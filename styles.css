@@ -24,7 +24,6 @@ main {
     padding: 20px;
     display: flex;
     justify-content: center;
-    width: 100%;
     flex: 1;
     margin-bottom: 60px; /* Add space for footer */
 }
@@ -46,7 +45,7 @@ main {
 @media screen and (max-width: 768px) {
     .container {
         width: 100%;
-        padding: 10px;
+        padding: 10px 20px;
         min-width: unset;
     }
     
