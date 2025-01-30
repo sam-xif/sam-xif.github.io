@@ -36,9 +36,9 @@ main {
 }
 
 /* Media queries for responsive design */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 2000px) {
     .container {
-        width: 40%;
+        width: 50%;
     }
 }
 
