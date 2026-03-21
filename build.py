@@ -81,7 +81,7 @@ INDEX_TEMPLATE = """\
         </div>
     </main>
     <footer>
-        <p>&copy; 2025 Samuel Xifaras</p>
+        <p>&copy; 2026 Samuel Xifaras</p>
     </footer>
 </body>
 </html>"""
