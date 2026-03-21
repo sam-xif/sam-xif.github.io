@@ -3,6 +3,10 @@
 # Navigate to the directory containing the website files
 cd $(dirname "$0")
 
+# Build the blog from markdown sources
+echo "Building blog..."
+python3 build.py
+
 # Start a local HTTP server on port 8000
 python3 -m http.server 8000
 
