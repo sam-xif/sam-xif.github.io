@@ -11,8 +11,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 try:
+    import mdformat
     import markdown
     import yaml
+    from l2m4m import LaTeX2MathMLExtension
 except ImportError:
     print("Missing dependencies. Run: pip install -r requirements.txt", file=sys.stderr)
     sys.exit(1)
@@ -123,7 +125,7 @@ def parse_post(path: Path) -> PostData:
     else:
         date = datetime.date.today()
 
-    md = markdown.Markdown(extensions=["fenced_code", "tables"])
+    md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension()])
     html_body = md.convert(body)
 
     return PostData(
@@ -169,7 +171,37 @@ def render_index_html(posts: list) -> str:
     return INDEX_TEMPLATE.replace("{{POST_LIST}}", post_list)
 
 
+def format_posts():
+    for md_file in sorted(POSTS_DIR.glob("*.md")):
+        # Extract frontmatter if present, remove before formatting, and re-add after
+        text = md_file.read_text(encoding="utf-8")
+        import re
+
+        match = re.match(r"^---\s*\n(.*?)(?:^---\s*$\n?)", text, re.DOTALL | re.MULTILINE)
+        if match:
+            frontmatter = match.group(0)
+            body = text[len(frontmatter):]
+            # Remove any leading newlines after the frontmatter block
+            body = body.lstrip('\r\n')
+        else:
+            frontmatter = ""
+            body = text
+
+        tmp_file = md_file.with_suffix(md_file.suffix + ".tmp")
+        tmp_file.write_text(body, encoding="utf-8")
+        mdformat.file(tmp_file, options={"wrap": 80})
+
+        formatted_body = tmp_file.read_text(encoding="utf-8")
+        tmp_file.unlink()
+
+        new_text = f"{frontmatter}{formatted_body}" if frontmatter else formatted_body
+        md_file.write_text(new_text, encoding="utf-8")
+
+        print(f"  Formatted: {md_file.relative_to(ROOT)}")
+
+
 def main():
+    format_posts()
     BLOG_DIR.mkdir(exist_ok=True)
 
     md_files = sorted(POSTS_DIR.glob("*.md"), reverse=True)

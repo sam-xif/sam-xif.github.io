@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 2028 Global Intelligence Shortage - Sam Xifaras</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+    <main>
+        <div class="container">
+            <nav class="blog-nav">
+                <a href="../index.html">Home</a>
+                <span class="blog-nav-sep">/</span>
+                <a href="index.html">Blog</a>
+            </nav>
+            <article class="post">
+                <header class="post-header">
+                    <h1>The 2028 Global Intelligence Shortage</h1>
+                    <time class="post-date" datetime="2026-03-21">March 21, 2026</time>
+                </header>
+                <div class="post-body">
+                    <p>I work in software, and since the beginning of this year, 2026, I have been
+investing in integrating AI into my workflow. AI has gotten strikingly good at
+coding, to the point where it writes close to 90% of my code. Many of my
+coworkers at Stripe are reporting a similar experience. Claude's latest Opus
+model is a significant step above previous frontier iterations, and engineers
+across the company have been using it extensively. I am sure this is playing out
+across the whole industry as well.</p>
+<p>The news isn't all great though. A step function in capability means a step
+function in cost. Recently, I caught wind of news that a large software company,
+typically considered best in class, is pumping the brakes on AI spend. The team
+responsible for rolling out AI tools must have received a directive to start
+constraining costs because the company's bottom line was starting to feel it,
+and they forced all engineers to use a lower tier model unknowingly. Several
+engineers at the company grumbled about how the lower model tier's output was
+noticably and significantly worse, and it led to wasted cycles spent on
+reviewing and correcting the worse model's output.</p>
+<p>This got me to thinking about whether the optimistic AI adoption scenarios
+painted in pieces like the
+<a href="https://www.citriniresearch.com/p/2028gic">Citrini report</a> and Matt Schumer's
+now infamous
+<a href="https://www.linkedin.com/pulse/something-big-happening-matt-shumer-so5he/">Something Big Is Happening</a>
+post.</p>
+<p>My take is that <strong>the AI replacement doom and gloom might be overstated</strong>, and
+I'll do my best here to explain why.</p>
+<h2>Running headlong toward the cost wall</h2>
+<p><img src="../blog_assets/headlong.png" /></p>
+<p>As I just mentioned, it seems that there are stirrings of companies starting to
+feel the burn of their cash—er—burn, and that different tiers of models have
+different tiers of capacity to automate work.</p>
+<p>Models with larger parameter counts and larger context windows have been shown
+to perform significantly better on tasks of longer horizon and complexity, but
+of course, you get what you pay for. The era of venture capital subsidies of
+below-market pricing among frontier giants such as Anthropic, OpenAI, and Google
+will have to come to an end at some point when the market returns to
+rationality, just as Uber investors
+<a href="https://www.nytimes.com/2021/06/08/technology/farewell-millennial-lifestyle-subsidy.html">subsidized the millenial lifestyle</a>
+for a time before fares skyrocketed.</p>
+<p>And when that time comes, I contend that, at least in the short-to-medium term,
+access to frontier reasoning capabilities will be constrained to the hands of
+the rich and powerful few, much like other forms of wealth in our top-heavy
+capitalist society. I find this vision of the future to be the most coherent,
+and frankly the most boring...which probably means that it is likely. The
+possible lack of future access to frontier model updates for the long tail of
+<a href="https://www.wealthspire.com/financial-dictionary/magnificent-7-stocks/">unmagnificent</a>
+enterprises, coupled with recent findings about the nature of how the current
+generation of AI models paradoxically may <em>decrease</em> productivity, or at least
+make work more cognitively exhausting, leads me to conclude that an
+economy-scale disruption in the vein of the Citrini report is highly unlikely,
+and the status quo will probably remain firmly in place for quite some time.</p>
+<p>I will attempt to reinvigorate in the reader a revolutionary spirit toward the
+end of this post with some thoughts about what actions we can take to try to
+generate escape velocity from this boring future. But to start, here are the
+main pillars of my argument:</p>
+<ol>
+<li>
+<p><strong>AI buildout bottleneck:</strong> The cost of the AI build out is high and physical
+   bottlenecks are becoming manifest. Recent geopolitical instability and its
+   effects on energy prices are also threatening to further slow progress</p>
+</li>
+<li>
+<p><strong>AI Adoption and productivity gains may not be sustainable:</strong> Investment in
+   AI tools is reportedly not generating ROI for many enterprises. AI is making
+   workers <em>feel</em> more productive, but with the consequence of increased
+   cognitive load and burnout. The oft-cited METR task horizon benchmark is not
+   very reflective of reality.</p>
+</li>
+<li>
+<p><strong>This may be the outcome the economy wants:</strong> People are scared of
+   disruption. The picture painted in the Citrini report is a bleak one,
+   especially given that governments typically lag significantly behind the
+   private sector in response to such events. Frankly, I also have little faith
+   that the current governmental status quo (in the US, at least) is
+   well-equipped for the creative policymaking that such an economic disruption
+   would call for.</p>
+</li>
+</ol>
+<h2>AI buildout economics</h2>
+<p>If you're tapped into the sphere of popular tech podcasts, such as the recently
+started <a href="https://cheekypint.transistor.fm/">Cheeky Pint</a> podcast started by
+cofounder of Stripe John Collison, you may have heard several guests, such as
+Elon Musk talking about a severe shortage of turbines that are used to convert
+natural gas-powered motion into electricity. Gas-fired turbine lead times have
+<a href="https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/052025-us-gas-fired-turbine-wait-times-as-much-as-seven-years-costs-up-sharply">soared</a>
+to as much as <em>seven years</em>. That means that if you aren't already in the queue,
+you're waiting close to a decade to getting just the turbines, which are
+necessary but not sufficient for end-to-end power generation from natural gas.</p>
+<p>Forecasts for data center energy demand vary wildly though. According to a
+<a href="https://www.wri.org/insights/us-data-centers-electricity-demand">report</a> from
+the World Resources Institute, forecasts for US data center yearly power demand
+in 2030 range from 200 terawatt-hours per year (TWh/yr) to 1,050 TWh/yr.
+Lawrence Berkeley National Laboratory seems to have a reasonable estimate
+somewhere in between those: 325T TWh/yr to 580 TWh/yr, so I'll accept the
+midpoint, 453 TWh/yr, as a provisional estimate of yearly power demand for data
+centers in the US in 2030.</p>
+<p>Frontier model providers themselves seem to be having trouble estimating demand
+for their own services. Project Stargate, announced right at the start of
+President Trump's second term in January 2025, was supposed to be a $500 billion
+initiative to build out AI-focused data centers by 2029, but negotiations
+between OpenAI and Oracle to expand Oracle's data center in Abilene, Texas
+recently fell through due in part to OpenAI's shifting capacity forecasts.</p>
+<p>And now, with US military action in Iran disrupting global oil supply, which
+will likely domino into higher prices for everything, I think there is
+significant risk emerging</p>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Samuel Xifaras</p>
+    </footer>
+</body>
+</html>

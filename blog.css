@@ -3,6 +3,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 
+.container {
+    width: 35%;
+}
+
 /* Breadcrumb navigation */
 .blog-nav {
     font-size: 0.9em;
@@ -151,4 +155,16 @@
 
 .post-body th {
     background: #f4f4f4;
+}
+
+.post-body p:has(> img) {
+    display: block;
+    width: 100%;
+}
+
+.post-body p > img {
+    width: 50%;
+    display: flex; 
+    margin-left: auto;
+    margin-right: auto;
 }

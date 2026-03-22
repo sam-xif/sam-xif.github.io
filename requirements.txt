@@ -1,2 +1,5 @@
-Markdown>=3.5
-PyYAML>=6.0
+L2M4M==1.0.4
+latex2mathml==3.79.0
+Markdown==3.10.2
+mdformat>=0.7.0
+PyYAML==6.0.3
