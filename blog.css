@@ -1,7 +1,54 @@
 /* blog.css - Blog-specific styles */
 
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+
+/* Theme variables */
+:root {
+    --bg: #ffffff;
+    --text: #111111;
+    --text-muted: #666;
+    --text-muted-2: #444;
+    --link: inherit;
+    --code-bg: #f4f4f4;
+    --border: #eee;
+    --border-strong: #ddd;
+    --blockquote-border: #ccc;
+    --blockquote-text: #555;
+    --th-bg: #f4f4f4;
+}
+
+[data-theme="sepia"] {
+    --bg: #f4ecd8;
+    --text: #3e2f1c;
+    --text-muted: #7a6348;
+    --text-muted-2: #6b5440;
+    --link: inherit;
+    --code-bg: #e8dcc4;
+    --border: #ddd0b8;
+    --border-strong: #c8b898;
+    --blockquote-border: #b8a07a;
+    --blockquote-text: #5a4530;
+    --th-bg: #e8dcc4;
+}
+
+[data-theme="dark"] {
+    --bg: #1a1a1a;
+    --text: #d8d8d8;
+    --text-muted: #999;
+    --text-muted-2: #bbb;
+    --link: inherit;
+    --code-bg: #2b2b2b;
+    --border: #333;
+    --border-strong: #444;
+    --blockquote-border: #555;
+    --blockquote-text: #aaa;
+    --th-bg: #2b2b2b;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
 
 .container {
     width: 35%;
@@ -12,12 +59,12 @@
 .blog-nav {
     font-size: 0.9em;
     margin-bottom: 30px;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .blog-nav-sep {
     margin: 0 6px;
-    color: #999;
+    color: var(--text-muted);
 }
 
 /* Blog index listing */
@@ -28,7 +75,7 @@
 
 .post-listing {
     margin-bottom: 32px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 24px;
 }
 
@@ -56,7 +103,7 @@
 .post-date {
     display: block;
     font-size: 0.85em;
-    color: #666;
+    color: var(--text-muted);
     margin-bottom: 6px;
 }
 
@@ -64,13 +111,13 @@
 .post-description {
     margin: 4px 0 0 0;
     font-size: 0.95em;
-    color: #444;
+    color: var(--text-muted-2);
 }
 
 /* Individual post page */
 .post-header {
     margin-bottom: 28px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 16px;
 }
 
@@ -79,7 +126,7 @@
 }
 
 /* Post body typography */
-.post-body {    
+.post-body {
     line-height: 1.7;
 }
 
@@ -111,14 +158,14 @@
 .post-body code {
     font-family: "Courier New", Courier, monospace;
     font-size: 0.88em;
-    background: #f4f4f4;
+    background: var(--code-bg);
     padding: 2px 5px;
     border-radius: 3px;
 }
 
 /* Code blocks (fenced) */
 .post-body pre {
-    background: #f4f4f4;
+    background: var(--code-bg);
     padding: 14px 16px;
     overflow-x: auto;
     border-radius: 4px;
@@ -133,10 +180,10 @@
 
 /* Blockquotes */
 .post-body blockquote {
-    border-left: 3px solid #ccc;
+    border-left: 3px solid var(--blockquote-border);
     margin: 0 0 1em 0;
     padding: 4px 16px;
-    color: #555;
+    color: var(--blockquote-text);
 }
 
 /* Tables */
@@ -149,13 +196,13 @@
 
 .post-body th,
 .post-body td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-strong);
     padding: 8px 12px;
     text-align: left;
 }
 
 .post-body th {
-    background: #f4f4f4;
+    background: var(--th-bg);
 }
 
 .post-body p:has(> img) {
@@ -166,11 +213,55 @@
 .post-body p > img {
     width: 60%;
     /* max-height: 500px; */
-    display: flex; 
+    display: flex;
     margin-left: auto;
     margin-right: auto;
 }
 
+/* Theme switcher */
+.theme-switcher {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+}
+
+.theme-btn {
+    font-family: "Playfair", serif;
+    font-size: 0.75em;
+    padding: 3px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: #ffffff;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.theme-btn[data-theme="sepia"] {
+    background: #f4ecd8;
+}
+
+.theme-btn[data-theme="dark"] {
+    background: #1a1a1a;
+    color: #999;
+}
+
+.theme-btn:hover {
+    border-color: var(--text-muted);
+}
+
+.theme-btn.active {
+    border-color: var(--text);
+}
+
+.theme-btn[data-theme="dark"]:hover {
+    color: #d8d8d8;
+    border-color: #999;
+}
+
+.theme-btn[data-theme="dark"].active {
+    color: #d8d8d8;
+    border-color: #d8d8d8;
+}
 
 /* Media queries for responsive design */
 @media screen and (max-width: 2000px) {

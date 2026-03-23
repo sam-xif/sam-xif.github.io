@@ -33,6 +33,7 @@ POST_TEMPLATE = """\
     <title>{{POST_TITLE}} - Sam Xifaras</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../blog.css">
+    <script src="../theme.js"></script>
 </head>
 <body>
     <main>
@@ -42,6 +43,11 @@ POST_TEMPLATE = """\
                 <span class="blog-nav-sep">/</span>
                 <a href="index.html">Blog</a>
             </nav>
+            <div class="theme-switcher">
+                <button class="theme-btn" data-theme="normal">Normal</button>
+                <button class="theme-btn" data-theme="sepia">Sepia</button>
+                <button class="theme-btn" data-theme="dark">Dark</button>
+            </div>
             <article class="post">
                 <header class="post-header">
                     <h1>{{POST_TITLE}}</h1>
@@ -69,6 +75,7 @@ INDEX_TEMPLATE = """\
     <title>Blog - Sam Xifaras</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../blog.css">
+    <script src="../theme.js"></script>
 </head>
 <body>
     <main>
@@ -78,6 +85,11 @@ INDEX_TEMPLATE = """\
                 <span class="blog-nav-sep">/</span>
                 <span>Blog</span>
             </nav>
+            <div class="theme-switcher">
+                <button class="theme-btn" data-theme="normal">Normal</button>
+                <button class="theme-btn" data-theme="sepia">Sepia</button>
+                <button class="theme-btn" data-theme="dark">Dark</button>
+            </div>
             <section class="blog-index">
                 <h2>Blog</h2>
                 {{POST_LIST}}
