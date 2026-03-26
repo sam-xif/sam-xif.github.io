@@ -227,14 +227,15 @@ sources cite different revenue and cost figures for OpenAI, and it is a private
 company, so it is difficult to know the truth with certainty. At a minimum,
 however, we can certainly say OpenAI is significantly unprofitable. Epoch AI
 <a href="https://epoch.ai/data-insights/openai-compute-spend">estimates</a> that OpenAI was
-significantly unprofitable in 2024, making $3.7 billion revenue on $1.8 billion
-inference spend and roughly $6 billion total compute spend, including inference.
-This implies a plausible 50% gross margin on inference, but a negative net
-margin that investors are covering.</p>
+significantly unprofitable in 2024, making &dollar;3.7 billion revenue on
+&dollar;1.8 billion inference spend and roughly &dollar;6 billion
+total compute spend, including inference. This implies a plausible 50% gross
+margin on inference, but a negative net margin that investors are covering.</p>
 <p>In 2025, OpenAI <a href="https://www.arcade.dev/blog/ai-inference-economics">reported</a>
-$4.3 billion in 2025H1 and projected $13 billion for full year. "Against that
-revenue, they’re spending approximately $22 billion," representing a shortfall
-of $9 billion that investors are subsidizing.</p>
+&dollar;4.3 billion in 2025H1 and projected &dollar;13 billion for
+full year. "Against that revenue, they’re spending approximately
+&dollar;22 billion," representing a shortfall of &dollar;9 billion
+that investors are subsidizing.</p>
 <p><a href="https://epoch.ai/data-insights/cost-trend-large-scale">Further research</a> from
 Epoch AI shows that on a large scale, training compute costs have been doubling
 every 8 months, or 2.7x per year. Let's see if we can put this all together with
@@ -250,20 +251,25 @@ then this simple model puts OpenAI's breakeven point in late 2028 (the X axis of
 the following graph is years since 2024, Y axis is logarithmic scale of
 revenue/cost).</p>
 <p><img src="../blog_assets/breakeven.png" style="width:100%" /></p>
-<p>This is roughly consistent with the figures Alex Salazar cites in
-<a href="https://www.arcade.dev/blog/ai-inference-economics">his post</a>.</p>
+<p>The revenue line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup></mrow></math> and the cost line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mo stretchy="false">&#x00028;</mo><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>5</mn><mo>&#x0002A;</mo><msup><mn>2.7</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo></mrow></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math> is
+years since 2024. This is roughly consistent with the figures Alex Salazar cites
+in <a href="https://www.arcade.dev/blog/ai-inference-economics">his post</a>.</p>
 <p>This model actually paints an optimistic picture for OpenAI, but I think it is
 unrealistic. Firstly, I think 3.5x annual revenue growth is optimistic,
-especially with the enterprise adoption question looming. Secondly, enterprises
-(and individual consumers for that matter) will likely want the frontier of
-models which cost the most, so maintaining a 50% inference margin becomes
-doubtful, especially in the face of fierce competition from other frontier labs
-who can absorb costs, such as Google, whose Gemini models have been making great
-strides lately. To provide another data point here: Claude Code will sometimes
-flash a message saying something to the effect of "Opus models only outperform
-Sonnet on complex planning tasks and cost 2x more." I imagine there's a similar
-story with OpenAI, Codex, and reasoning models that burn more compute per token
-and more tokens as a whole during chain-of-thought rollout.</p>
+especially with the enterprise adoption question looming. If we adjust the
+average revenue growth rate down to just 3.3x per year while keeping the cost
+curve the same, OpenAI's revenue <strong>never catches up to its costs</strong> in this
+model. The cost model also doesn't include other operating costs like headcount
+and office space. Secondly, enterprises (and individual consumers for that
+matter) will likely want the frontier of models which cost the most, so
+maintaining a 50% inference margin becomes doubtful, especially in the face of
+fierce competition from other frontier labs who can absorb costs, such as
+Google, whose Gemini models have been making great strides lately. To provide an
+anecdotal data point here, I have noticed that Claude Code will sometimes flash
+a message saying something to the effect of <em>Opus models only outperform Sonnet
+on complex planning tasks and cost 2x more.</em> I imagine there's a similar story
+with OpenAI, Codex, and reasoning models that burn more compute per token and
+more tokens as a whole during chain-of-thought rollout.</p>
 <p>This all spells trouble for "thin wrapper" AI startup companies that are
 reselling marked up tokens from frontier providers.
 <a href="https://techcrunch.com/2025/08/07/the-high-costs-and-thin-margins-threatening-ai-coding-startups/">According to</a>

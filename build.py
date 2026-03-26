@@ -6,6 +6,7 @@ Requires: pip install -r requirements.txt
 """
 
 import datetime
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -133,7 +134,7 @@ def parse_post(path: Path) -> PostData:
     else:
         date = datetime.date.today()
 
-    md = markdown.Markdown(extensions=["fenced_code", "tables", #LaTeX2MathMLExtension()
+    md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension()
     ])
     html_body = md.convert(body)
 
@@ -184,8 +185,6 @@ def format_posts():
     for md_file in sorted(POSTS_DIR.glob("*.md")):
         # Extract frontmatter if present, remove before formatting, and re-add after
         text = md_file.read_text(encoding="utf-8")
-        import re
-
         match = re.match(r"^---\s*\n(.*?)(?:^---\s*$\n?)", text, re.DOTALL | re.MULTILINE)
         if match:
             frontmatter = match.group(0)
@@ -196,12 +195,26 @@ def format_posts():
             frontmatter = ""
             body = text
 
+        latex_map = {}
+        def replace_latex(m):
+            key = f"XLATEX{len(latex_map)}X"
+            latex_map[key] = m.group(0)
+            return key
+        body = re.sub(r'\$\$[\s\S]*?\$\$|\$[^$\n]+?\$', replace_latex, body, flags=re.MULTILINE)
+
+        dollar_placeholder = "XDOLLARENTITYX"
+        body = body.replace("&dollar;", dollar_placeholder)
+
         tmp_file = md_file.with_suffix(md_file.suffix + ".tmp")
         tmp_file.write_text(body, encoding="utf-8")
         mdformat.file(tmp_file, options={"wrap": 80})
 
         formatted_body = tmp_file.read_text(encoding="utf-8")
         tmp_file.unlink()
+
+        formatted_body = formatted_body.replace(dollar_placeholder, "&dollar;")
+        for key, val in latex_map.items():
+            formatted_body = formatted_body.replace(key, val)
 
         new_text = f"{frontmatter}{formatted_body}" if frontmatter else formatted_body
         md_file.write_text(new_text, encoding="utf-8")
