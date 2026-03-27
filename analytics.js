@@ -4,6 +4,7 @@
   function logVisit(path, referrer) {
     fetch("https://tevwhxqpjjypmlywuqnu.supabase.co/functions/v1/log-site-visit", {
       method: "POST",
+      keepalive: true,
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + SUPABASE_ANON_KEY,
