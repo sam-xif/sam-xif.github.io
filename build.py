@@ -62,7 +62,15 @@ POST_TEMPLATE = """\
         </div>
     </main>
     <footer>
-        <p>&copy; 2026 Samuel Xifaras</p>
+        <div class="newsletter">
+            <p class="newsletter-label">Want to get updates from me? Drop your email below!</p>
+            <form id="newsletter-form" class="newsletter-form">
+                <input type="email" id="newsletter-email" placeholder="your@email.com" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            <p id="newsletter-msg" class="newsletter-msg"></p>
+        </div>
+        <p class="footer-copyright">&copy; 2026 Samuel Xifaras</p>
     </footer>
 </body>
 </html>"""
@@ -100,7 +108,15 @@ INDEX_TEMPLATE = """\
         </div>
     </main>
     <footer>
-        <p>&copy; 2026 Samuel Xifaras</p>
+        <div class="newsletter">
+            <p class="newsletter-label">Want to get updates from me? Drop your email below!</p>
+            <form id="newsletter-form" class="newsletter-form">
+                <input type="email" id="newsletter-email" placeholder="your@email.com" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            <p id="newsletter-msg" class="newsletter-msg"></p>
+        </div>
+        <p class="footer-copyright">&copy; 2026 Samuel Xifaras</p>
     </footer>
 </body>
 </html>"""

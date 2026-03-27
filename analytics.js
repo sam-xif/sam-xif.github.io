@@ -30,5 +30,31 @@
         });
       }
     });
+
+    var form = document.getElementById("newsletter-form");
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = document.getElementById("newsletter-email").value;
+        var msg = document.getElementById("newsletter-msg");
+        fetch("https://tevwhxqpjjypmlywuqnu.supabase.co/functions/v1/email-signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          },
+          body: JSON.stringify({ email: email }),
+        }).then(function (res) {
+          if (res.ok) {
+            msg.textContent = "You're subscribed!";
+            form.reset();
+          } else {
+            msg.textContent = "Something went wrong. Please try again.";
+          }
+        }).catch(function () {
+          msg.textContent = "Something went wrong. Please try again.";
+        });
+      });
+    }
   });
 })();
