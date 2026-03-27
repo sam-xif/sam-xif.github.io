@@ -11,6 +11,8 @@
       path: window.location.pathname,
       referrer: document.referrer || null,
       user_agent: navigator.userAgent,
+      language: navigator.language,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     }),
   }).catch(function () {});
 })();
