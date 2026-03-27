@@ -35,6 +35,7 @@ POST_TEMPLATE = """\
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../blog.css">
     <script src="../theme.js"></script>
+    <script src="../analytics.js"></script>
 </head>
 <body>
     <main>
@@ -77,6 +78,7 @@ INDEX_TEMPLATE = """\
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../blog.css">
     <script src="../theme.js"></script>
+    <script src="../analytics.js"></script>
 </head>
 <body>
     <main>
