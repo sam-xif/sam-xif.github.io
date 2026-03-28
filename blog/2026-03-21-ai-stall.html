@@ -26,17 +26,19 @@
             <article class="post">
                 <header class="post-header">
                     <h1>AI won't come for your job yet, and that's bad</h1>
-                    <time class="post-date" datetime="2026-03-26">March 26, 2026</time>
+                    <time class="post-date" datetime="2026-03-28">March 28, 2026</time>
                 </header>
                 <div class="post-body">
                     <p><strong>Bottom line up front:</strong> <i>I suspect that we will see a huge spike in
-inference costs, for multiple reasons, which will make all but the least
-powerful models unaffordable for the average person and enterprise. This will
-limit the potential for rapid societal and economic transformation, relegating
-us to a reality where AI is another tool like email that usually works well but
-can't automate anything in its own right. Some actionable things I believe we
-can do to lower the probability of this outcome are:</i> create, research how to
-make inference cheaper, open source everything, <em>and</em> build community.</p>
+inference costs due to macro risks, current inference subsidization, and
+questionable ROI on average from AI adoption. If inference costs increase, they
+will make all but the least powerful models unaffordable for the average person
+and enterprise. This will limit the potential for rapid societal and economic
+transformation, relegating us to a reality where AI is another tool like email
+that usually works well but can't automate most things in its own right. Some
+actionable things I believe we can do to lower the probability of this outcome
+are:</i> create, research how to make inference cheaper, open source everything,
+<em>and</em> build community.</p>
 <p><br></p>
 <p>I work in software, and since the beginning of this year, 2026, I have been
 investing in deeply integrating AI into my workflow. AI has gotten strikingly
@@ -65,22 +67,18 @@ overstated</strong>, and I'm disappointed about the reality that is likely to em
 instead. I'll do my best to explain why.</p>
 <h2>Running headfirst into the cost wall</h2>
 <p><img src="../blog_assets/headlong.png" /></p>
-<p>As I just mentioned, it seems that there are stirrings of companies starting to
-feel the burn of their cash—er—burn, and that different tiers of models have
-markedly different capabilities to automate work.</p>
 <p>Models with larger parameter counts and larger context windows have been
-<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">shown</a>
-(albeit with benchmarks that I don't think generalize well) to perform
-significantly better on tasks of longer horizon and complexity, and you get what
-you pay for. Today, frontier reasoning capability is affordable because of
-venture capital or loss-leader subsidies. The frontier giants of Anthropic,
-OpenAI, Google, and Meta are all facing intense competitive pressure to price
-their inference at below market rates. This era of below-market pricing among
-frontier giants such as Anthropic, OpenAI, and Google will have to come to an
-end at some point when the market returns to rationality, just as Uber investors
+<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">shown</a><a class="tooltip" data-tip="Albeit with benchmarks that I don't think generalize well. Critique of the METR task horizon assessment deserves a post of its own" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a>.
+to perform significantly better on tasks of longer horizon and complexity, and
+you get what you pay for. Today, frontier reasoning capability is affordable
+because of venture capital or loss-leader subsidies. The frontier giants of
+Anthropic, OpenAI, Google, and Meta are all facing intense competitive pressure
+to price their inference at below market rates. This era of below-market pricing
+among these will have to come to an end at some point when the market returns to
+rationality, just as Uber investors
 <a href="https://www.nytimes.com/2021/06/08/technology/farewell-millennial-lifestyle-subsidy.html">subsidized the millennial lifestyle</a>
 for a time before fares skyrocketed.</p>
-<p>And when that time comes, I contend that, at least in the short-to-medium term,
+<p>When that time comes, I contend that, at least in the short-to-medium term,
 access to frontier reasoning capabilities will be constrained to the hands of
 the rich and powerful few, much like other forms of wealth in our top-heavy
 capitalist society. I find this vision of the future to be the most coherent,
@@ -95,14 +93,14 @@ replace jobs entirely. In light of this, I believe an economy-scale disruption
 in the vein of the Citrini report isn't very probable, and the status quo will
 probably remain in place for some time.</p>
 <p>By the end of this post, I hope to reinvigorate in you (and myself, quite
-frankly) a revolutionary spirit toward the end of this post with some thoughts
-about what actions we can take to try to generate escape velocity from this
-boring future. But to start, here are the main pillars of my argument:</p>
+frankly) a revolutionary spirit with some thoughts about what actions we can
+take to try to generate escape velocity from this boring future. But to start,
+here are the main pillars of my argument:</p>
 <ol>
 <li>
-<p><strong>AI buildout is bottlenecked:</strong> The cost of the AI buildout is high and
-   physical bottlenecks are becoming manifest. Recent geopolitical instability
-   and its effects on energy prices threaten to further dampen progress.</p>
+<p><strong>AI buildout is bottlenecked:</strong> constraints on the manufacturing of critical
+   inputs limit the AI buildout.. Recent geopolitical instability and its
+   effects on energy prices threaten to further dampen progress.</p>
 </li>
 <li>
 <p><strong>Inference costs are being held artificially low:</strong> Investor money is
@@ -115,35 +113,18 @@ boring future. But to start, here are the main pillars of my argument:</p>
 <p><strong>AI Adoption and productivity gains may not be sustainable:</strong> Investment in
    AI tools are reportedly not generating ROI for many enterprises. AI is making
    workers <em>feel</em> more productive, but with the consequence of increased
-   cognitive load and burnout.</p>
+   cognitive load.</p>
 </li>
 </ol>
 <h2>AI buildout challenges</h2>
-<p>There is nothing like a massive shift in focus when it comes to revealing the
-points where a process is not robust. The AI buildout is one such shift in
-focus. Human activity is inefficient because we can't predict the future. When
-the economy is humming along, the probability distribution of what tomorrow will
-look like is almost collapsed. Tomorrow will very likely look like today. The
-probability distributions of 1 week, 1 month, 1 year out are not as collapsed,
-and yet futures contracts to lock in oil prices are still traded. Some traders
-will lose, some will win. That's the order of things.</p>
-<p>Stripe's
-<a href="https://assets.stripeassets.com/fzn2n1nzq965/3LlGw839Q6kUwxZlLZDtH6/75ddcbada4aa7743dd8ec7d0f9ca497e/Stripe-annual-letter-2025-desktop.pdf">2025 annual letter</a>
-discusses a similar idea that they dub the "Sorting Machine":</p>
-<blockquote>
-<p>At heart, competitive markets are a sorting machine. They direct profits,
-capital, and talent to the places of greatest impact, as determined by
-customers voting with their wallets. Historically, this sorting happened
-methodically. It typically took decades for a household name to be unseated or
-for a new entrant to reach meaningful scale.</p>
-<p>The sorting machine is now whirring faster: winners and losers are being
-anointed more quickly and more intensely. Today, the most profitable third of
-publicly listed companies in the US account for two-thirds of total market
-capitalization, the highest share since data began in 1963. And much of this
-is a story of profit concentration, not just valuations: the top 10% of the
-S&amp;P 500 by market cap now account for roughly 59% of the index’s total
-profits, which is elevated relative to recent history</p>
-</blockquote>
+<p>When an environment changes, systems operating in that environment either fail
+or adapt. The release of ChatGPT in 2022 changed the environment, and 3.5 years
+later, our economic system is still in the process of adapting.</p>
+<p>How quickly different parts of the economy can adapt is variable. Software
+adapts very quickly, hardware, more slowly, and physical manufacturing
+infrastructure adapts at a snail's pace. It is not very surprising then, in my
+view, that the chokepoints of the AI buildout are in the realm of the physical:
+power and silicon.</p>
 <h3>Challenge 1: Power</h3>
 <p>If you're tapped into the sphere of popular tech podcasts, such as the
 <a href="https://cheekypint.transistor.fm/">Cheeky Pint</a> podcast by John Collison,
@@ -165,7 +146,7 @@ market, "triggering price increases of around 50%." This crisis may be
 transient, and we will see how things play out in the coming weeks, but it
 highlights the US and world economies' sensitivity to global conflict.</p>
 <p>Natural gas may also be more significant to this buildout than we think. In the
-previously mentioned Cheeky Pint episode, #21, Musk discussed the bottlenecked
+previously mentioned Cheeky Pint episode 21, Musk discussed the bottlenecked
 state of power production (emphasis mine):</p>
 <blockquote>
 <p>Yes. You can drill down to a level further. It's the vanes and blades in the
@@ -175,39 +156,6 @@ to cast the blades and vanes in the turbines, assuming you’re using gas power.
 scale solar, but the tariffs currently for importing solar in the US are
 gigantic and the domestic solar production is pitiful.</p>
 </blockquote>
-<!-- 
-Forecasts for data center energy demand vary wildly though. According to a
-[report](https://www.wri.org/insights/us-data-centers-electricity-demand) from
-the World Resources Institute, forecasts for US data center yearly power demand
-in 2030 range from 200 terawatt-hours per year (TWh/yr) to 1,050 TWh/yr.
-Lawrence Berkeley National Laboratory seems to have a reasonable estimate
-somewhere in between those: 325 TWh/yr to 580 TWh/yr, so I'll accept the
-midpoint, 453 TWh/yr, as a provisional estimate of yearly power demand for data
-centers in the US in 2030.
-
-According to
-[data](https://www.eia.gov/electricity/annual/table.php?t=epa_03_01_a.html) from
-the US Energy Information Administration, total power generation at utility
-scale factories was 4,309 TWh. News outlet
-[Gartner](https://www.gartner.com/en/newsroom/press-releases/2025-11-17-gartner-says-electricity-demand-for-data-centers-to-grow-16-percent-in-2025-and-double-by-2030)
-estimates 2025 data center power consumption 448 TWh, and they estimate it to
-grow to 980 TWh in 2030. If we assume the 448 TWh figure for current data center
-power demand is included in the 4,309 TWh total generation figure, that is a .1%
-increase in total power generation to meet the data center demand for the LNBL
-estimate, 12.3% for the Gartner estimate, and 14% for the high end of the
-estimates given in the Word Resources Institute report.
-
-Though energy forecasts for AI-focused data centers are uncertain, I think it is
-evident that energy is emerging as the bottleneck, especially in light of the
-recent Iran developments. US military action in Iran has led to the effective
-closure of the strait of Hormuz, which is disrupting global oil and liquefied
-natural gas (LNG) supply. According to
-[Reuters](https://www.reuters.com/business/energy/iran-wars-energy-impact-forces-world-pay-up-cut-consumption-2026-03-21/),
-the situation in the strait has removed around 400 million barrels from the
-market, "triggering price increases of around 50%." This crisis may be
-transient, and we will see how things play out in the coming weeks, but it
-highlights the US and world economies' sensitivity to global conflict. -->
-
 <h3>Challenge 2: Silicon</h3>
 <p>Another part of the AI buildout with significant supply chain risk is silicon.
 TSMC is a Taiwanese corporation which represents a single point of failure for
@@ -267,33 +215,33 @@ reality that AI inference is mispriced relative to how much it costs, as I'll go
 over in the next section.</p>
 <h2>Inference costs are artificially low</h2>
 <p>As a business model, serving AI inference is more akin to a utility business
-than a traditional software as a service business. While both OpenAI and the
-classic SaaS exemplar Salesforce are selling software, OpenAI has a much more
-significant cost profile. Immense compute and intense R&amp;D are not needed to
-tweak a button on a page, but they are needed to produce GPT-6 and beyond and to
-serve inference on those models to consumers. A utilities business charges by
-usage, and it is a margin business: the profit is constrained to how much delta
-betwee costs and revenue customers are willing to tolerate. When margin
+than a traditional SaaS business. While both OpenAI and the classic SaaS
+exemplar, Salesforce, are selling software, OpenAI has a much more significant
+cost profile. Immense compute and intense R&amp;D are not needed to tweak a button
+on a Salesforce user interface, but they are needed to produce GPT-6 and beyond
+and serve inference on those models to consumers. A utilities business charges
+by usage, and it is a margin business: the profit is constrained to how much
+delta between costs and revenue customers are willing to tolerate. When margin
 businesses compete with each other, revenue gets compressed down to cost.</p>
-<p>Importantly, usage-based services businesses have a very different margin
-profile from SaaS businesses. And research and compute costs to train each
-successive frontier mode have only been going up. Margins may be improving for
-worse models, but the training and serving of frontier models that keeps their
-business afloat is precisely what’s destroying their changes at profitability.
-According to Epoch, the cost of training has been doubling every 8 months. The
-cost of compute has not been halving every 8 months. This is, until the costs of
-inference spike to cover COGS as well as R&amp;D, or some other business structure
-gets figured out. Perhaps the government needs to step in to find R&amp;D.</p>
+<p>Frontier labs are margin businesses that also have to cover costs of R&amp;D on new
+model development, and there is no shortage of demand for better models. As I
+noted at the beginning of this post, the difference in quality between Sonnet
+and Opus is palpable for some use cases. Margins may be improving for worse
+models, but the training and serving of the most powerful models is precisely
+what’s destroying frontier labs' chances at profitability. According to Epoch
+AI, the cost of training on a large scale has been doubling every 8 months. The
+cost of compute has not been halving every 8 months.</p>
 <h3>Napkin math</h3>
 <p>Let's look at some numbers, using OpenAI as an example. Several different
 sources cite different revenue and cost figures for OpenAI, and it is a private
-company, so it is difficult to know the truth with certainty. At a minimum,
-however, we can certainly say OpenAI is significantly unprofitable. Epoch AI
-<a href="https://epoch.ai/data-insights/openai-compute-spend">estimates</a> that OpenAI was
-significantly unprofitable in 2024, making &dollar;3.7 billion revenue on
-&dollar;1.8 billion inference spend and roughly &dollar;6 billion
-total compute spend, including inference. This implies a plausible 50% gross
-margin on inference, but a negative net margin that investors are covering.</p>
+company, so it is difficult to know their true financials with certainty. At a
+minimum, however, we can certainly say OpenAI is losing money at an astounding
+clip. Epoch AI <a href="https://epoch.ai/data-insights/openai-compute-spend">estimates</a>
+that OpenAI was significantly unprofitable in 2024, making &dollar;3.7
+billion revenue on &dollar;1.8 billion inference spend and roughly
+&dollar;6 billion total compute spend, including inference. This implies a
+plausible 50% gross margin on inference, but a negative net margin that
+investors are covering.</p>
 <p>In 2025, OpenAI <a href="https://www.arcade.dev/blog/ai-inference-economics">reported</a>
 &dollar;4.3 billion in 2025H1 and projected &dollar;13 billion for
 full year. "Against that revenue, they’re spending approximately
@@ -301,70 +249,68 @@ full year. "Against that revenue, they’re spending approximately
 that investors are subsidizing.</p>
 <p><a href="https://epoch.ai/data-insights/cost-trend-large-scale">Further research</a> from
 Epoch AI shows that on a large scale, training compute costs have been doubling
-every 8 months, or 2.7x per year. Let's see if we can put this all together with
-some napkin math.</p>
+every 8 months, or 2.7x per year. Here's some napkin math to put this all
+together</p>
 <p>If we suppose OpenAI's revenue is also growing exponentially, and take their
 projection as truth, this would mean OpenAI's revenue is growing 3.5x annually.
 If we assume that the roughly 50% gross margin on inference based on data from
 EpochAI continues to hold, and we additionally assume that research compute
-costs grow similarly to training compute costs (this is plausible as the amount
+costs grow similarly to training compute costs<a class="tooltip" data-tip="this is plausible as the amount
 of tokens being consumed for research is probably going to keep growing too,
-with AI becoming more involved in the code writing and research process itself),
-then this simple model puts OpenAI's breakeven point in late 2028 (the X axis of
-the following graph is years since 2024, Y axis is logarithmic scale of
-revenue/cost).</p>
+with AI becoming more involved in the code writing and research process itself" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a>, then this simple model
+puts OpenAI's breakeven point in late 2028. The X axis of the following graph is
+years since 2024, Y axis is logarithmic scale of revenue/cost.</p>
 <p><img src="../blog_assets/breakeven.png" style="width:100%" /></p>
 <p>The revenue line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup></mrow></math> and the cost line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mo stretchy="false">&#x00028;</mo><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>5</mn><mo>&#x0002A;</mo><msup><mn>2.7</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo></mrow></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math> is
-years since 2024. This is roughly consistent with the figures Alex Salazar cites
-in <a href="https://www.arcade.dev/blog/ai-inference-economics">his post</a>.</p>
+years since 2024. This is roughly consistent with the figures Alex Salazar
+provides in <a href="https://www.arcade.dev/blog/ai-inference-economics">his post</a>.</p>
 <p>This model actually paints an optimistic picture for OpenAI, but I think it is
-unrealistic.<a class="tooltip" data-tip="How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where formalize this napkin math into something more compelling." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> Firstly, I think 3.5x annual revenue growth is
-optimistic, especially with the enterprise adoption question looming. If we
-adjust the average revenue growth rate down to just 3.3x per year while keeping
-the cost curve the same, OpenAI's revenue <strong>never catches up to its costs</strong> in
-this model. The cost model also doesn't include other operating costs like
-headcount and office space. Secondly, enterprises (and individual consumers for
-that matter) will likely want the frontier of models which cost the most, so
-maintaining a 50% inference margin becomes doubtful, especially in the face of
-fierce competition from other frontier labs who can absorb costs, such as
-Google, whose Gemini models have been making great strides lately.</p>
-<p>To provide an anecdotal data point from my own experience, I have noticed that
-Claude Code will sometimes flash a message saying something to the effect of
-<em>Opus models only outperform Sonnet on complex planning tasks and cost 2x more.</em>
-I imagine there's a similar story with OpenAI, Codex, and reasoning models that
-burn more compute per token and more tokens as a whole during chain-of-thought
-rollout.</p>
+unrealistic.<a class="tooltip" data-tip="How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where I formalize this napkin math into something more compelling. The fact that NVIDIA's gross margins are 71% for the fiscal year ended January 2026 and &lt;a href=&quot;https://finbox.com/NASDAQGS:NVDA/explorer/ni_cf&quot;&gt;net income is 120 billion&lt;/a&gt; seems to indicate that there is room for cost compression on the compute end." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> Firstly, I think 3.5x annual revenue growth is
+optimistic, especially with the enterprise adoption question looming.<a class="tooltip" data-tip="by &quot;enterprise adoption question&quot; I mean how likely it is that OpenAI will see success in general enterprise adoption of its tools" href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a>
+If we adjust the average revenue growth rate down to just 3.3x per year while
+keeping the cost curve the same, OpenAI's revenue <strong>never catches up to its
+costs</strong> in this model. The cost model also doesn't include other operating costs
+like headcount and office space. Secondly, customers will almost certainly
+prefer the frontier models which cost the most, so maintaining a 50% inference
+margin becomes doubtful, especially in the face of fierce competition from other
+frontier labs who can absorb costs, such as Google, whose Gemini models have
+been making great strides lately.</p>
+<p>To provide another anecdotal data point from my own experience, I have noticed
+that Claude Code will sometimes flash a message saying something to the effect
+of <em>Opus models only outperform Sonnet on complex planning tasks and cost 2x
+more.</em> I imagine there's a similar story with OpenAI, Codex, and reasoning
+models that burn more compute per token.</p>
 <h3>Trouble for GPT wrappers</h3>
-<p>This all spells trouble for "thin wrapper" AI startup companies that are
-reselling marked up tokens from frontier providers.
+<p>This all spells trouble for "thin wrapper"<a class="tooltip" data-tip="The notion of &quot;wrappers&quot; as a bad thing is debatable. SaaS historically was denigrated as &quot;SQL wrappers&quot; but it became a successful business. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> AI startup companies that
+are reselling marked up tokens from frontier providers.
 <a href="https://techcrunch.com/2025/08/07/the-high-costs-and-thin-margins-threatening-ai-coding-startups/">According to</a>
 Erik Nordlander, a general partner at Google Ventures are banking on inference
 today being "the most expensive it's ever going to be," but it's unclear that
 this trend will hold.</p>
 <p>Windsurf and Cursor were two such "wrapper" companies, but they both saw the
-writing on the wall and responded to it in two different ways. Windsurf accepted
-acquisition by OpenAI before the inference cost crunch destroyed their margins.
-Cursor took a different approach. They leveraged their data moat of real
-transcripts of conversations between engineers and AI to train a domain-specific
-coding model. This model is not good at other tasks, but is very good at coding,
-and inference costs far less than frontier generalist models.</p>
+writing on the wall and responded to it in different ways. Windsurf accepted
+acquisition by OpenAI for &dollar;3 billion to lock in returns before the
+inference cost crunch destroyed their margins. Cursor took a different approach.
+They leveraged their data moat of real transcripts of conversations between
+engineers and AI to train a domain-specific coding model. This model is not good
+at other tasks, but is very good at coding, and inference costs far less than
+frontier generalist models.</p>
 <p>The ability to train such domain specific models may become increasingly
 important in the future. Unique repositories of data is the new competitive
-advantage. Training nonetheless requires compute, though, so the buildout
-bottlenecks we explored in the previous section apply. There is still no free
-lunch.</p>
-<p>When inference gets more expensive, the tiered access pattern will become
-manifest, and the pace of adoption will likely slow down due to stunted growth
-in AI automation potential for the long tail of companies and humans. Adoption
-won't fully stop; the capability of lower tier models will meet with the
-automation potential of some percentile of tasks, and that market will be
-cleared. Generalized job replacement will have to wait for stable energy and
-compute inputs, efficiency gains in compute and model architecture, and
-stabilizing inference costs.</p>
+advantage. Training nonetheless requires compute, so the buildout bottlenecks we
+explored in the previous section apply. There is still no free lunch.</p>
+<p>When inference gets more expensive, the tiered access pattern, where model
+quality closely correlates with budget, will emerge, and the pace of adoption
+will likely slow down due to stunted growth in AI automation potential for the
+long tail of companies and humans. Adoption won't fully stop; the capability of
+lower tier models will meet with the automation potential of some percentile of
+tasks, and that market will be cleared. Generalized job replacement will have to
+wait for stable energy and compute inputs, efficiency gains in compute and model
+architecture, and stabilizing inference costs.</p>
 <h2>Unsustainable AI productivity "gains"</h2>
 <p>Working with AI tools has a strange allure, almost an addictive quality. The gap
-between dream and reality has shortened, so the dopamine hit we get from
-completing a task is closer and more predictably reachable.</p>
+between dream and reality has apparently shortened, so the dopamine hit we get
+from completing a task is closer and more predictably reachable.</p>
 <p>However, this comes at a cost. As @francedot notes in their X post about
 <a href="https://x.com/francedot/status/2017858253439345092">"Vibe Coding Paralysis,"</a>
 "we've discovered a new failure mode." Harvard Business Review coined the term
@@ -414,7 +360,7 @@ skeptical of the AI job replacement narrative as it has been presented so far, I
 do feel like living in a world where most people would not need to work would be
 a pretty exciting experience. It would present an opportunity to get really good
 at <em>creating</em> without regard to how we're going to bring money home. Scarcity
-creates a competitiveness that stifles creativity.<a class="tooltip" data-tip="The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> Courageous are
+creates a competitiveness that stifles creativity.<a class="tooltip" data-tip="The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a> Courageous are
 those that pursue their creative passions in the face of the probability that
 their efforts will not amount to much money. I currently live in New York City,
 which is full of such iconoclastic people, and that makes it an inspiring place.</p>
@@ -549,8 +495,14 @@ explore an in-person meeting!</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where formalize this napkin math into something more compelling. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
-        <li id="tooltip-def-2">The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-1">Albeit with benchmarks that I don't think generalize well. Critique of the METR task horizon assessment deserves a post of its own <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">this is plausible as the amount
+of tokens being consumed for research is probably going to keep growing too,
+with AI becoming more involved in the code writing and research process itself <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-3">How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where I formalize this napkin math into something more compelling. The fact that NVIDIA's gross margins are 71% for the fiscal year ended January 2026 and &lt;a href=&quot;https://finbox.com/NASDAQGS:NVDA/explorer/ni_cf&quot;&gt;net income is 120 billion&lt;/a&gt; seems to indicate that there is room for cost compression on the compute end. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">by &quot;enterprise adoption question&quot; I mean how likely it is that OpenAI will see success in general enterprise adoption of its tools <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
+        <li id="tooltip-def-5">The notion of &quot;wrappers&quot; as a bad thing is debatable. SaaS historically was denigrated as &quot;SQL wrappers&quot; but it became a successful business. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
+        <li id="tooltip-def-6">The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
     </ol>
 </section>
                 </div>
