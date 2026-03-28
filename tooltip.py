@@ -7,6 +7,7 @@ Mobile: renders as numbered superscripts linking to a footnote section appended
         to the post body.
 """
 
+import html as _html
 import re
 import xml.etree.ElementTree as etree
 
@@ -55,6 +56,12 @@ _SPAN_RE = re.compile(
 )
 
 
+def _sanitize_attr(tip: str) -> str:
+    """Strip HTML tags from tip text for use in the data-tip CSS attribute."""
+    plain = re.sub(r'<[^>]+>', '', _html.unescape(tip))
+    return _html.escape(plain, quote=True)
+
+
 def add_tooltip_footnotes(html: str) -> str:
     """Post-process rendered HTML to number tooltips and append a footnote section.
 
@@ -68,7 +75,7 @@ def add_tooltip_footnotes(html: str) -> str:
         tip, text = m.group(1), m.group(2)
         tooltips.append(tip)
         return (
-            f'<a class="tooltip" data-tip="{tip}" href="#tooltip-def-{n}" id="tooltip-ref-{n}">'
+            f'<a class="tooltip" data-tip="{_sanitize_attr(tip)}" href="#tooltip-def-{n}" id="tooltip-ref-{n}">'
             f'{text}<sup>{n}</sup>'
             f'</a>'
         )
@@ -79,7 +86,7 @@ def add_tooltip_footnotes(html: str) -> str:
         return html
 
     items = "\n".join(
-        f'        <li id="tooltip-def-{i + 1}">{tip} '
+        f'        <li id="tooltip-def-{i + 1}">{_html.unescape(tip)} '
         f'<a class="tooltip-back" href="#tooltip-ref-{i + 1}">↩</a></li>'
         for i, tip in enumerate(tooltips)
     )
