@@ -307,7 +307,6 @@ a:visited {
 /* Tooltips */
 .tooltip {
     position: relative;
-    color: initial;
     text-decoration: none;
     border-bottom: 1px dotted var(--text);
 }
@@ -369,7 +368,6 @@ a:visited {
 }
 
 .tooltip-back {
-    color: var(--text-muted);
     text-decoration: none;
     margin-left: 0.3em;
 }

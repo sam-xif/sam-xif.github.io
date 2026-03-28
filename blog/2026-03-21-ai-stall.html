@@ -281,7 +281,7 @@ of <em>Opus models only outperform Sonnet on complex planning tasks and cost 2x
 more.</em> I imagine there's a similar story with OpenAI, Codex, and reasoning
 models that burn more compute per token.</p>
 <h3>Trouble for GPT wrappers</h3>
-<p>This all spells trouble for "thin wrapper"<a class="tooltip" data-tip="The notion of &quot;wrappers&quot; as a bad thing is debatable. SaaS historically was denigrated as &quot;SQL wrappers&quot; but it became a successful business. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> AI startup companies that
+<p>This all spells trouble for "thin wrapper"<a class="tooltip" data-tip="The notion of &quot;wrappers&quot; as a bad thing is debatable. SaaS historically was denigrated as &quot;SQL wrappers&quot; but it became a successful business model. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> AI startup companies that
 are reselling marked up tokens from frontier providers.
 <a href="https://techcrunch.com/2025/08/07/the-high-costs-and-thin-margins-threatening-ai-coding-startups/">According to</a>
 Erik Nordlander, a general partner at Google Ventures are banking on inference
@@ -311,43 +311,49 @@ architecture, and stabilizing inference costs.</p>
 <p>Working with AI tools has a strange allure, almost an addictive quality. The gap
 between dream and reality has shortened, so the dopamine hit we get from
 completing a task is closer and more predictably reachable.</p>
-<p>However, this comes at a cost. As @francedot notes in their X post about
-<a href="https://x.com/francedot/status/2017858253439345092">"Vibe Coding Paralysis,"</a>
-"we've discovered a new failure mode." Harvard Business Review coined the term
-<a href="https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry">"AI Brain Fry"</a> for
-this phenomenon. It can be characterized as feeling productive but being utterly
-confused about the work that you're outputting. Monitoring many parallel
-workstreams of AI agents is a form of multitasking, and it is common knowledge
-that humans are bad at multitasking. In many work environments, employees are
-being encouraged to adopt AI at all costs, with some workplaces even considering
-token usage as a component of employee performance.</p>
-<p>The question that comes to my mind with all this is: what is the ROI? What are
-the metrics we can use to measure progress? In software engineering, at least,
-<a href="https://en.wikipedia.org/wiki/The_Mythical_Man-Month">measuring productivity</a>
-has historically been difficult, and that measurement problem doesn't suddenly
-go away with AI; we have known for decades that lines of code written and pull
-requests merged are not good proxies for productivity. The reason for this is
-fairly obvious: if your output is measured by lines of code, and output is
-incentivized, then you are incentivized to massage your code to do what it's
-already doing while taking up as many lines as possible. This leads to code that
-is less readable and probably less efficient too.</p>
-<p>Perhaps projects completed could be a good metric? But projects are not
-fungible; they have different levels of complexity. One could weight the
-projects by t-shirt sizes, or Jira points, but estimation itself is
-<a href="https://ronjeffries.com/xprog/articles/the-noestimates-movement/">mired in controversy</a>.
-The challenge is that software engineering, and probably most knowledge work
-tasks, have output that is nonlinearly related to the inputs (time, humans
-working on the problem, coffee). Creative work stutters, backtracks, whirls
-around, and sometimes gets blocked until a lightning bolt of inspiration cracks.</p>
-<p>Additionally, the need to <em>manage</em> the AI—which is where the cognitive load is
-occurring according to HBR and @francedot—is inversely related to the quality of
-its output. This connects back to where we started. If the long tail of
-enterprises is constrained to using models with subfrontier capability, then AI
-may automate just enough of the toil in knowledge work for its use to continue
-to be justified, while also continuing to cause AI brain fry without the
-predicted mass liberation of workers from the bonds of their labor. In such a
-situation, the return on investment of AI is dubious.</p>
-<p>With 61% of senior business leaders
+<p>This thrill has enabled us to take on more work. I can attest that there is a
+thrill to being able to kick off a new agent session when an idea comes to my
+head instead of having to invest the mental effort of thinking through what I'm
+trying to do. This is a pattern that is appearing across the economy. According
+to <a href="https://hbr.org/2026/02/ai-doesnt-reduce-work-it-intensifies-it">research</a>
+published in HBR,</p>
+<blockquote>
+<p>On their own initiative workers did more because AI made "doing more" feel
+possible, accessible, and in many cases intrinsically rewarding.</p>
+</blockquote>
+<p>The researchers warn, however, that this early period of experimentation could
+morph into cognitive overload, reducing quality of work output and
+decision-making in the long term.</p>
+<p>The work will always be there for us to do, it's just a matter of where we draw
+the line. With early AI pilots, this line shifted, perhaps too much. With each
+advance of the AI reasoning frontier, this line shifts again. This process has
+revealed that <strong>humans are the bottleneck</strong>. We are the organisms that have
+intrinsic difficulty with context switching and parallel task management.
+Computers have no such trouble because they have a fundamentally different
+architecture.</p>
+<p>We are now faced with a new type of problem, a human-computer interface problem.
+If humans need to remain in the loop, how do we serialize AI output for human
+consumption and interpretation in a way that is not cognitively overwhelming and
+doesn't burn them out?</p>
+<p>But what happens when humans don't need to remain in the loop? This isn't
+possible at today's AI capability levels, but it might be in the future. The
+more tasks AI can take on, the less touchpoints it needs to have with humans,
+which means that there is potentially an exponential degree of
+speedup.<a class="tooltip" data-tip="Consider a human that can handle a single task at a time. If their task has n subtasks, and each of those subtasks has n subtasks, then an AI that can achieve virtually infinite parallelism only needs to take three &quot;units&quot; of time, one for each layer of tasks, whereas a human would need n^2 + n + 1." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a></p>
+<p>This reality is achievable with future frontier reasoning capabilities, and it
+will be the moment that humans are effectively liberated from labor. But at AI's
+current capability levels, humans are stuck in the rut of needing to talk
+serially to a fundamentally parallel machine. And if inference costs spike for
+the best performing models, then most enterprises may not be able to afford to
+pay their way out of this rut.</p>
+<p>If employees under the current regime continue to experience cognitive
+exhaustion, alternatively called
+<a href="https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry">"AI Brain Fry"</a> or as
+@francedot on X calls it,
+<a href="https://x.com/francedot/status/2017858253439345092">"Vibe Coding paralysis"</a>,
+and companies can't afford to throw money at expensive token generation, then
+executives might start to realize negative return on investment into AI. With
+61% of senior business leaders
 <a href="https://www.cio.com/article/4114010/2026-the-year-ai-roi-gets-real.html">feeling increased pressure</a>
 to prove ROI compared to a year ago, and 71% of global CIOs
 <a href="https://hbr.org/2026/03/7-factors-that-drive-returns-on-ai-investments-according-to-a-new-survey">saying</a>
@@ -360,7 +366,7 @@ skeptical of the AI job replacement narrative as it has been presented so far, I
 do feel like living in a world where most people would not need to work would be
 a pretty exciting experience. It would present an opportunity to get really good
 at <em>creating</em> without regard to how we're going to bring money home. Scarcity
-creates a competitiveness that stifles creativity.<a class="tooltip" data-tip="The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a> Courageous are
+creates a competitiveness that stifles creativity.<a class="tooltip" data-tip="The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> Courageous are
 those that pursue their creative passions in the face of the probability that
 their efforts will not amount to much money. I currently live in New York City,
 which is full of such iconoclastic people, and that makes it an inspiring place.</p>
@@ -378,8 +384,9 @@ pattern, and importantly puts a damper on the job replacement dynamics
 highlighted in thought experiments such as the Citrini report. AI inference is
 being kept artificially cheap due to the venture capital subsidy, and it is
 unclear that investments in AI are returning even at current frontier reasoning
-levels. And if the scale hypothesis (that scaling compute will invariably lead
-to better AI) proves to be true, increased reasoning will incur higher costs.</p>
+levels. And if the scale hypothesis<a class="tooltip" data-tip="that scaling compute will invariably lead
+to better AI" href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> proves to be true, increased
+reasoning will incur higher costs.</p>
 <p>Here are some rapid-fire reasons why I could be wrong:</p>
 <ol>
 <li>Perhaps progress in making inference cheaper at the hardware level will speed
@@ -501,8 +508,11 @@ of tokens being consumed for research is probably going to keep growing too,
 with AI becoming more involved in the code writing and research process itself <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
         <li id="tooltip-def-3">How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where I formalize this napkin math into something more compelling. The fact that NVIDIA's gross margins are 71% for the fiscal year ended January 2026 and <a href="https://finbox.com/NASDAQGS:NVDA/explorer/ni_cf">net income is 120 billion</a> seems to indicate that there is room for cost compression on the compute end. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
         <li id="tooltip-def-4">by "enterprise adoption question" I mean how likely it is that OpenAI will see success in general enterprise adoption of its tools <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
-        <li id="tooltip-def-5">The notion of "wrappers" as a bad thing is debatable. SaaS historically was denigrated as "SQL wrappers" but it became a successful business. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
-        <li id="tooltip-def-6">The other side of this coin is the common adage, "constraints breed creativity," but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
+        <li id="tooltip-def-5">The notion of "wrappers" as a bad thing is debatable. SaaS historically was denigrated as "SQL wrappers" but it became a successful business model. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
+        <li id="tooltip-def-6">Consider a human that can handle a single task at a time. If their task has n subtasks, and each of those subtasks has n subtasks, then an AI that can achieve virtually infinite parallelism only needs to take three "units" of time, one for each layer of tasks, whereas a human would need n^2 + n + 1. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
+        <li id="tooltip-def-7">The other side of this coin is the common adage, "constraints breed creativity," but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
+        <li id="tooltip-def-8">that scaling compute will invariably lead
+to better AI <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
     </ol>
 </section>
                 </div>
