@@ -20,7 +20,7 @@ except ImportError:
     print("Missing dependencies. Run: pip install -r requirements.txt", file=sys.stderr)
     sys.exit(1)
 
-from tooltip import TooltipExtension, preserve_tooltips, restore_tooltips
+from tooltip import TooltipExtension, preserve_tooltips, restore_tooltips, add_tooltip_footnotes
 
 ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
@@ -162,7 +162,7 @@ def parse_post(path: Path) -> PostData:
         date = datetime.date.today()
 
     md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension(), TooltipExtension()])
-    html_body = md.convert(body)
+    html_body = add_tooltip_footnotes(md.convert(body))
 
     return PostData(
         title=title,

@@ -1,7 +1,10 @@
 """Tooltip support for markdown posts.
 
 Syntax: [visible text]^(tooltip content)
-Renders as a CSS-only styled tooltip that inherits the post's theme.
+
+Desktop: renders as a CSS hover bubble.
+Mobile: renders as numbered superscripts linking to a footnote section appended
+        to the post body.
 """
 
 import re
@@ -10,7 +13,7 @@ import xml.etree.ElementTree as etree
 from markdown.extensions import Extension
 from markdown.inlinepatterns import InlineProcessor
 
-_TOOLTIP_RE = r'\[([^\]]+)\]\^\(([^)]+)\)'
+_TOOLTIP_RE = r'\[([^\]]*)\]\^\(([^)]+)\)'
 _PLACEHOLDER_PREFIX = "XTOOLTIP"
 _PLACEHOLDER_SUFFIX = "X"
 
@@ -45,3 +48,47 @@ def restore_tooltips(body: str, tooltip_map: dict) -> str:
     for key, val in tooltip_map.items():
         body = body.replace(key, val)
     return body
+
+
+_SPAN_RE = re.compile(
+    r'<span class="tooltip" data-tip="([^"]*)" tabindex="0">([^<]*)</span>'
+)
+
+
+def add_tooltip_footnotes(html: str) -> str:
+    """Post-process rendered HTML to number tooltips and append a footnote section.
+
+    Each tooltip span gains an id and a hidden superscript link. A
+    <section class="tooltip-footnotes"> is appended for mobile display.
+    """
+    tooltips: list[str] = []
+
+    def _replace(m: re.Match) -> str:
+        n = len(tooltips) + 1
+        tip, text = m.group(1), m.group(2)
+        tooltips.append(tip)
+        return (
+            f'<a class="tooltip" data-tip="{tip}" href="#tooltip-def-{n}" id="tooltip-ref-{n}">'
+            f'{text}<sup>{n}</sup>'
+            f'</a>'
+        )
+
+    html = _SPAN_RE.sub(_replace, html)
+
+    if not tooltips:
+        return html
+
+    items = "\n".join(
+        f'        <li id="tooltip-def-{i + 1}">{tip} '
+        f'<a class="tooltip-back" href="#tooltip-ref-{i + 1}">↩</a></li>'
+        for i, tip in enumerate(tooltips)
+    )
+    footnotes = (
+        '\n<section class="tooltip-footnotes">\n'
+        '    <hr class="tooltip-footnotes-rule">\n'
+        '    <ol>\n'
+        f'{items}\n'
+        '    </ol>\n'
+        '</section>'
+    )
+    return html + footnotes

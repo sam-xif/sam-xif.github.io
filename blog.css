@@ -137,6 +137,7 @@ a:visited {
     margin-bottom: 28px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 16px;
+    transition: border-color 0.3s ease;
 }
 
 .post-header h1 {
@@ -294,14 +295,25 @@ a:visited {
         padding: 10px 20px;
         min-width: unset;
     }
+
+    .tooltip::after,
+    .tooltip::before {
+        display: none !important;
+    }
+
 }
 
 
 /* Tooltips */
 .tooltip {
     position: relative;
-    cursor: help;
+    color: initial;
+    text-decoration: none;
     border-bottom: 1px dotted var(--text);
+}
+
+.tooltip:hover {
+    text-decoration: none;
 }
 
 .tooltip::after {
@@ -322,29 +334,44 @@ a:visited {
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
     z-index: 100;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3), 0 1.5px 3px rgba(0, 0, 0, 0.10);
 }
-
-/* .tooltip::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 3px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--text);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: 100;
-} */
 
 .tooltip:hover::after,
 .tooltip:hover::before,
 .tooltip:focus::after,
 .tooltip:focus::before {
     opacity: 1;
+}
+
+.tooltip-footnotes {
+    margin-top: 2em;
+    font-size: 0.85em;
+    color: var(--text-muted-2);
+}
+
+.tooltip-footnotes-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-bottom: 1em;
+}
+
+.tooltip-footnotes ol {
+    padding-left: 1.5em;
+    margin: 0;
+}
+
+.tooltip-footnotes li {
+    margin-bottom: 0.5em;
+    line-height: 1.5;
+}
+
+.tooltip-back {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 0.3em;
 }
 
 #expressions {
