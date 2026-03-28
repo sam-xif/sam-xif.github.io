@@ -20,6 +20,8 @@ except ImportError:
     print("Missing dependencies. Run: pip install -r requirements.txt", file=sys.stderr)
     sys.exit(1)
 
+from tooltip import TooltipExtension, preserve_tooltips, restore_tooltips
+
 ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
 BLOG_DIR = ROOT / "blog"
@@ -159,8 +161,7 @@ def parse_post(path: Path) -> PostData:
     else:
         date = datetime.date.today()
 
-    md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension()
-    ])
+    md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension(), TooltipExtension()])
     html_body = md.convert(body)
 
     return PostData(
@@ -220,6 +221,9 @@ def format_posts():
             frontmatter = ""
             body = text
 
+        tooltip_map = {}
+        body = preserve_tooltips(body, tooltip_map)
+
         latex_map = {}
         def replace_latex(m):
             key = f"XLATEX{len(latex_map)}X"
@@ -240,6 +244,7 @@ def format_posts():
         formatted_body = formatted_body.replace(dollar_placeholder, "&dollar;")
         for key, val in latex_map.items():
             formatted_body = formatted_body.replace(key, val)
+        formatted_body = restore_tooltips(formatted_body, tooltip_map)
 
         new_text = f"{frontmatter}{formatted_body}" if frontmatter else formatted_body
         md_file.write_text(new_text, encoding="utf-8")

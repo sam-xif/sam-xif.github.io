@@ -297,6 +297,56 @@ a:visited {
 }
 
 
+/* Tooltips */
+.tooltip {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dotted var(--text);
+}
+
+.tooltip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    padding: 0.4em 0.7em;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-family: inherit;
+    min-width: 300px;
+    max-width: 1000px;
+    white-space: normal;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 100;
+}
+
+/* .tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 3px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--text);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 100;
+} */
+
+.tooltip:hover::after,
+.tooltip:hover::before,
+.tooltip:focus::after,
+.tooltip:focus::before {
+    opacity: 1;
+}
+
 #expressions {
     display:block;
     margin: 0 auto 20px auto;
