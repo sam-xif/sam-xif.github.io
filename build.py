@@ -102,6 +102,7 @@ INDEX_TEMPLATE = """\
                 <button class="theme-btn" data-theme="dark">Dark</button>
             </div>
             <section class="blog-index">
+                <i id="expressions">Expressions of my inner world</i>
                 <h2>Blog</h2>
                 {{POST_LIST}}
             </section>

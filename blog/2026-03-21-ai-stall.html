@@ -29,9 +29,18 @@
                     <time class="post-date" datetime="2026-03-26">March 26, 2026</time>
                 </header>
                 <div class="post-body">
-                    <p>I work in software, and since the beginning of this year, 2026, I have been
-investing in integrating AI into my workflow. AI has gotten strikingly good at
-coding, to the point where it writes close to 90% of my code. Many of my
+                    <p><strong>Bottom line up front:</strong> <i>I suspect that we will see a huge spike in
+inference costs, for multiple reasons, which will make all but the least
+powerful models unaffordable for the average person and enterprise. This will
+limit the potential for rapid societal and economic transformation, relegating
+us to a reality where AI is another tool like email that usually works well but
+can't automate anything in its own right. Some actionable things I believe we
+can do to lower the probability of this outcome are:</i> create, research how to
+make inference cheaper, build in the open, and build community.</p>
+<p><br></p>
+<p>I work in software, and since the beginning of this year, 2026, I have been
+investing in deeply integrating AI into my workflow. AI has gotten strikingly
+good at coding, to the point where it writes close to 90% of my code. Many of my
 coworkers at Stripe are reporting a similar experience. Claude's latest Opus
 model is a significant step above previous frontier iterations, and engineers
 across the company have been using it extensively. I am sure this is playing out
@@ -85,10 +94,10 @@ with their jobs and AI that can fulfill some functions but isn't good enough to
 replace jobs entirely. In light of this, I believe an economy-scale disruption
 in the vein of the Citrini report isn't very probable, and the status quo will
 probably remain in place for some time.</p>
-<p>I will attempt to reinvigorate in the reader (and myself, quite frankly) a
-revolutionary spirit toward the end of this post with some thoughts about what
-actions we can take to try to generate escape velocity from this boring future.
-But to start, here are the main pillars of my argument:</p>
+<p>By the end of this post, I hope to reinvigorate in you (and myself, quite
+frankly) a revolutionary spirit toward the end of this post with some thoughts
+about what actions we can take to try to generate escape velocity from this
+boring future. But to start, here are the main pillars of my argument:</p>
 <ol>
 <li>
 <p><strong>AI buildout is bottlenecked:</strong> The cost of the AI buildout is high and
@@ -110,6 +119,32 @@ But to start, here are the main pillars of my argument:</p>
 </li>
 </ol>
 <h2>AI buildout challenges</h2>
+<p>There is nothing like a massive shift in focus when it comes to revealing the
+points where a process is not robust. The AI buildout is one such shift in
+focus. Human activity is inefficient because we can't predict the future. When
+the economy is humming along, the probability distribution of what tomorrow will
+look like is almost collapsed. Tomorrow will very likely look like today. The
+probability distributions of 1 week, 1 month, 1 year out are not as collapsed,
+and yet futures contracts to lock in oil prices are still traded. Some traders
+will lose, some will win. That's the order of things.</p>
+<p>Stripe's
+<a href="https://assets.stripeassets.com/fzn2n1nzq965/3LlGw839Q6kUwxZlLZDtH6/75ddcbada4aa7743dd8ec7d0f9ca497e/Stripe-annual-letter-2025-desktop.pdf">2025 annual letter</a>
+discusses a similar idea that they dub the "Sorting Machine":</p>
+<blockquote>
+<p>At heart, competitive markets are a sorting machine. They direct profits,
+capital, and talent to the places of greatest impact, as determined by
+customers voting with their wallets. Historically, this sorting happened
+methodically. It typically took decades for a household name to be unseated or
+for a new entrant to reach meaningful scale.</p>
+<p>The sorting machine is now whirring faster: winners and losers are being
+anointed more quickly and more intensely. Today, the most profitable third of
+publicly listed companies in the US account for two-thirds of total market
+capitalization, the highest share since data began in 1963. And much of this
+is a story of profit concentration, not just valuations: the top 10% of the
+S&amp;P 500 by market cap now account for roughly 59% of the index’s total
+profits, which is elevated relative to recent history</p>
+</blockquote>
+<h3>Challenge 1: Power</h3>
 <p>If you're tapped into the sphere of popular tech podcasts, such as the
 <a href="https://cheekypint.transistor.fm/">Cheeky Pint</a> podcast by John Collison,
 cofounder of Stripe, you may have heard Elon Musk in a recent episode talking
@@ -129,6 +164,17 @@ the situation in the strait has removed around 400 million barrels from the
 market, "triggering price increases of around 50%." This crisis may be
 transient, and we will see how things play out in the coming weeks, but it
 highlights the US and world economies' sensitivity to global conflict.</p>
+<p>Natural gas may also be more significant to this buildout than we think. In the
+previously mentioned Cheeky Pint episode, #21, Musk discussed the bottlenecked
+state of power production (emphasis mine):</p>
+<blockquote>
+<p>Yes. You can drill down to a level further. It's the vanes and blades in the
+turbines that are the limiting factor because it’s a very specialized process
+to cast the blades and vanes in the turbines, assuming you’re using gas power.
+<strong>It's very difficult to scale other forms of power.</strong> You can potentially
+scale solar, but the tariffs currently for importing solar in the US are
+gigantic and the domestic solar production is pitiful.</p>
+</blockquote>
 <!-- 
 Forecasts for data center energy demand vary wildly though. According to a
 [report](https://www.wri.org/insights/us-data-centers-electricity-demand) from
@@ -162,6 +208,7 @@ market, "triggering price increases of around 50%." This crisis may be
 transient, and we will see how things play out in the coming weeks, but it
 highlights the US and world economies' sensitivity to global conflict. -->
 
+<h3>Challenge 2: Silicon</h3>
 <p>Another part of the AI buildout with significant supply chain risk is silicon.
 TSMC is a Taiwanese corporation which represents a single point of failure for
 the US tech industry. In Q2 2025, TSMC
@@ -204,12 +251,12 @@ operations are reportedly
 and the Arizona plant still reportedly needs to
 <a href="https://www.techpowerup.com/330349/tsmc-arizona-plant-operations-will-reportedly-cost-30-more-than-taiwan-sites?cp=2">import materials from Taiwan</a>
 to maintain production quality.</p>
-<p>Putting this all together, it seems that more push is needed from the US
-government to subsidize chip costs (perhaps with tariff revenue?) to spur
-US-based demand, or to provide research grant funding to incentivize silicon die
-manufacturing process R&amp;D on US soil, either with TSMC or other companies or
-universities, so that process improvements and manufacturing capacity hit US
-soil first.</p>
+<h3>Putting this all together</h3>
+<p>It seems that more push is needed from the US government to subsidize chip costs
+(perhaps with tariff revenue?) to spur US-based demand, or to provide research
+grant funding to incentivize silicon die manufacturing process R&amp;D on US soil,
+either with TSMC or other companies or universities, so that process
+improvements and manufacturing capacity hit US soil first.</p>
 <p>If we don't take action, we are at best poised to experience severe supply
 shortage of frontier-level chips, leading to significantly increased inference
 costs, and at worst, positioned to lose the AI race entirely to other
@@ -228,16 +275,15 @@ serve inference on those models to consumers. A utilities business charges by
 usage, and it is a margin business: the profit is constrained to how much delta
 betwee costs and revenue customers are willing to tolerate. When margin
 businesses compete with each other, revenue gets compressed down to cost.</p>
-<p>Importantly, if it hasn't yet been made clear, usage-based services businesses
-have very different margin profiles than SaaS businesses. And research and
-compute costs to train each successive frontier mode have only been going up.
-Margins may be improving for worse models, but the training and serving of
-frontier models that keeps their business afloat is precisely what’s destroying
-their changes at profitability. According to Epoch, the cost of training has
-been doubling every 8 months. The cost of compute has not been halving every 8
-months. This is, until the costs of inference spike to cover COGS as well as
-R&amp;D, or some other business structure gets figured out. Perhaps the government
-needs to step in to find R&amp;D.</p>
+<p>Importantly, usage-based services businesses have a very different margin
+profile from SaaS businesses. And research and compute costs to train each
+successive frontier mode have only been going up. Margins may be improving for
+worse models, but the training and serving of frontier models that keeps their
+business afloat is precisely what’s destroying their changes at profitability.
+According to Epoch, the cost of training has been doubling every 8 months. The
+cost of compute has not been halving every 8 months. This is, until the costs of
+inference spike to cover COGS as well as R&amp;D, or some other business structure
+gets figured out. Perhaps the government needs to step in to find R&amp;D.</p>
 <p>Let's look at some numbers, using OpenAI as an example. Several different
 sources cite different revenue and cost figures for OpenAI, and it is a private
 company, so it is difficult to know the truth with certainty. At a minimum,
@@ -400,10 +446,9 @@ to better AI) proves to be true, increased reasoning will incur higher costs.</p
 space to get them into this piece. I may return to some of these pushbacks in
 future blog posts, so stay tuned!</p>
 <h2>How can we manifest the "good ending?"</h2>
-<p>Now, as promised, I would like to leave the reader with some parting thoughts on
-how we can manifest what I'm calling the "good ending," where job replacement
-does happen and it enables us to become our true creative, soulful, human
-selves.</p>
+<p>Now, as promised, I would like to leave you with some parting thoughts on how we
+can manifest what I'm calling the "good ending," where job replacement does
+happen and it enables us to become our true creative, soulful, human selves.</p>
 <p>A lot of this has parallels with and draws inspiration from
 <a href="https://x.com/jgreenhall/status/2028850398224654752?s=46">this post</a> by Jordan
 Hall on X. Shoutout to <a href="https://www.nicholasmakiej.com/">Nick Makiej</a> for
@@ -443,25 +488,26 @@ ChatGPT on March 22nd, 2026 (this isn't a very reproducible experiment, because
 OpenAI hides which model is being used on the free version). On the fourth try,
 ChatGPT repeated the same joke as the third try:</p>
 <p><img src="../blog_assets/tell_me_a_joke.png" style="width:100%" /></p>
-<p>The upshot here is that we as humans still have a lot to offer. As Karpathy
-says, humans are capable of maintaining a huge amount of entropy, and we alone
-are able to get AI out of its collapsed rut.</p>
-<p>Go forth, create, and create with high quality.</p>
+<p>The upshot here is that we as humans still have a lot to offer. Maybe inference
+doesn't have to decrease substantially in cost if we can collectively provide
+current models with more entropy per token.</p>
 <p>Each of us contains a deep well of entropy, informed by our unique personal
-experiences and story. This is why we each have something uniquely beautiful to
-contribute, and this is what inspired me to start this blog. I used AI to
+experiences and story. This is what inspired me to start this blog. I used AI to
 research this piece, but I wrote every word on this page by hand because I
 wanted this blog to reflect my entropic voice.</p>
+<p>Go forth, create, and create with high quality.</p>
 <h3>2. Participate in research to make AI more cost effective to train and run</h3>
 <p>The further we drive down the cost of inference, the more likely it is that
 we'll be able to generate escape velocity. This will also further democratize
 access to inference, rather than frontier-level reasoning being kept in the
-hands of the few.</p>
+hands of the few. Another shoutout is in order for what Dana and the team are
+doing at <a href="https://www.subconscious.dev/">Subconscious</a>, which is tackling this
+problem with a codesigned model and inference runtime.</p>
 <p>If inference is cheap, and can be done with consumer hardware at the edge, this
 also solves the energy issue. The grid is well equipped to handle marginal load
 increases at its edges, but not well equipped to handle a massive spike in load
 at a single geographical point. We can get around the bottleneck described in
-the <a href="#ai-buildout-challenges">AI buildout challenges</a> section entirely.</p>
+the "AI buildout challenges" section entirely.</p>
 <h3>3. Open source everything</h3>
 <p>As Jordan Hall
 <a href="https://x.com/jgreenhall/status/2028850398224654752?s=46">points out</a>: ideas,
@@ -483,6 +529,7 @@ me an email at <a href="mailto:s.xifaras999@gmail.com">s.xifaras999@gmail.com</a
 would like to leave feedback, positive or critical, or just want to chat. If
 you're in the northeastern US (NYC-Boston range), let me know and I'd love to
 explore an in-person meeting!</p>
+<p>Victor and Nick, <strong>thank you</strong> for your helpful feedback on drafts of this post.</p>
                 </div>
             </article>
         </div>
