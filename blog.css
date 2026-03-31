@@ -300,7 +300,8 @@ a:visited {
     }
 
     .tooltip::after,
-    .tooltip::before {
+    .tooltip::before,
+    .filter-btn[data-tip]::after {
         display: none !important;
     }
 
@@ -378,4 +379,83 @@ a:visited {
 #expressions {
     display:block;
     margin: 0 auto 20px auto;
+}
+
+/* Category filters */
+.category-filters {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    font-family: "Playfair", serif;
+    font-size: 0.75em;
+    padding: 3px 10px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-btn:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+.filter-btn.active {
+    border-color: var(--text);
+    color: var(--text);
+}
+
+.filter-btn[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    padding: 0.4em 0.7em;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-family: inherit;
+    white-space: nowrap;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, box-shadow 0.3s ease;
+    z-index: 100;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3), 0 1.5px 3px rgba(0, 0, 0, 0.10);
+}
+
+.filter-btn[data-tip]:hover::after {
+    opacity: 1;
+}
+
+/* Post meta row (date + category badge) */
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.post-listing .post-date {
+    display: inline;
+    margin-bottom: 0;
+}
+
+/* Category badge on index listings */
+.post-category {
+    font-size: 0.75em;
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 1px 6px;
+    transition: border-color 0.3s ease;
 }

@@ -26,14 +26,20 @@
             <section class="blog-index">
                 <i id="expressions">Expressions of my inner world</i>
                 <h2>Blog</h2>
-                <article class="post-listing">
+                <div class="category-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="blog" data-tip="Longer-form, more heavily researched content.">Blog</button>
+                    <button class="filter-btn" data-filter="thoughts" data-tip="Quick, unedited streams of consciousness.">Thoughts</button>
+                    <button class="filter-btn" data-filter="poetry" data-tip="Self-explanatory.">Poetry</button>
+                </div>
+                <article class="post-listing" data-category="blog">
     <h3><a href="2026-03-31-ai-stall.html">AI won't come for your job yet, and that's bad</a></h3>
-    <time class="post-date" datetime="2026-03-31">March 31, 2026</time>
+    <div class="post-meta"><time class="post-date" datetime="2026-03-31">March 31, 2026</time><span class="post-category">blog</span></div>
     <p class="post-description">What macro risk, inference subsidies, and questionable ROI imply about future AI adoption patterns, and how we can change that</p>
 </article>
-<article class="post-listing">
+<article class="post-listing" data-category="blog">
     <h3><a href="2026-03-21-hello-world.html">Hello, World!</a></h3>
-    <time class="post-date" datetime="2026-03-21">March 21, 2026</time>
+    <div class="post-meta"><time class="post-date" datetime="2026-03-21">March 21, 2026</time><span class="post-category">blog</span></div>
     <p class="post-description">An introductory post on why I'm starting a blog and what to expect</p>
 </article>
             </section>
@@ -50,5 +56,21 @@
         </div>
         <p class="footer-copyright">&copy; 2026 Samuel Xifaras</p>
     </footer>
+    <script>
+        (function () {
+            var btns = document.querySelectorAll('.filter-btn');
+            btns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    btns.forEach(function (b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    var filter = btn.dataset.filter;
+                    document.querySelectorAll('.post-listing').forEach(function (article) {
+                        article.style.display =
+                            (filter === 'all' || article.dataset.category === filter) ? '' : 'none';
+                    });
+                });
+            });
+        })();
+    </script>
 </body>
 </html>

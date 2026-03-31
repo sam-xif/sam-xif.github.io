@@ -106,6 +106,12 @@ INDEX_TEMPLATE = """\
             <section class="blog-index">
                 <i id="expressions">Expressions of my inner world</i>
                 <h2>Blog</h2>
+                <div class="category-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="blog" data-tip="Longer-form, more heavily researched content.">Blog</button>
+                    <button class="filter-btn" data-filter="thoughts" data-tip="Quick, unedited streams of consciousness.">Thoughts</button>
+                    <button class="filter-btn" data-filter="poetry" data-tip="Self-explanatory.">Poetry</button>
+                </div>
                 {{POST_LIST}}
             </section>
         </div>
@@ -121,6 +127,22 @@ INDEX_TEMPLATE = """\
         </div>
         <p class="footer-copyright">&copy; 2026 Samuel Xifaras</p>
     </footer>
+    <script>
+        (function () {
+            var btns = document.querySelectorAll('.filter-btn');
+            btns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    btns.forEach(function (b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+                    var filter = btn.dataset.filter;
+                    document.querySelectorAll('.post-listing').forEach(function (article) {
+                        article.style.display =
+                            (filter === 'all' || article.dataset.category === filter) ? '' : 'none';
+                    });
+                });
+            });
+        })();
+    </script>
 </body>
 </html>"""
 
@@ -132,6 +154,7 @@ class PostData:
     description: str
     slug: str
     html_body: str
+    category: str = "blog"
 
 
 def format_date(d: datetime.date) -> str:
@@ -152,6 +175,7 @@ def parse_post(path: Path) -> PostData:
     slug = path.stem
     title = meta.get("title", slug.replace("-", " ").title())
     description = meta.get("description", "")
+    category = meta.get("category", "blog")
 
     raw_date = meta.get("date", "")
     if isinstance(raw_date, datetime.date):
@@ -170,6 +194,7 @@ def parse_post(path: Path) -> PostData:
         description=description,
         slug=slug,
         html_body=html_body,
+        category=category,
     )
 
 
@@ -195,10 +220,13 @@ def render_index_html(posts: list) -> str:
                 else ""
             )
             entries.append(
-                f'<article class="post-listing">\n'
+                f'<article class="post-listing" data-category="{post.category}">\n'
                 f'    <h3><a href="{post.slug}.html">{post.title}</a></h3>\n'
-                f'    <time class="post-date" datetime="{post.date.isoformat()}">'
-                f'{format_date(post.date)}</time>\n'
+                f'    <div class="post-meta">'
+                f'<time class="post-date" datetime="{post.date.isoformat()}">'
+                f'{format_date(post.date)}</time>'
+                f'<span class="post-category">{post.category}</span>'
+                f'</div>\n'
                 f'    {description_html}\n'
                 f'</article>'
             )
