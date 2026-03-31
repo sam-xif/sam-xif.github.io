@@ -54,11 +54,13 @@ body {
 a {
     color: var(--link);
     text-decoration: underline;
+    transition: color 0.3s ease;
 }
 
 a:visited {
     color: var(--link);
     text-decoration: underline;
+    transition: color 0.3s ease;
 }
 
 .post-body code,
@@ -95,6 +97,7 @@ a:visited {
     margin-bottom: 32px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 24px;
+    transition: border-color 0.3s ease;
 }
 
 .post-listing:last-child {
