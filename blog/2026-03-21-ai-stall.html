@@ -26,212 +26,161 @@
             <article class="post">
                 <header class="post-header">
                     <h1>AI won't come for your job yet, and that's bad</h1>
-                    <time class="post-date" datetime="2026-03-28">March 28, 2026</time>
+                    <time class="post-date" datetime="2026-03-31">March 31, 2026</time>
                 </header>
                 <div class="post-body">
-                    <p><strong>Bottom line up front:</strong> <i>I suspect that we will see a huge spike in
-inference costs due to macro risks, current inference subsidization, and
-questionable ROI on average from AI adoption. If inference costs increase, they
-will make all but the least powerful models unaffordable for the average person
-and enterprise. This will limit the potential for rapid societal and economic
-transformation, relegating us to a reality where AI is another tool like email
-that usually works well but can't automate most things in its own right. Some
-actionable things I believe we can do to lower the probability of this outcome
-are:</i> create, research how to make inference cheaper, open source everything,
-<em>and</em> build community.</p>
+                    <p><strong>Bottom line up front:</strong> <i>I suspect that we will see an eyewatering spike in
+inference costs due to macro risks, evaporation of inference subsidies, and
+questionable productivity improvements from AI adoption with current models. If
+inference costs increase, they will make all but the least powerful models
+unaffordable for the average person and enterprise. This will limit the
+potential for rapid societal and economic transformation, relegating us to a
+reality where AI is another tool like email that usually works well but can't
+automate most things in its own right. I would like to see a different future. I
+think a world where jobs are automated en masse could be good for reorienting
+humans toward creativity and community, and some actionable things I believe we
+can do to increase the probability of that outcome are: <strong>create</strong>, <strong>research
+how to make inference cheaper</strong>, <strong>contribute to Scalable Formal Oversight</strong>,
+and <strong>build community</strong></i>.</p>
 <p><br></p>
 <p>I work in software, and since the beginning of this year, 2026, I have been
 investing in deeply integrating AI into my workflow. AI has gotten strikingly
-good at coding, to the point where it writes close to 90% of my code. Many of my
-coworkers at Stripe are reporting a similar experience. Claude's latest Opus
-model is a significant step above previous frontier iterations, and engineers
-across the company have been using it extensively. I am sure this is playing out
-across the whole industry as well.</p>
-<p>The news isn't all great though. A step up in capability means a step up in
-cost. Recently, I caught wind of news that a large software company (name
-omitted for privacy) is pumping the brakes on AI spend. The team responsible for
-rolling out AI tools must have received a directive to start constraining costs
-because the company's bottom line was starting to feel it, and they forced all
-engineers to use a lower tier model unknowingly. In response, several engineers
-at the company grumbled about how the lower model tier's output was noticeably
-worse, and it led to wasted cycles spent on reviewing and correcting the worse
-model's output.</p>
+good at coding, to the point where it writes more than 90% of my code, and many
+of my coworkers at Stripe are reporting a similar experience. Everyone in
+software that I talk to agrees: Anthropic's Opus 4.6 unleashed a vibe shift in
+coding capability. A world where software engineering is mostly automated feels
+within reach.</p>
+<p>Although there are many questions unanswered about the safety of mass AI
+adoption, I think there is great potential for the replacement of jobs by AI to
+create a remarkably improved standard of living, where humans can be free of
+most material constraints and return to a state of creativity and
+community-oriented living. The transitional period might be painful, but I am
+generally optimistic about what a fully AI-driven future could look like. We can
+maximize our chances of success if we pair a push for powerful AI-driven job
+automation with
+<a href="https://www.lesswrong.com/posts/SfhFh9Hfm6JYvzbby/the-scalable-formal-oversight-research-program">Scalable Formal Oversight</a>
+(SFO).</p>
+<p>If we don't act now, this generational opportunity might fade away. One way it
+could fade is if inference costs rise substantially. Recently, I caught wind of
+news that a large software company (name omitted for privacy) is pumping the
+brakes on AI spend. The team responsible for rolling out AI tools must have
+received a directive to start constraining costs because the company's bottom
+line was starting to feel it, and they forced all engineers to use a lower tier
+model unknowingly. In response, several engineers at the company grumbled about
+how the lower model tier's output was noticeably worse, and it led to wasted
+cycles spent on reviewing and correcting the worse model's output.</p>
 <p>This got me thinking about whether the AI adoption and job replacement scenarios
 painted in pieces like the
 <a href="https://www.citriniresearch.com/p/2028gic">Citrini report</a> and Matt Schumer's
 now infamous
 <a href="https://www.linkedin.com/pulse/something-big-happening-matt-shumer-so5he/">Something Big Is Happening</a>
-post are worth believing.</p>
-<p>My take is that <strong>the white collar AI replacement narrative might be
-overstated</strong>, and I'm disappointed about the reality that is likely to emerge
-instead. I'll do my best to explain why.</p>
-<h2>Running headfirst into the cost wall</h2>
-<p><img src="../blog_assets/headlong.png" /></p>
-<p>Models with larger parameter counts and larger context windows have been
-<a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/">shown</a><a class="tooltip" data-tip="Albeit with benchmarks that I don&#x27;t think generalize well. Critique of the METR task horizon assessment deserves a post of its own" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a>.
-to perform significantly better on tasks of longer horizon and complexity, and
-you get what you pay for. Today, frontier reasoning capability is affordable
-because of venture capital or loss-leader subsidies. The frontier giants of
-Anthropic, OpenAI, Google, and Meta are all facing intense competitive pressure
-to price their inference at below market rates. This era of below-market pricing
-among these will have to come to an end at some point when the market returns to
-rationality, just as Uber investors
-<a href="https://www.nytimes.com/2021/06/08/technology/farewell-millennial-lifestyle-subsidy.html">subsidized the millennial lifestyle</a>
-for a time before fares skyrocketed.</p>
-<p>When that time comes, I contend that, at least in the short-to-medium term,
-access to frontier reasoning capabilities will be constrained to the hands of
-the rich and powerful few, much like other forms of wealth in our top-heavy
-capitalist society. I find this vision of the future to be the most coherent,
-and the most boring...which probably means it is likely. The possible lack of
-future access to frontier model updates for the long tail of
-<a href="https://www.wealthspire.com/financial-dictionary/magnificent-7-stocks/">unmagnificent</a>
-enterprises, coupled with recent findings about the nature of how the current
-generation of AI models paradoxically may <em>decrease</em> productivity, or at least
-make work more cognitively exhausting, could lead to most people being "stuck"
-with their jobs and AI that can fulfill some functions but isn't good enough to
-replace jobs entirely. In light of this, I believe an economy-scale disruption
-in the vein of the Citrini report isn't very probable, and the status quo will
-probably remain in place for some time.</p>
+post are realistic in our current world.</p>
+<p>My take is that <strong>AI labor replacement is not going to happen yet</strong>. AI
+inference will get significantly more expensive due to macro and geopolitical
+risks and the fleeting nature of investor subsidies of inference. If that
+happens, the demand for inference that's fueling the AI buildout could evaporate
+due to prohibitively high costs, thus completing the boom-bust cycle. I'm
+disappointed about this because I believe that this technology has the potential
+to transform the way we work and live, but all hope is not lost; there are
+several strategic directions in which we can collectively push to maximize the
+likelihood of a good outcome.</p>
 <p>By the end of this post, I hope to reinvigorate in you (and myself, quite
 frankly) a revolutionary spirit with some thoughts about what actions we can
-take to try to generate escape velocity from this boring future. But to start,
-here are the main pillars of my argument:</p>
+take to try to generate escape velocity from the boring future where AI becomes
+a half-decent tool that makes work more annoying and
+<a href="https://hbr.org/2026/02/ai-doesnt-reduce-work-it-intensifies-it">exhausting</a>.
+But to start, here are the main pillars of my argument:</p>
 <ol>
 <li>
-<p><strong>AI buildout is bottlenecked:</strong> constraints on the manufacturing of critical
+<p><strong>AI buildout is bottlenecked:</strong> Constraints on the manufacturing of critical
    inputs limit the AI buildout. Recent geopolitical instability and its effects
    on energy prices threaten to further dampen progress.</p>
 </li>
 <li>
 <p><strong>Inference costs are being held artificially low:</strong> Investor money is
-   subsidizing the free tiers of frontier labs, and in some cases frontier labs
-   are even losing money on paid tiers. We should expect inference costs to rise
-   substantially if the frontier labs providing the models we know and love want
-   to stay in business.</p>
+   subsidizing the free tiers of frontier labs. We should expect inference costs
+   to rise substantially if the frontier labs providing the models we know and
+   love want to stay in business.</p>
 </li>
 <li>
-<p><strong>AI Adoption and productivity gains may not be sustainable:</strong> Investment in
-   AI tools are reportedly not generating ROI for many enterprises. AI is making
-   workers <em>feel</em> more productive, but with the consequence of increased
-   cognitive load.</p>
+<p><strong>Humans are now the bottleneck more than ever:</strong> Investment in AI tools are
+   reportedly not generating ROI for many enterprises. AI helps workers do more,
+   but the limits of cognitive load of managing and communicating with AI agents
+   in parallel are becoming apparent.</p>
 </li>
 </ol>
-<h2>AI buildout challenges</h2>
+<h2>Expect inference costs to increase</h2>
 <p>When an environment changes, systems operating in that environment either fail
-or adapt. The release of ChatGPT in 2022 changed the environment, and 3.5 years
-later, our economic system is still in the process of adapting.</p>
+or adapt. The release of ChatGPT in 2022 changed the environment, and three and
+a half years later, our economic system is still in the process of adapting.</p>
 <p>How quickly different parts of the economy can adapt is variable. Software
 adapts very quickly, hardware, more slowly, and physical manufacturing
-infrastructure adapts at a snail's pace. It is not very surprising then, in my
-view, that the chokepoints of the AI buildout are in the realm of the physical:
-power and silicon.</p>
-<h3>Challenge 1: Power</h3>
+infrastructure adapts at a snail's pace. It is therefore unsurprising that the
+chokepoints of the AI buildout are in the realm of the physical: power and
+silicon.</p>
+<p>Frontier labs are also underpricing inference, drawing down their prodigious
+cash reserves to cover their costs. If the macro risk flares up, then capital
+might dry up before profitability is reached.</p>
+<h3>Risk 1: Macro</h3>
 <p>If you're tapped into the sphere of popular tech podcasts, such as the
 <a href="https://cheekypint.transistor.fm/">Cheeky Pint</a> podcast by John Collison,
 cofounder of Stripe, you may have heard Elon Musk in a recent episode talking
-about a severe shortage of the turbines that are used to convert natural
-gas-powered motion into electricity. Gas-fired turbine lead times have
+about a severe shortage of the turbines that are used to convert natural gas
+into electricity. Gas-fired turbine lead times have
 <a href="https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/052025-us-gas-fired-turbine-wait-times-as-much-as-seven-years-costs-up-sharply">soared</a>
 to as much as <em>seven years</em>. That means that if you aren't already in the queue,
 you're waiting close to a decade to getting just the turbines, which are
 necessary but not sufficient to generate electricity from natural gas.</p>
-<p>Natural gas turbines are just one example of how bottlenecks in the energy
-generation pipeline are emerging. Global supply chain interdependencies, and the
-geopolitics that threaten them, also play a role. Recent US military action in
-Iran has led to the effective closure of the strait of Hormuz, which is
-disrupting global oil and liquefied natural gas (LNG) supply. According to
+<p>The supply of natural gas itself, along with oil, are also being threatened.
+Recent US military action in Iran has effectively closed the strait of Hormuz,
+which is disrupting global oil and liquefied natural gas (LNG) supply. According
+to
 <a href="https://www.reuters.com/business/energy/iran-wars-energy-impact-forces-world-pay-up-cut-consumption-2026-03-21/">Reuters</a>,
 the situation in the strait has removed around 400 million barrels from the
 market, "triggering price increases of around 50%." This crisis may be
 transient, and we will see how things play out in the coming weeks, but it
 highlights the US and world economies' sensitivity to global conflict.</p>
-<p>Natural gas may also be more significant to this buildout than we think. In the
-previously mentioned Cheeky Pint episode 21, Musk discussed the bottlenecked
-state of power production (emphasis mine):</p>
-<blockquote>
-<p>Yes. You can drill down to a level further. It's the vanes and blades in the
-turbines that are the limiting factor because it’s a very specialized process
-to cast the blades and vanes in the turbines, assuming you’re using gas power.
-<strong>It's very difficult to scale other forms of power.</strong> You can potentially
-scale solar, but the tariffs currently for importing solar in the US are
-gigantic and the domestic solar production is pitiful.</p>
-</blockquote>
-<h3>Challenge 2: Silicon</h3>
-<p>Another part of the AI buildout with significant supply chain risk is silicon.
-TSMC is a Taiwanese corporation which represents a single point of failure for
-the US tech industry. In Q2 2025, TSMC
+<p>These circumstances may restrict how quickly new data centers can come online,
+depending on what fuel source they choose.
+<a href="https://www.gartner.com/en/newsroom/press-releases/2025-11-17-gartner-says-electricity-demand-for-data-centers-to-grow-16-percent-in-2025-and-double-by-2030">Gartner</a>
+estimates 2025 data center power consumption 448 TWh, and they estimate it to
+grow to 980 TWh in 2030. In their model, power consumption by data centers more
+than doubles in five years, while growth in power generation across the board in
+the US is alarmingly
+<a href="https://www.eia.gov/electricity/annual/table.php?t=epa_03_01_a.html">stagnant</a>.<a class="tooltip" data-tip="Look at the &quot;Total Generation at Utility Scale Facilities&quot; column in the Annual Totals group. In 2014, power generation was 4,093,564 GWh, and in 2025, it was 4,308,634 GWh. This is a mere 5.2% increase in 11 years!" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a></p>
+<p>As for silicon, TSMC, a Taiwanese corporation, represents a single point of
+failure for the US tech industry. In Q2 2025, TSMC
 <a href="https://www.design-reuse.com/news/202529294-global-foundry-revenue-surged-to-41-7-billion-in-q2-2025-with-tsmc-capturing-a-record-70-percent-market-share/">captured</a>
 a record 70.2% of chip foundry market share. According to
 <a href="https://www.nasdaq.com/articles/1-number-may-ensure-tsmcs-market-dominance">Nasdaq</a>,
 TSMC has an even higher share, 90%, of advanced chip manufacturing, which
-includes 3-nanometer chips which are becoming standard. They are clearly very
-good at what they do, and according to Reiner Pope, founder of chip startup
-<a href="https://matx.com/">MatX</a>, in his
-<a href="https://cheekypint.substack.com/p/reiner-pope-of-matx-on-accelerating">interview</a>
-on the Cheeky Pint podcast, TSMC is relatively cheap for the work they do, and
-they maintain good customer relationships. TSMC has become a global giant
-through business acumen and successful R&amp;D efforts to develop robust
-manufacturing processes. The elephant in the room remains, however: Taiwan is a
-mere 100 miles off the coast of China, posing an inescapable geopolitical risk.</p>
-<p>Under pressure from the US government, TSMC has worked to spin up a fab in
-Arizona. Morris Chang, legend of the semiconductor industry and founder of TSMC,
-has <a href="https://newsletter.semianalysis.com/p/tsmc-overseas-fabs-a-success">said</a>
-that he thinks TSMC Arizona will be non-competitive in the global market. There
-may be some weight to this claim, as TSMC Arizona already lags behind Taiwan in
-the set of manufacturing processes that are available. TSMC is currently capable
-of lithography down to 2 nanometer scale, and cloud service providers are
+includes 3-nanometer chips that are becoming standard. TSMC poses obvious
+geopolitical risk as well, as is a mere 100 miles off the coast of China. One
+well targeted and well timed attack could disrupt AI adoption by limiting how
+much compute can get built out in the short term. There is no telling how long
+it would take to reach original production capacity again if there were
+significant damage to the dense network of fabs, raw materials suppliers, and
+research institutions on Taiwan's west coast.</p>
+<p>Ostensibly in response to these risks, the US government pressured TSMC to spin
+up a fab in Arizona. The fab has been built, but TSMC Arizona already lags
+behind Taiwan in the set of manufacturing processes that are available. TSMC is
+currently capable of lithography down to 2 nanometer scale, and cloud service
+providers are
 <a href="https://www.trendforce.com/news/2025/06/02/news-tsmcs-2nm-wafers-rumored-to-soar-to-30k-per-unit-yet-csp-giants-reportedly-rush-to-adopt-by-2027/">rushing</a>
 to adopt it, but 2nm and the older 3nm processes are slated to be made available
 in the Arizona plant in 2029 and 2027, respectively. In Taiwan, a 1nm fab is
 <a href="https://www.trendforce.com/news/2025/02/03/news-tsmc-said-to-plan-2nm-production-in-u-s-1nm-fab-in-tainan/">already set</a>
-for Tainan. Current headlines about manufacturing in Arizona of advanced silicon
-dies for frontier chip designers such as NVIDIA are deceiving too, because the
-<a href="https://www.trendforce.com/news/2025/06/10/news-tsmc-speeds-up-arizona-expansion-yet-u-s-packaging-plant-sites-reportedly-remain-up-in-the-air/">advanced packaging</a>
-processes still need to be done in Taiwan, although there are plans to build
-advanced packaging plants in the same Arizona-based facility.</p>
-<p>Eventually though, I expect the manufacturing capability gap will be closed, but
-the gaps of capacity and cost remain. In 2025, TSMC production exceeded 17
-million 12-inch equivalent wafers, which is 1.4 million per month. According to
-a report in early 2025, the Arizona 4nm fab is expected to reach a capacity of
-30,000 wafers per month, which is just 360,000 per year, and TSMC Arizona
-operations are reportedly
-<a href="https://www.techpowerup.com/330349/tsmc-arizona-plant-operations-will-reportedly-cost-30-more-than-taiwan-sites?cp=2">30% more expensive</a>,
-and the Arizona plant still reportedly needs to
-<a href="https://www.techpowerup.com/330349/tsmc-arizona-plant-operations-will-reportedly-cost-30-more-than-taiwan-sites?cp=2">import materials from Taiwan</a>
-to maintain production quality.</p>
-<h3>Putting this all together</h3>
-<p>It seems that more push is needed from the US government to subsidize chip costs
-(perhaps with tariff revenue?) to spur US-based demand, or to provide research
-grant funding to incentivize silicon die manufacturing process R&amp;D on US soil,
-either with TSMC or other companies or universities, so that process
-improvements and manufacturing capacity hit US soil first.</p>
-<p>If we don't take action, we are at best poised to experience severe supply
-shortage of frontier-level chips, leading to significantly increased inference
-costs, and at worst, positioned to lose the AI race entirely to other
-governments that are willing to take bolder steps, such as China's CCP. In
-either scenario, frontier-level inference would be relegated to the rich buyers
-who can afford it. In addition to macro risk, there is also the simple financial
-reality that AI inference is mispriced relative to how much it costs, as I'll go
-over in the next section.</p>
-<h2>Inference costs are artificially low</h2>
-<p>As a business model, serving AI inference is more akin to a utility business
-than a traditional SaaS business. While both OpenAI and the classic SaaS
-exemplar, Salesforce, are selling software, OpenAI has a much more significant
-cost profile. Immense compute and intense R&amp;D are not needed to tweak a button
-on a Salesforce user interface, but they are needed to produce GPT-6 and beyond
-and serve inference on those models to consumers. A utilities business charges
-by usage, and it is a margin business: the profit is constrained to how much
-delta between costs and revenue customers are willing to tolerate. When margin
-businesses compete with each other, revenue gets compressed down to cost.</p>
-<p>Frontier labs are margin businesses that also have to cover costs of R&amp;D on new
-model development, and there is no shortage of demand for better models. As I
-noted at the beginning of this post, the difference in quality between Sonnet
-and Opus is palpable for some use cases. Margins may be improving for worse
-models, but the training and serving of the most powerful models is precisely
-what’s destroying frontier labs' chances at profitability. According to Epoch
-AI, the cost of training on a large scale has been doubling every 8 months. The
-cost of compute has not been halving every 8 months.</p>
-<h3>Napkin math</h3>
+for Tainan. US-based fabs have a lot of catch-up to do. We must have parity with
+the state of the art in chip manufacturing before the supply chain and
+geographical dependencies can be eliminated.</p>
+<p>These are far from the only risks to chip fabrication either. Just as I was
+drafting this post, a notification lit up my phone:
+<a href="https://www.nytimes.com/2026/03/27/business/helium-chips-iran-war.html?smid=nytcore-ios-share">"An Invisible Bottleneck: A Helium Shortage Threatens the Chip Industry"</a>.</p>
+<p>It becomes hard to justify underpricing inference when the cost of the physical
+utility infrastructure might blow up, and it's impossible to justify
+underpricing when there is no capital to subsidize inference. This brings us to
+the next risk: capital.</p>
+<h3>Risk 2: Capital well runs dry</h3>
 <p>Let's look at some numbers, using OpenAI as an example. Several different
 sources cite different revenue and cost figures for OpenAI, and it is a private
 company, so it is difficult to know their true financials with certainty. At a
@@ -246,68 +195,43 @@ investors are covering.</p>
 &dollar;4.3 billion in 2025H1 and projected &dollar;13 billion for
 full year. "Against that revenue, they’re spending approximately
 &dollar;22 billion," representing a shortfall of &dollar;9 billion
-that investors are subsidizing.</p>
-<p><a href="https://epoch.ai/data-insights/cost-trend-large-scale">Further research</a> from
+that investors are subsidizing. This shortfall is set to increase, as
+<a href="https://epoch.ai/data-insights/cost-trend-large-scale">further research</a> from
 Epoch AI shows that on a large scale, training compute costs have been doubling
-every 8 months, or 2.7x per year. Here's some napkin math to put this all
-together</p>
-<p>If we suppose OpenAI's revenue is also growing exponentially, and take their
-projection as truth, this would mean OpenAI's revenue is growing 3.5x annually.
-If we assume that the roughly 50% gross margin on inference based on data from
-EpochAI continues to hold, and we additionally assume that research compute
-costs grow similarly to training compute costs<a class="tooltip" data-tip="this is plausible as the amount
-of tokens being consumed for research is probably going to keep growing too,
-with AI becoming more involved in the code writing and research process itself" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a>, then this simple model
-puts OpenAI's breakeven point in late 2028. The X axis of the following graph is
-years since 2024, Y axis is logarithmic scale of revenue/cost.</p>
-<p><img src="../blog_assets/breakeven.png" style="width:100%" /></p>
-<p>The revenue line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup></mrow></math> and the cost line is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mo stretchy="false">&#x00028;</mo><mn>3.7</mn><mo>&#x0002A;</mo><msup><mn>3.5</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>5</mn><mo>&#x0002A;</mo><msup><mn>2.7</mn><mi>n</mi></msup><mo stretchy="false">&#x00029;</mo></mrow></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math> is
-years since 2024. This is roughly consistent with the figures Alex Salazar
-provides in <a href="https://www.arcade.dev/blog/ai-inference-economics">his post</a>.</p>
-<p>This model actually paints an optimistic picture for OpenAI, but I think it is
-unrealistic.<a class="tooltip" data-tip="How unrealistic is it? What are OpenAI&#x27;s expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where I formalize this napkin math into something more compelling. The fact that NVIDIA&#x27;s gross margins are 71% for the fiscal year ended January 2026 and net income is 120 billion seems to indicate that there is room for cost compression on the compute end." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> Firstly, I think 3.5x annual revenue growth is
-optimistic, especially with the enterprise adoption question looming.<a class="tooltip" data-tip="by &quot;enterprise adoption question&quot; I mean how likely it is that OpenAI will see success in general enterprise adoption of its tools" href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a>
-If we adjust the average revenue growth rate down to just 3.3x per year while
-keeping the cost curve the same, OpenAI's revenue <strong>never catches up to its
-costs</strong> in this model. The cost model also doesn't include other operating costs
-like headcount and office space. Secondly, customers will almost certainly
-prefer the frontier models which cost the most, so maintaining a 50% inference
-margin becomes doubtful, especially in the face of fierce competition from other
-frontier labs who can absorb costs, such as Google, whose Gemini models have
-been making great strides lately.</p>
-<p>To provide another anecdotal data point from my own experience, I have noticed
-that Claude Code will sometimes flash a message saying something to the effect
-of <em>Opus models only outperform Sonnet on complex planning tasks and cost 2x
-more.</em> I imagine there's a similar story with OpenAI, Codex, and reasoning
-models that burn more compute per token.</p>
-<h3>Trouble for GPT wrappers</h3>
-<p>This all spells trouble for "thin wrapper"<a class="tooltip" data-tip="The notion of &quot;wrappers&quot; as a bad thing is debatable. SaaS historically was denigrated as &quot;SQL wrappers&quot; but it became a successful business model. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> AI startup companies that
-are reselling marked up tokens from frontier providers.
-<a href="https://techcrunch.com/2025/08/07/the-high-costs-and-thin-margins-threatening-ai-coding-startups/">According to</a>
-Erik Nordlander, a general partner at Google Ventures are banking on inference
-today being "the most expensive it's ever going to be," but it's unclear that
-this trend will hold.</p>
-<p>Windsurf and Cursor were two such "wrapper" companies, but they both saw the
-writing on the wall and responded to it in different ways. Windsurf accepted
-acquisition by OpenAI for &dollar;3 billion to lock in returns before the
-inference cost crunch destroyed their margins. Cursor took a different approach.
-They leveraged their data moat of real transcripts of conversations between
-engineers and AI to train a domain-specific coding model. This model is not good
-at other tasks, but is very good at coding, and inference costs far less than
-frontier generalist models.</p>
-<p>The ability to train such domain specific models may become increasingly
-important in the future. Unique repositories of data is the new competitive
-advantage. Training nonetheless requires compute, so the buildout bottlenecks we
-explored in the previous section apply. There is still no free lunch.</p>
-<p>When inference gets more expensive, the tiered access pattern, where model
-quality closely correlates with budget, will emerge, and the pace of adoption
-will likely slow down due to stunted growth in AI automation potential for the
-long tail of companies and humans. Adoption won't fully stop; the capability of
-lower tier models will meet with the automation potential of some percentile of
-tasks, and that market will be cleared. Generalized job replacement will have to
-wait for stable energy and compute inputs, efficiency gains in compute and model
-architecture, and stabilizing inference costs.</p>
-<h2>Unsustainable AI productivity "gains"</h2>
+every 8 months, or 2.7x per year.</p>
+<p>OpenAI and their investors are well aware of the capital requirements to keep
+the lights on with inference as well as in the R&amp;D department. The company is
+fresh off a
+<a href="https://www.cnbc.com/2026/03/24/openai-secures-an-extra-10-billion-in-record-funding-round-cfo-friar-says.html">record fundraise</a>
+of &dollar;120 billion. Even with that much capital, OpenAI still has to
+be judicious. Just last week, OpenAI decided to shut down Sora, the video
+generation app released several months ago. OpenAI's CFO, Sarah Friar,
+<a href="https://www.cnbc.com/2026/03/24/openai-secures-an-extra-10-billion-in-record-funding-round-cfo-friar-says.html">said on CNBC</a>,
+<strong>"We are just facing a lack of compute."</strong>
+<a href="https://techcrunch.com/2026/03/29/why-openai-really-shut-down-sora/">TechCrunch</a>
+cites the Wall Street Journal's analysis of the situation, stating that "Claude
+Code, in particular, was eating OpenAI’s lunch."</p>
+<p>If the macro risks increase, leading to costlier compute, OpenAI may not be able
+to make the rounds with investors to raise eyewatering amounts of money much
+longer. Furthermore, all this is moot if these models don't perform in
+real-world deployments. With 61% of senior business leaders
+<a href="https://www.cio.com/article/4114010/2026-the-year-ai-roi-gets-real.html">feeling increased pressure</a>
+to prove ROI compared to a year ago, and 71% of global CIOs
+<a href="https://hbr.org/2026/03/7-factors-that-drive-returns-on-ai-investments-according-to-a-new-survey">saying</a>
+their AI budgets would be cut if value from AI couldn't be demonstrated within 2
+years, fiscal reality may start settling in soon. If poor performance metrics
+coincide with a compute cost spike, AI investment and adoption fervor could
+rapidly deteriorate.</p>
+<p>The competition is fierce. I predict that being able to manage costs will soon
+become a moat. A good example of this is Cursor. They leveraged their data moat
+to build in-house models that are domain-specific for coding and far less
+expensive to run. If capital runs out, labs like OpenAI and Anthropic will have
+to either cut costs or significantly increase the cost of using their products,
+restricting the accessibility of powerful AI. If only mediocre AI remains
+accessible, we will settle into a
+<a href="https://en.wikipedia.org/wiki/Stationary_point">stationary point</a> of productive
+capacity where humans remain the bottleneck.</p>
+<h2>Humans are more of a bottleneck than ever</h2>
 <p>Working with AI tools has a strange allure, almost an addictive quality. The gap
 between dream and reality has shortened, so the dopamine hit we get from
 completing a task is closer and more predictably reachable.</p>
@@ -324,106 +248,82 @@ possible, accessible, and in many cases intrinsically rewarding.</p>
 <p>The researchers warn, however, that this early period of experimentation could
 morph into cognitive overload, reducing quality of work output and
 decision-making in the long term.</p>
-<p>The work will always be there for us to do, it's just a matter of where we draw
-the line. With early AI pilots, this line shifted, perhaps too much. With each
-advance of the AI reasoning frontier, this line shifts again. This process has
-revealed that <strong>humans are the bottleneck</strong>. We are the organisms that have
-intrinsic difficulty with context switching and parallel task management.
-Computers have no such trouble because they have a fundamentally different
-architecture.</p>
-<p>We are now faced with a new type of problem, a human-computer interface problem.
-If humans need to remain in the loop, how do we serialize AI output for human
-consumption and interpretation in a way that is not cognitively overwhelming and
-doesn't burn them out?</p>
-<p>But what happens when humans don't need to remain in the loop? This isn't
-possible at today's AI capability levels, but it might be in the future. The
-more tasks AI can take on, the less touchpoints it needs to have with humans,
-which means that there is potentially an exponential degree of
-speedup.<a class="tooltip" data-tip="Consider a human that can handle a single task at a time. If their task has n subtasks, and each of those subtasks has n subtasks, then an AI that can achieve virtually infinite parallelism only needs to take three &quot;units&quot; of time, one for each layer of tasks, whereas a human would need n^2 + n + 1." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a></p>
-<p>This reality is achievable with future frontier reasoning capabilities, and it
-will be the moment that humans are effectively liberated from labor. But at AI's
-current capability levels, humans are stuck in the rut of needing to talk
-serially to a fundamentally parallel machine. And if inference costs spike for
-the best performing models, then most enterprises may not be able to afford to
-pay their way out of this rut.</p>
-<p>If employees under the current regime continue to experience cognitive
-exhaustion, alternatively called
-<a href="https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry">"AI Brain Fry"</a> or as
-@francedot on X calls it,
-<a href="https://x.com/francedot/status/2017858253439345092">"Vibe Coding paralysis"</a>,
-and companies can't afford to throw money at expensive token generation, then
-executives might start to realize negative return on investment into AI. With
-61% of senior business leaders
-<a href="https://www.cio.com/article/4114010/2026-the-year-ai-roi-gets-real.html">feeling increased pressure</a>
-to prove ROI compared to a year ago, and 71% of global CIOs
-<a href="https://hbr.org/2026/03/7-factors-that-drive-returns-on-ai-investments-according-to-a-new-survey">saying</a>
-their AI budgets would be cut if value from AI couldn't be demonstrated within 2
-years, fiscal reality may start settling in soon. If this is coincidental with
-an inference cost spike for all but the least capable models, AI investment
-fervor could evaporate quickly.</p>
-<p>This would be a rather unfortunate outcome. Although I've always been somewhat
-skeptical of the AI job replacement narrative as it has been presented so far, I
-do feel like living in a world where most people would not need to work would be
-a pretty exciting experience. It would present an opportunity to get really good
-at <em>creating</em> without regard to how we're going to bring money home. Scarcity
-creates a competitiveness that stifles creativity.<a class="tooltip" data-tip="The other side of this coin is the common adage, &quot;constraints breed creativity,&quot; but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> Courageous are
-those that pursue their creative passions in the face of the probability that
-their efforts will not amount to much money. I currently live in New York City,
-which is full of such iconoclastic people, and that makes it an inspiring place.</p>
-<p>I will revisit this line of thinking in the conclusion of this piece, where I
-discuss the importance of this creative expression in manifesting a bright
-future of AI. There are many reasons why I could be wrong as well, and I'll
-cover some in the following before concluding.</p>
-<h2>Why I could be wrong</h2>
-<p>To recapitulate: my core thesis is that access to AI inference at the frontier
-of capability is necessary to support nontrivial levels of job replacement, and
-access to frontier-level capabilities will eventually become prohibitively
-expensive for all but the richest enterprises and people that can afford it, due
-to both macro risks and financial reality. This creates an inequitable access
-pattern, and importantly puts a damper on the job replacement dynamics
-highlighted in thought experiments such as the Citrini report. AI inference is
-being kept artificially cheap due to the venture capital subsidy, and it is
-unclear that investments in AI are returning even at current frontier reasoning
-levels. And if the scale hypothesis<a class="tooltip" data-tip="that scaling compute will invariably lead
-to better AI" href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> proves to be true, increased
-reasoning will incur higher costs.</p>
-<p>Here are some rapid-fire reasons why I could be wrong:</p>
-<ol>
-<li>Perhaps progress in making inference cheaper at the hardware level will speed
-   up. <a href="https://matx.com/">MatX</a> is a chip startup hoping to reinvent how AI
-   inference is done at a hardware level, which is compelling, and perhaps they
-   will have some breakthrough.</li>
-<li>Perhaps the geopolitical risks of today will evaporate tomorrow.</li>
-<li>Perhaps the buildout will proceed more smoothly than I think it will, with
-   TSMC's Arizona buildout proceeding as planned or better than planned.</li>
-<li>Perhaps the problem isn't inference cost, but context management or other
-   algorithmic inefficiencies (my good friend Dana is working on this at
-   <a href="https://www.subconscious.dev/">Subconscious</a>), and better context management
-   is an <a href="https://arxiv.org/abs/2310.08560">active</a>
-   <a href="https://arxiv.org/html/2510.14278v1">research</a>
-   <a href="https://arxiv.org/abs/2507.16784">area</a>. We could generate escape velocity
-   if we can solve these challenges and unlock more consistent ROI.</li>
-<li>Perhaps most industries won't actually require highly capable LLMs to be
-   mostly automated.</li>
-<li>Perhaps people are still learning how to most effectively use AI. A recent
-   <a href="https://www.anthropic.com/research/economic-index-march-2026-report">report</a>
-   from Anthropic suggests this very effect. Longer tenure users of Claude are
-   4% more likely to have successful conversations, even after controlling for
-   model type, use case, and country/language.</li>
-</ol>
-<p>Each of these probably deserves more exploration, but I did not have the time or
-space to get them into this piece. I may return to some of these pushbacks in
-future posts, so stay tuned!</p>
+<p>Humans have a fundamentally serial input-output interface. We fail at
+multitasking, and there is a well-established
+<a href="https://onlinelibrary.wiley.com/doi/full/10.1155/ahci/9313239">body of research</a>
+that corroborates this.<a class="tooltip" data-tip="See Section 2, &quot;Cognitive Workload in Multitasking Environments,&quot; in the cited systematic literature review." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> AI, on the other hand, can be virtually
+infinitely parallelized, producing more output per unit time than is humanly
+possible to review and understand in a timely fashion, and trying to switch
+between parallel threads deleteriously imposes cognitive overhead. This effect,
+sometimes referred to as
+<a href="https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry">"AI Brain Fry"</a> is
+analogous to
+<a href="https://en.wikipedia.org/wiki/Thrashing_(computer_science)">thrashing</a> on
+computers. It is a slowdown caused by the serialization of infinite parallel AI
+workstreams, and the temptation to add more workstreams to "be more productive."</p>
+<p>This all points to the need to develop a better working relationship with AI.
+Perhaps we need to be able to entrust it with longer horizon tasks so that we
+aren't as crushed by the
+<a href="https://justoffbyone.com/posts/math-of-why-you-cant-focus-at-work/">mathematics</a>
+of how much effort it takes for our brains to switch context and enter deep
+focus mode. I'll take this one step further: <strong>task time horizon where AI can
+reliably (&gt;&gt;90%) execute tasks independently is the most important dimension for
+job replacement</strong>. It is more important than cost because capital can be
+acquired if the return-on-investment potential is there (i.e. loans).</p>
+<p>Reliable long horizon task completion, however, still eludes even the most
+powerful models. According to the
+<a href="https://metr.org/time-horizons/">METR task completion time horizon evaluation</a>,
+Opus 4.6 can complete a task that would take a human 1 hour and 10 minutes with
+only <em>80% reliability</em>.<a class="tooltip" data-tip="And the true task time horizon value might be even less. I don&#x27;t think METR&#x27;s benchmark generalizes well. I may write a follow-up post about this." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> 80% reliability is significantly less reliable
+than a well-calibrated human in a workplace. Correcting the output of AI 20% of
+the time for long horizon tasks and having to context switch frequently to
+manage many short horizon tasks doesn't sound like a healthy, productive working
+model to me.</p>
+<p>So for the time being, it seems that we are stuck in this rut where AI works
+decently well but leaves us cognitively exhausted due to managing it. If future
+AI can achieve reliability figures in the high 90s but only with extremely high
+cost, such that ROI still remains questionable, then the fantasies of
+Citrini-style job replacement vanish.</p>
 <h2>How can we manifest the "good ending?"</h2>
-<p>Now, as promised, I would like to leave you with some parting thoughts on how we
-can manifest what I'm calling the "good ending," where job replacement does
-happen and it enables us to become our true creative, soulful, human selves.</p>
-<p>A lot of this has parallels with and draws inspiration from
+<p>Now, as promised, I would like to paint a different picture and suggest
+strategic directions in which we can collectively push to manifest what I'm
+calling the "good ending," where job replacement does happen and it enables us
+to become our true creative, soulful, human selves.</p>
+<p>Upon reading the above, you might be wondering, "why is the current state
+suboptimal?" and "how does job replacement enable this vision of yours?" These
+are fair questions, and it is true that these are not guarantees. Work gives
+many people a sense of purpose, and many people may not want to lose that.
+However, community involvement can also grant a sense of purpose. I have felt
+this in my own life. Spending time with my family and community and helping them
+out motivates me like few other things in the world. I think one of the
+tragedies of our modern economic system is that community-building has fallen by
+the wayside.</p>
+<p>Alongside community is creativity which seems uniquely able to form within us a
+moral conscience. For exaxmple, <em>Uncle Tom’s Cabin</em> by Harriet Beecher Stowe
+<a href="https://www.weforum.org/stories/2016/03/10-novels-that-changed-the-world/">sent waves</a>
+through the northern states, greatly furthering the abolitionist cause.
+Literature, art, and other creative works transmit memories of human pain and
+suffering of the past, helping us learn and reflect in the process. I believe
+humanity benefits from being able to spend lots of time creating and reflecting
+on creative works.</p>
+<p>AI displacement of jobs enables community-orientation and creativity simply by
+returning to us the choice of what we do with our time. Many of us may choose to
+keep working, and that's fine. Many jobs have space for the creative work I
+described.<a class="tooltip" data-tip="Software engineering, for instance. That&#x27;s why I enjoy it." href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a> Many of us may choose other pursuits. It is not a given
+that our governmental systems will respond in kind by allocating resources
+appropriately in a post-work world, but I remain optimistic that we can prosper
+nonetheless.<a class="tooltip" data-tip="I plan on returning to more practical thoughts on how governments can respond to such societal change in a future post." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> Without needing to sacrifice community to make a living,
+we can turn towards our neighbors and connect with them. We can generate new
+cultures and traditions.</p>
+<p>This line of thinking calls to mind the Greek culture that I grew up in. There
+are rich regional traditions of music, dance, cuisine, customary celebrations,
+and other cultural artifacts generated from generations of playful
+experimentation.</p>
+<p>These thoughts have parallels with and draw inspiration from
 <a href="https://x.com/jgreenhall/status/2028850398224654752?s=46">this post</a> by Jordan
-Hall on X. Shoutout to <a href="https://www.nicholasmakiej.com/">Nick Makiej</a> for
-finding it and sharing it with me.</p>
-<p>I will also emphasize that there is a sense of urgency here. We have an
-opportunity to shape outcomes before they get shaped for us.</p>
+Hall on X. Shoutout to my friend <a href="https://www.nicholasmakiej.com/">Nick Makiej</a>
+for finding it and sharing it with me. Now, the following are the directions I
+suggest we push toward to generate this reality.</p>
 <h3>1. Create</h3>
 <p>New generations of AI models are currently getting trained on immense amounts of
 AI slop content that was generated by past generations of models. Epoch AI
@@ -467,30 +367,100 @@ wanted this blog to reflect my entropic voice.</p>
 <p>Go forth, create, and create with high quality.</p>
 <h3>2. Participate in research to make AI more cost effective to train and run</h3>
 <p>The further we drive down the cost of inference, the more likely it is that
-we'll be able to generate escape velocity. This will also further democratize
-access to inference, rather than frontier-level reasoning being kept in the
-hands of the few. Another shoutout is in order for what Dana and the team are
-doing at <a href="https://www.subconscious.dev/">Subconscious</a>, which is tackling this
-problem with a codesigned model and inference runtime.</p>
-<p>If inference is cheap, and can be done with consumer hardware at the edge, this
-also solves the energy issue. The grid is well equipped to handle marginal load
-increases at its edges, but not well equipped to handle a massive spike in load
-at a single geographical point. We can get around the bottleneck described in
-the "AI buildout challenges" section entirely.</p>
-<h3>3. Open source everything</h3>
-<p>As Jordan Hall
-<a href="https://x.com/jgreenhall/status/2028850398224654752?s=46">points out</a>: ideas,
-when shared, multiply. They are not scarce resources. This single fact explains
-the compounding nature of the entire saga of scientific and technological
-progress since the Enlightenment. And similar sagas likely played out in Ancient
-Egypt, Greece, and Rome, and in the Islamic Empire (there's a reason why algebra
-is an Arabic word).</p>
-<p>I call us all to build in the open. Hoarding ideas behind the arcane patent
-system is selfish and counterproductive.</p>
+we'll be able to generate escape velocity and drive meaningful adoption of AI in
+workplaces and among people at the edge.</p>
+<p>Research in
+<a href="https://ieeexplore.ieee.org/document/10968787">quantization, distillation, and pruning</a>
+has made strides toward making LLM inference runnable on cheap hardware such as
+phones, but with a slight accuracy penalty. Figuring out how to mitigate that
+tradeoff is an interesting research direction.</p>
+<p>I think alternatives to the LLM architecture are also underexplored. Drawing
+from the
+<a href="https://proceedings.neurips.cc/paper_files/paper/2024/file/e618724ac897c6cf3fbfb273f8695d67-Paper-Conference.pdf">Mamba</a>
+architecture, for instance, could lead to significant efficiency improvements,
+as Mamba's attention has linear
+<a href="https://en.wikipedia.org/wiki/Time_complexity">time complexity</a> whereas
+standard transformer model attention layers have quadratic time complexity.</p>
+<p>My good friend Dana recently joined <a href="https://subconscious.dev">Subconscious</a>, a
+startup leveraging <a href="https://arxiv.org/abs/2507.16784">research out of MIT</a> which
+proposes a codesigned thread inference architecture and runtime for long horizon
+tasks. Codesign, though harder to implement and not generalizable, can have
+tremendous efficiency benefits because each part of the system is aware of how
+it needs to interact with the others to maximize efficiency and accuracy.
+Architecture-runtime codesign is a great first step. I would love to see this
+taken a step further toward runtime-chip codesign as well.
+<a href="https://matx.com/">MatX</a> is a startup building chips for inference, and I
+expect they've done some thinking about this.</p>
+<p>A nice consequence of all this is that cheap inference that can be run with
+consumer hardware at the edge also solves the energy bottleneck. The power grid
+is designed to handle marginal load increases at its edges, but not well
+equipped to handle a massive spike in load at a single geographical point. This
+might even resolve some of the silicon bottleneck too; consider how much compute
+there is around us lying dormant on devices like smartphones, tablets, even our
+laptops.</p>
+<p>There is lots of interesting work to be done here, and I look forward to seeing
+it.</p>
+<h3>3. Participate in the Scalable Formal Oversight initiative</h3>
+<p>The obvious risk posed when racing towards the "good ending" is the AI doomer's
+fantasy: what if AI takes over and starts misbehaving?</p>
+<p>This is not a fantasy. The AI of today misbehaves often. Large language models
+are known to engage in <a href="https://arxiv.org/abs/2412.14093">deceptive behavior</a> to
+make human evaluators think that they are more aligned with human intentions
+than they actually are. Code that agents output can be unsafe and
+<a href="https://x.com/leojrr/status/1901560276488511759?s=20">destructive</a>. A
+verification harness for the actions that AI agents take is crucial. In my view,
+it is a prerequisite for any significant job replacement in safety critical
+domains, and it is likely necessary in order to actually enable large scale
+replacement in software engineering, for instance, where high level goals can be
+very long horizon, and contexts can grow very large. Agents are likely prone to
+mistakes that may be avoidable with verification guardrails.</p>
+<p>Read Max von Hippel's post
+<a href="https://www.lesswrong.com/posts/SfhFh9Hfm6JYvzbby/the-scalable-formal-oversight-research-program">Scalable Formal Oversight</a>,
+and take it seriously!</p>
 <h3>4. Build community</h3>
 <p>At the end of the day, community is all we have. If AI frees us from most
 material constraints, then we can return to a world of playful creativity,
 cheer, and communal bonds. This is a world I'd love to live in.</p>
+<p>If this resonates with you, get in touch!</p>
+<p><insert a pleasant image here of humans around a fire></p>
+<h2>Why I could be wrong</h2>
+<p>To recapitulate: my core thesis is that we can expect AI inference to get
+significantly more expensive, due to macro risks and venture capital inference
+subsidies running out. Cheap access to AI inference at the frontier of
+capability is necessary to support nontrivial levels of job replacement, so we
+will likely land in a situation where fervor around AI will slow greatly.</p>
+<p>Here are some rapid-fire reasons why I could be wrong:</p>
+<ol>
+<li>Perhaps progress in making inference cheaper at the hardware level will speed
+   up. <a href="https://matx.com/">MatX</a> is a chip startup hoping to reinvent how AI
+   inference is done at a hardware level, which is compelling, and perhaps they
+   will have some breakthrough.</li>
+<li>Perhaps the geopolitical risks of today will evaporate tomorrow.</li>
+<li>Perhaps the buildout will proceed more smoothly than I think it will, with
+   TSMC's Arizona buildout proceeding as planned or better than planned.</li>
+<li>Perhaps the problem isn't inference cost, but context management or other
+   algorithmic inefficiencies (another shoutout to Dana at
+   <a href="https://www.subconscious.dev/">Subconscious</a>), and better context management
+   is <a href="https://arxiv.org/abs/2512.24601">an</a>
+   <a href="https://arxiv.org/abs/2310.08560">active</a>
+   <a href="https://arxiv.org/html/2510.14278v1">research</a>
+   <a href="https://arxiv.org/abs/2507.16784">area</a>. We could generate escape velocity
+   if we can solve these challenges and unlock more consistent ROI.</li>
+<li>Perhaps most industries won't actually require highly capable LLMs to be
+   mostly automated.</li>
+<li>Perhaps people are still learning how to most effectively use AI. A recent
+   <a href="https://www.anthropic.com/research/economic-index-march-2026-report">report</a>
+   from Anthropic suggests this very effect. Longer tenure users of Claude are
+   4% more likely to have successful conversations, even after controlling for
+   model type, use case, and country/language. Multitasking is also a skill that
+   appears to be
+   <a href="https://www.cell.com/neuron/fulltext/S0896-6273(09)00458-9">trainable</a>.</li>
+</ol>
+<p>There are probably more reasons. Send me an email if you have a comment! This
+post is an essay<a class="tooltip" data-tip="French for &quot;attempt&quot;" href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a> in the true sense of the word.</p>
+<p>Each of these probably deserves more exploration, but I did not have the time or
+space to get them into this piece. I may return to some of these pushbacks in
+future posts, so stay tuned!</p>
 <h2>Final word</h2>
 <p>Thank you for making it this far. This is the first blog post that I'm
 officially publishing, so I would appreciate any and all feedback. Please drop
@@ -502,17 +472,12 @@ explore an in-person meeting!</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">Albeit with benchmarks that I don't think generalize well. Critique of the METR task horizon assessment deserves a post of its own <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
-        <li id="tooltip-def-2">this is plausible as the amount
-of tokens being consumed for research is probably going to keep growing too,
-with AI becoming more involved in the code writing and research process itself <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
-        <li id="tooltip-def-3">How unrealistic is it? What are OpenAI's expected compute costs, and how much more costly could compute become? I am thinking of tackling these questions in a future post where I formalize this napkin math into something more compelling. The fact that NVIDIA's gross margins are 71% for the fiscal year ended January 2026 and <a href="https://finbox.com/NASDAQGS:NVDA/explorer/ni_cf">net income is 120 billion</a> seems to indicate that there is room for cost compression on the compute end. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
-        <li id="tooltip-def-4">by "enterprise adoption question" I mean how likely it is that OpenAI will see success in general enterprise adoption of its tools <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
-        <li id="tooltip-def-5">The notion of "wrappers" as a bad thing is debatable. SaaS historically was denigrated as "SQL wrappers" but it became a successful business model. SaaS is dying now though because the ease of building bespoke SQL wrappers has greatly increased. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
-        <li id="tooltip-def-6">Consider a human that can handle a single task at a time. If their task has n subtasks, and each of those subtasks has n subtasks, then an AI that can achieve virtually infinite parallelism only needs to take three "units" of time, one for each layer of tasks, whereas a human would need n^2 + n + 1. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
-        <li id="tooltip-def-7">The other side of this coin is the common adage, "constraints breed creativity," but I think this is a subtly different kind of creativity: a resourcefulness when solving problems, rather than open creative expressiveness. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
-        <li id="tooltip-def-8">that scaling compute will invariably lead
-to better AI <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
+        <li id="tooltip-def-1">Look at the "Total Generation at Utility Scale Facilities" column in the Annual Totals group. In 2014, power generation was 4,093,564 GWh, and in 2025, it was 4,308,634 GWh. This is a mere 5.2% increase in 11 years! <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">See Section 2, "Cognitive Workload in Multitasking Environments," in the cited systematic literature review. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-3">And the true task time horizon value might be even less. I don't think METR's benchmark generalizes well. I may write a follow-up post about this. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">Software engineering, for instance. That's why I enjoy it. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
+        <li id="tooltip-def-5">I plan on returning to more practical thoughts on how governments can respond to such societal change in a future post. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
+        <li id="tooltip-def-6">French for "attempt" <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
     </ol>
 </section>
                 </div>
