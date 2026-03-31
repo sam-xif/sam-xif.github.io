@@ -102,6 +102,23 @@ a:hover {
 }
 
 
+#blog-banner {
+    background-color: #d4edda;
+    color: #1a4a26;
+    border: 1px solid #a8d5b5;
+    border-radius: 4px;
+    padding: 10px 16px;
+    margin-bottom: 24px;
+    font-size: 0.95em;
+    text-align: center;
+}
+
+#blog-banner a {
+    color: #1a4a26;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 #about {
     margin: 30px 0;
 }
