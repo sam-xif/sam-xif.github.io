@@ -33,6 +33,7 @@ main {
     min-width: 300px;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
 }
 
 /* Media queries for responsive design */
@@ -99,6 +100,24 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.rss-corner {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    opacity: 0.85;
+}
+
+.rss-corner:hover {
+    opacity: 1;
+    text-decoration: none;
+}
+
+.rss-corner img {
+    display: block;
+    width: 24px;
+    height: 24px;
 }
 
 

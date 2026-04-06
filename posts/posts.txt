@@ -1,0 +1,7 @@
+# Posts to build and publish.
+# Add a filename (with or without .md) to include it in the build and RSS feed.
+# Posts not listed here will be ignored even if the .md file exists.
+
+2026-03-21-hello-world.md
+2026-03-31-ai-stall.md
+2026-04-01-detox.md
