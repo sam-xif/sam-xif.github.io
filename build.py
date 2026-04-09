@@ -109,6 +109,7 @@ INDEX_TEMPLATE = """\
             </div>
             <section class="blog-index">
                 <i id="expressions">Expressions of my inner world</i>
+                <p>Find some of these writings and more on my <a href="https://samxif.substack.com/">Substack</a></p>
                 <h2>Blog</h2>
                 <div class="category-filters">
                     <button class="filter-btn active" data-filter="all">All</button>
