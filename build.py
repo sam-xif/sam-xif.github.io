@@ -242,7 +242,7 @@ def get_post_files() -> list[Path]:
 
 
 def format_posts():
-    for md_file in sorted(get_post_files()):
+    for md_file in sorted(POSTS_DIR.glob("*.md")):
         # Extract frontmatter if present, remove before formatting, and re-add after
         text = md_file.read_text(encoding="utf-8")
         match = re.match(r"^---\s*\n(.*?)(?:^---\s*$\n?)", text, re.DOTALL | re.MULTILINE)
