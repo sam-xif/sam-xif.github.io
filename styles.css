@@ -121,7 +121,7 @@ a:hover {
 }
 
 
-#blog-banner {
+.blog-banner {
     background-color: #d4edda;
     color: #1a4a26;
     border: 1px solid #a8d5b5;
@@ -132,7 +132,7 @@ a:hover {
     text-align: center;
 }
 
-#blog-banner a {
+.blog-banner a {
     color: #1a4a26;
     font-weight: bold;
     text-decoration: underline;
