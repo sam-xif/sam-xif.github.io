@@ -64,7 +64,6 @@ a:visited {
 }
 
 .post-body code,
-.post-body pre,
 .post-body blockquote,
 .post-body th {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -186,7 +185,7 @@ a:visited {
 }
 
 /* Code blocks (fenced) */
-.post-body pre {
+.post-body pre.code {
     background: var(--code-bg);
     padding: 14px 16px;
     overflow-x: auto;
@@ -194,7 +193,7 @@ a:visited {
     margin-bottom: 1em;
 }
 
-.post-body pre code {
+.post-body pre.code code {
     background: none;
     padding: 0;
     font-size: 0.85em;
@@ -458,4 +457,13 @@ a:visited {
     border-radius: 3px;
     padding: 1px 6px;
     transition: border-color 0.3s ease;
+}
+
+blockquote pre {
+    font-family: inherit;
+    color: inherit;
+    padding: 0px;
+    margin: -10pt 0 -25pt 0;
+    display: block;
+    line-height: normal;
 }

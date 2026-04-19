@@ -291,25 +291,30 @@ def main():
     format_posts()
     BLOG_DIR.mkdir(exist_ok=True)
 
-    md_files = get_post_files()
-    if not md_files:
-        print("No posts listed in posts/posts.txt")
+    published_slugs = {p.stem for p in get_post_files()}
 
-    posts = []
-    for md_file in md_files:
+    all_md_files = sorted(POSTS_DIR.glob("*.md"), reverse=True)
+    if not all_md_files:
+        print("No markdown files found in posts/")
+
+    all_posts = []
+    published_posts = []
+    for md_file in all_md_files:
         post = parse_post(md_file)
-        posts.append(post)
+        all_posts.append(post)
         out_path = BLOG_DIR / f"{post.slug}.html"
         out_path.write_text(render_post_html(post), encoding="utf-8")
         print(f"  Built: {out_path.relative_to(ROOT)}")
+        if post.slug in published_slugs:
+            published_posts.append(post)
 
-    posts.sort(key=lambda p: p.date, reverse=True)
+    published_posts.sort(key=lambda p: p.date, reverse=True)
 
     index_path = BLOG_DIR / "index.html"
-    index_path.write_text(render_index_html(posts), encoding="utf-8")
-    print(f"  Built: {index_path.relative_to(ROOT)} ({len(posts)} post(s))")
+    index_path.write_text(render_index_html(published_posts), encoding="utf-8")
+    print(f"  Built: {index_path.relative_to(ROOT)} ({len(published_posts)} post(s))")
 
-    build_feed(posts)
+    build_feed(published_posts)
 
 
 if __name__ == "__main__":
