@@ -190,7 +190,10 @@ assumptions. For example, "the purpose of life is to generate economic value,
 for which I will be rewarded with the resources to command that others produce
 economic value for me," or "labor is an instrument at my disposal, given money."
 
-## On crucifying the old language
+In the rest of this post, I will push back against these generally accepted
+assumptions, and offer new unifying principles inspired by what really matters.
+
+## Crucifying the old principles
 
 The language of money is universally spoken, but it is not universally
 expressive. Unpriced externalities, such as environmental side effects of the
@@ -241,13 +244,14 @@ complete, in the form of artificial intelligence. AI has the potential to
 manifest immense good, and this is the version of the future I hope to push for
 and will continue to argue for [in my writings](./2026-03-31-ai-stall.html).
 However, if additional tiers of the tower continue to be built, we may invite
-the wrath of God who wants us to be proud of our individuality rather than
-conformity in pursuit of a single-minded (and absent-minded) goal.
+the wrath of God (literally, or figuratively, whichever interpretation you
+prefer) who wants us to be proud of our individuality rather than conformity in
+pursuit of a single-minded (and absent-minded) goal.
 
-Jesus also recognized the perversion of money as the universal language. A
-classic example of this can be found in all four canonical gospels. Jesus' entry
-into the temple and subsequent outrage at those buying and selling within. Here
-is the version from Mark 11:15-19,
+Jesus also recognized the perverseness of having money as the fabric of society.
+A classic example of this can be found in all four canonical gospels. Jesus'
+entry into the temple and subsequent outrage at those buying and selling within.
+Here is the version from Mark 11:15-19,
 
 > Then they came to Jerusalem. And he entered the temple and began to drive out
 > those who were selling and those who were buying in the temple, and he
@@ -308,6 +312,18 @@ cut from the same cloth. In order to find principles that unifying us, let us
 turn inward, and interrogate what ultimately matters to all people.
 
 ## Unifying principles
+
+<!-- 
+
+Perhaps the principles should be more things like:
+
+1. everyone has causes and conditions that you may not know about; do not judge
+1. don't take anything personally; forgive always, all the time
+1. embrace impermanence
+1. positive action as spiritual currency
+
+
+-->
 
 I entreat you all to consider this question deeply: what will you have to say
 for yourself when you
