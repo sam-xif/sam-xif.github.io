@@ -1,9 +1,10 @@
 ---
-title: "A different way, Part 1"
+title: "Against transactional thinking (and a parable)"
 date: 2026-04-20
-description: "Against transactional thinking"
+description: "Life doesn't have to be zero-sum. Part one of many."
 category: blog
 ---
+
 The week of April 5th, which was a couple weeks ago now, was Eastern Orthodox
 Holy Week. I decided to take that week off from work, and the result was an
 unexpected reflection on my life and what is important to me. That inspired this
@@ -182,7 +183,7 @@ Those who don't think transactionally have a willingness to be generous, to
 love, and to be unconcerned with what they will receive in return. This inspires
 everyone around them (I hope) to be better. If you aren't religious, now perhaps
 you can understand why people choose to go to church on Sunday to hear how Jesus
-and his followers interacted with the world.
+and his followers interacted nontransactionally with the world.
 
 The good news is that developing nontransactionality in thought is simple. Like
 anything else, it is a skill that can be practiced. Freely give, and freely
