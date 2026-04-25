@@ -145,7 +145,7 @@ physically aggressive. It's a powerful image, and a relevant one. Our world is
 the new den and many corporations are the new robbers. Exploitation in the name
 of money happens every day billions of times over on Earth today. In America,
 our clothes are bought with
-[modern slave labor](https://edition.cnn.com/2023/05/23/asia/modern-slavery-index-2023-intl-hnk)..
+[modern slave labor](https://edition.cnn.com/2023/05/23/asia/modern-slavery-index-2023-intl-hnk).
 Our chocolate is bought with
 [child labor in Africa](https://www.washingtonpost.com/graphics/2019/business/hershey-nestle-mars-chocolate-child-labor-west-africa/).
 
