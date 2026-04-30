@@ -3,6 +3,7 @@ title: "Against transactional thinking (and a parable)"
 date: 2026-04-20
 description: "Life doesn't have to be zero-sum. Part one of many."
 category: blog
+topic: philosophy
 ---
 
 The week of April 5th, which was a couple weeks ago now, was Eastern Orthodox

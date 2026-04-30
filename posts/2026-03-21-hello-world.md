@@ -3,6 +3,7 @@ title: "Hello, World!"
 date: 2026-03-21
 description: "An introductory post on why I'm starting a blog and what to expect"
 category: blog
+topic: personal
 ---
 
 ## Why a Blog?

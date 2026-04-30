@@ -27,7 +27,7 @@ def _build_xml(posts) -> str:
 
     items = []
     for post in posts:
-        url = f"{BASE_URL}/blog/{post.slug}.html"
+        url = f"{BASE_URL}/blog/topics/{post.topic}/{post.slug}.html"
         items.append(
             f"    <item>\n"
             f"      <title>{_escape_xml(post.title)}</title>\n"
