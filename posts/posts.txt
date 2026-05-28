@@ -6,3 +6,4 @@
 2026-03-31-ai-stall.md
 2026-04-01-detox.md
 2026-04-20-different-way-part-1.md
+2026-05-28-east-of-eden-reflection.md
