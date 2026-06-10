@@ -20,14 +20,17 @@ the assumptions our economy rests upon are upended, then there will no longer be
 a workplace to train for because there will be no workforce. There will no
 longer be a market for many products, like suppliers of office desks, chairs,
 etc., and the businesses that feed off of knowledge workers' disposable income
-cease to be viable. The Citrini report, in this vision, mostly comes to life.
+cease to be viable. The
+[Citrini report](https://www.citriniresearch.com/p/2028gic), in this vision,
+mostly comes to life.
 
-My tune may seem to have changed since my first blog post, "AI won't come for
-your job yet, and that's bad." It has. I still think that AI inference will, for
-now, remain prohibitively expensive for many use cases, but Anthropic has
-reportedly reached profitability recently ahead of a fall 2026 IPO, which I did
-not expect. AI is expensive, but companies are increasingly willing to pay the
-cost, and making tough financial decisions and hiring decisions to do so.
+My tune may seem to have changed since my first blog post,
+["AI won't come for your job yet, and that's bad."](/blog/topics/tech/2026-03-31-ai-stall.html)
+It has. I still think that AI inference will, for now, remain prohibitively
+expensive for many use cases, but Anthropic has reportedly reached profitability
+recently ahead of a fall 2026 IPO, which I did not expect. AI is expensive, but
+companies are increasingly willing to pay the cost, and making tough financial
+decisions and hiring decisions to do so.
 
 If the data center buildout continues unabated, I expect that inference costs
 will continue to drop, allowing Anthropic to become even more profitable, or
@@ -265,7 +268,7 @@ while maintaining our own sense of purpose (our comparative advantage of moral
 reasoning) and minimize potential harm caused by a blanket replacement of jobs
 with no plan.
 
-## Where we are
+## Where we're going
 
 We are currently moving farther away from this vision. Liberal arts education
 has been losing its favor in recent years. Many humanities departments have been
@@ -281,21 +284,6 @@ important than ever, and Marxist ideology is probably more pertinent than ever
 before.[]^(I'm not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it's directionally accurate though.) I call for a reinvestment in the liberal arts as the last
 bastion of humanity in a world of machines.
 
-As another early step to stem the further destruction of community by our
-technocracy, we can find like-minded people who are willing to show their
-children the benefit of a play-based childhood, and an intellectually
-invigorating adolescence and higher education. All this will prepare future
-generations of humans to truly *shape* the world, as the students at Deep
-Springs do, rather than just play along passively, abstractly hoping for change
-to come. I think this is beautiful. Before continuing, I'd like to draw an
-important distinction, however: impact does not equal power. I do not believe in
-training students to seek the highest possible office and leverage fame to exert
-their will. Instead, I believe that an orientation toward the local community is
-the place where impact can be seeded, and depending on the circumstances,
-efforts and their fruits may grow beyond the immediate community, or they may
-not, and either one is perfectly fine and respectable. The pursuit of power in
-the desire to make an impact is a distraction.[]^(self-admittedly, this is a trap I fall into sometimes)
-
 In order to motivate people to believe, or at least engage with this thesis, we
 need to invert our culture of how we think about our economy and AI. For
 example, Jensen Huang, on a recent episode of the Dwarkesh podcast, said that he
@@ -306,9 +294,27 @@ valuable than ever before in the age of AI. What if a shortage of software
 engineers is exactly what we want, though? This would apply a natural braking
 mechanism to AI that would allow us to catch our breath. Jensen, of course, is
 the CEO of NVIDIA, and has every incentive to disagree with my premise that
-slowing AI is good.[]^(The argument of accelerating AI to "beat China" in an AI race is <a href="https://www.nytimes.com/2026/05/14/opinion/china-trump-ai-xi.html">losing its luster</a>.)
+slowing AI is good.[]^(The argument of accelerating AI to "beat China" in an AI race is <a href="https://www.nytimes.com/2026/05/14/opinion/china-trump-ai-xi.html">losing its luster</a>.) Most public discourse assumes that *growth*, at
+whatever cost, confers benefits to all people. In some respects, this is true.
+Growth in medical capability has increased our life expectancy. However, I don't
+think it is very controversial to assert that better data-driven marketing, more
+insidious psychological discoveries that get people to gamble more or doomscroll
+on social media, and other features of
+[limbic capitalism](https://www.afterbabel.com/p/limbic-capitalism-addiction-david-courtwright)
+have not been good for society. These two sides of capitalism emerged from the
+same incentive structure; the structure, taken to a limit, is good, but is
+bittersweet when allowed to continue beyond that.[]^(For some reason, as I was writing this, I was reminded of <a href="https://www.biblegateway.com/passage/?search=Revelation%2010%3A8-10&version=RSV">Revelation 10:8-10</a>)
 
-This has been said plenty of times before, but it is also time to change the
+<!-- As another early step to stem the further destruction of community by our
+technocracy, we can find like-minded people who are willing to show their
+children the benefit of a play-based childhood, and an intellectually
+invigorating adolescence and higher education. All this will prepare future
+generations of humans to truly *shape* the world, as the students at Deep
+Springs do, rather than just play along passively, abstractly hoping for change
+to come. I think this is beautiful. Before continuing, I'd like to draw an
+important distinction, however:  -->
+
+This has been said plenty of times before, but it is clearly time to change the
 idea that a four-year college degree is a sure path to the workforce, and that
 all schooling prior to college is simply instrumental in gaining admittance to a
 good four year college, and that nothing else matters. I think this pattern has
@@ -320,6 +326,14 @@ emotional intelligence, which we often ignore until it's too late. Recall that
 there is life beyond work, and life is work in itself; we must constantly face
 emotional challenges presented by cycles of violence, hatred, past mistakes,
 injustices, and more human failings that characterize this imperfect world.
+
+Finally, impact does not equal power. I do not believe in training students to
+seek the highest possible office and leverage fame to exert their will. Instead,
+I believe that an orientation toward the local community is the place where
+impact can be seeded, and depending on the circumstances, efforts and their
+fruits may grow beyond the immediate community, or they may not, and either one
+is perfectly fine and respectable. The pursuit of power in the desire to make an
+impact is a distraction.[]^(self-admittedly, this is a trap I fall into sometimes)
 
 Overall, I am hopeful about the future, but I think it is important to be
 cleareyed about how each of us is contributing to it. Following is out, leading
