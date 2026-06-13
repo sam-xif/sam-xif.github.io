@@ -7,3 +7,5 @@
 2026-04-01-detox.md
 2026-04-20-different-way-part-1.md
 2026-05-28-east-of-eden-reflection.md
+2026-06-13-benediction.md
+2026-06-13-ai-education.md
