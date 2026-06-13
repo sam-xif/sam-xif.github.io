@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 13 Jun 2026 18:16:35 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 13 Jun 2026 18:36:46 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>Benediction</title>
@@ -220,19 +220,25 @@ based on context.</p>
 <p>Moral reasoning comes through direct experience and simply <em>being human</em>. This
 is why it's the perfect niche for humans to fall into in this new age.</p>
 <h2>The new education</h2>
+<!-- 
+
+Problem: this section does not illustrate/connect back to how this "new education" teaches moral reasoning
+
+-->
+
 <p>One of the dairy cows on the ranch had an infected wound, and Rebecca was
 cleaning it. Rebecca could <em>feel</em> how the cleaning was hurting the cow, and yet
 she had to carry on for its fate. Rebecca is a student at
 <a href="https://www.nytimes.com/2026/05/20/opinion/deep-springs-college-ivy-league-education.html">Deep Springs College</a>,
 a "work school" that emphasizes personal responsibility and stewardship of the
 campus alongside a liberal arts education.</p>
-<p>Deep Springs hits at a fundamental disconnect in higher education as it's
-practiced today: modern colleges prepare us to work, but not to live. Deep
-Springs gives students an opportunity to form a two-way relationship with the
-world around them. They give and they take. At a normal college, students
-typically skew far more towards the taking. As the author of the piece I linked,
-Michal Leibowitz, points out, at "other, bigger schools, students are freed from
-the drudgery of cleaning, of fixing the old campus vehicles and toilets, of
+<p>Deep Springs hits at the fundamental disconnect in higher education I've been
+alluding to: modern colleges prepare us to work, but not to live. Deep Springs
+gives students an opportunity to form a two-way relationship with the world
+around them. They give and they take. At a normal college, students typically
+skew far more towards the taking. As the author of the piece I linked, Michal
+Leibowitz, points out, at "other, bigger schools, students are freed from the
+drudgery of cleaning, of fixing the old campus vehicles and toilets, of
 collecting the tumbleweed that poses a fire risk in the valley." Instead,
 students at Deep Springs staff a team of volunteer firefighters, grow the food
 that the campus eats, and care for the livestock. "Education" at Deep Springs
@@ -264,18 +270,32 @@ not to are masking it), then motivation springs forth to correct our
 deficiencies. We need to revive the social gym of life; the problem is that
 everyone is on their damn phones, and so we have a collective action problem. -->
 
-<p>To solve this problem, a liberal arts education that returns to an oral and
+<p>Moral reasoning is woven throughout the Deep Springs ethos. Rebecca learned of
+the tension between necessity and hurtfulness of certain actions. Sasha
+Halperin, another student, learned that in an environment with rich communal
+bonds, there is "no place to hide." Having to reckon with how your own actions
+affect other people and your environment is the crux of moral reasoning.</p>
+<p>We don't necessarily need to replicate the Deep Springs model everywhere, but to
+my knowledge, it is the institution that most closely embodies the vision I am
+driving towards here. If we choose to have college remain a part of our society,
+perhaps emphasizing a liberal arts education that returns to an oral and
+in-class tradition of assessing student performance could be a good first step
+in the right direection.</p>
+<!-- To solve this problem, a liberal arts education that returns to an oral and
 in-class tradition of assessing student performance could be a good first step.
 The best way to encourage good student learning is to block the easy way out.
 The problem is that in a future world where humans do not play a major role in
 the means of production, students might not see the value in obtaining an
 education in the first place. Even if it were compulsory, students might not be
-motivated to put effort in.</p>
-<p>I am not sure how worried we need to be about this, though. The best part about
+motivated to put effort in. -->
+
+<!-- 
+I am not sure how worried we need to be about this, though. The best part about
 this future of education is that everyone has a place, and what more does any
-young person crave than to <em>belong?</em> There is no "demand" signal for unique and
+young person crave than to *belong?* There is no "demand" signal for unique and
 critical thought; every student has something to contribute based on the unique
-circumstances of their own life.<a class="tooltip" data-tip="This brings up an important risk: if we push too far toward the homogenization of life–as has already happened somewhat with social media–then discourse breaks down because no one thinks differently. No one wants to push back in a groupthink environment because it harms the group dynamic. We also lose opportunities to develop empathy and morality by learning how to put ourselves in a different person&#x27;s shoes. How would we bring entropy back in the future so that productive discourse can occur? This is an open question and it needs to be answered before the vision I&#x27;m articulating here can be pursued." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a></p>
+circumstances of their own life.[]^(This brings up an important risk: if we push too far toward the homogenization of life–as has already happened somewhat with social media–then discourse breaks down because no one thinks differently. No one wants to push back in a groupthink environment because it harms the group dynamic. We also lose opportunities to develop empathy and morality by learning how to put ourselves in a different person's shoes. How would we bring entropy back in the future so that productive discourse can occur? This is an open question and it needs to be answered before the vision I'm articulating here can be pursued.) -->
+
 <!-- 
 There is a delicate and strange balance. The fact that different languages and cultural groups
 exist is, in a way, what allows us to grow. It's what allows us to learn.  
@@ -313,7 +333,16 @@ such majors are "brainwashed by Marxist ideology," and others think that trade
 schools will be where people go to find their place in the workforce in a
 post-AI world. The irony here is that AI could be ushering in a post-work world,
 which means that finding a place in the workforce is less important than ever,
-and Marxist ideology is probably more pertinent than ever.<a class="tooltip" data-tip="I&#x27;m not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it&#x27;s directionally accurate though." href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a></p>
+and Marxist ideology is probably more pertinent than ever.<a class="tooltip" data-tip="I&#x27;m not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it&#x27;s directionally accurate though." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a></p>
+<!-- We are currently moving farther away from this vision. 
+
+What other obvious evidence of this is there?
+
+Widening wealth gap? 
+SpaceX going public?
+youth anxiety increasing?
+-->
+
 <!--
 Where else are we going?
 
@@ -349,9 +378,9 @@ insidious psychological techniques that get people to gamble more or doomscroll
 on social media, and other features of
 <a href="https://www.afterbabel.com/p/limbic-capitalism-addiction-david-courtwright">limbic capitalism</a>
 have not been good for society. AI will enable exacerbation of all these things
-as well.<a class="tooltip" data-tip="There is a lot of darkness to explore here with things like AI pornography and &quot;gooning.&quot; Maybe I&#x27;ll write about that another time." href="#tooltip-def-9" id="tooltip-ref-9"><sup>9</sup></a> These two sides of capitalism emerged from the same incentive
+as well.<a class="tooltip" data-tip="There is a lot of darkness to explore here with things like AI pornography and &quot;gooning.&quot; Maybe I&#x27;ll write about that another time." href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> These two sides of capitalism emerged from the same incentive
 structure; the structure, taken to a limit, is good, but is bittersweet when
-allowed to continue beyond that.<a class="tooltip" data-tip="For some reason, as I was writing this, I was reminded of Revelation 10:8-10" href="#tooltip-def-10" id="tooltip-ref-10"><sup>10</sup></a></p>
+allowed to continue beyond that.<a class="tooltip" data-tip="For some reason, as I was writing this, I was reminded of Revelation 10:8-10" href="#tooltip-def-9" id="tooltip-ref-9"><sup>9</sup></a></p>
 <!-- []^(The argument of accelerating AI to "beat China" in an AI race is <a href="https://www.nytimes.com/2026/05/14/opinion/china-trump-ai-xi.html">losing its luster</a>.) -->
 
 <!-- As another early step to stem the further destruction of community by our
@@ -444,10 +473,9 @@ https://substack.com/@existentialespresso/note/c-269351530?r=863mlw&utm_source=n
         <li id="tooltip-def-4">Not all students do this, of course <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
         <li id="tooltip-def-5">To draw an analogy for the uninitiated, think of activations as the pattern of how neurons fire in your/the AI's brain <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
         <li id="tooltip-def-6">Simplified definition for the uninitiated, this is the prompt that defines the large language model's role and behavior. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
-        <li id="tooltip-def-7">This brings up an important risk: if we push too far toward the homogenization of life–as has already happened somewhat with social media–then discourse breaks down because no one thinks differently. No one wants to push back in a groupthink environment because it harms the group dynamic. We also lose opportunities to develop empathy and morality by learning how to put ourselves in a different person's shoes. How would we bring entropy back in the future so that productive discourse can occur? This is an open question and it needs to be answered before the vision I'm articulating here can be pursued. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
-        <li id="tooltip-def-8">I'm not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it's directionally accurate though. <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
-        <li id="tooltip-def-9">There is a lot of darkness to explore here with things like AI pornography and "gooning." Maybe I'll write about that another time. <a class="tooltip-back" href="#tooltip-ref-9">↩</a></li>
-        <li id="tooltip-def-10">For some reason, as I was writing this, I was reminded of <a href="https://www.biblegateway.com/passage/?search=Revelation%2010%3A8-10&version=RSV">Revelation 10:8-10</a> <a class="tooltip-back" href="#tooltip-ref-10">↩</a></li>
+        <li id="tooltip-def-7">I'm not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it's directionally accurate though. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
+        <li id="tooltip-def-8">There is a lot of darkness to explore here with things like AI pornography and "gooning." Maybe I'll write about that another time. <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
+        <li id="tooltip-def-9">For some reason, as I was writing this, I was reminded of <a href="https://www.biblegateway.com/passage/?search=Revelation%2010%3A8-10&version=RSV">Revelation 10:8-10</a> <a class="tooltip-back" href="#tooltip-ref-9">↩</a></li>
     </ol>
 </section>]]></content:encoded>
     </item>

@@ -219,6 +219,12 @@ is why it's the perfect niche for humans to fall into in this new age.
 
 ## The new education
 
+<!-- 
+
+Problem: this section does not illustrate/connect back to how this "new education" teaches moral reasoning
+
+-->
+
 One of the dairy cows on the ranch had an infected wound, and Rebecca was
 cleaning it. Rebecca could *feel* how the cleaning was hurting the cow, and yet
 she had to carry on for its fate. Rebecca is a student at
@@ -226,13 +232,13 @@ she had to carry on for its fate. Rebecca is a student at
 a "work school" that emphasizes personal responsibility and stewardship of the
 campus alongside a liberal arts education.
 
-Deep Springs hits at a fundamental disconnect in higher education as it's
-practiced today: modern colleges prepare us to work, but not to live. Deep
-Springs gives students an opportunity to form a two-way relationship with the
-world around them. They give and they take. At a normal college, students
-typically skew far more towards the taking. As the author of the piece I linked,
-Michal Leibowitz, points out, at "other, bigger schools, students are freed from
-the drudgery of cleaning, of fixing the old campus vehicles and toilets, of
+Deep Springs hits at the fundamental disconnect in higher education I've been
+alluding to: modern colleges prepare us to work, but not to live. Deep Springs
+gives students an opportunity to form a two-way relationship with the world
+around them. They give and they take. At a normal college, students typically
+skew far more towards the taking. As the author of the piece I linked, Michal
+Leibowitz, points out, at "other, bigger schools, students are freed from the
+drudgery of cleaning, of fixing the old campus vehicles and toilets, of
 collecting the tumbleweed that poses a fire risk in the valley." Instead,
 students at Deep Springs staff a team of volunteer firefighters, grow the food
 that the campus eats, and care for the livestock. "Education" at Deep Springs
@@ -265,19 +271,33 @@ not to are masking it), then motivation springs forth to correct our
 deficiencies. We need to revive the social gym of life; the problem is that
 everyone is on their damn phones, and so we have a collective action problem. -->
 
-To solve this problem, a liberal arts education that returns to an oral and
+Moral reasoning is woven throughout the Deep Springs ethos. Rebecca learned of
+the tension between necessity and hurtfulness of certain actions. Sasha
+Halperin, another student, learned that in an environment with rich communal
+bonds, there is "no place to hide." Having to reckon with how your own actions
+affect other people and your environment is the crux of moral reasoning.
+
+We don't necessarily need to replicate the Deep Springs model everywhere, but to
+my knowledge, it is the institution that most closely embodies the vision I am
+driving towards here. If we choose to have college remain a part of our society,
+perhaps emphasizing a liberal arts education that returns to an oral and
+in-class tradition of assessing student performance could be a good first step
+in the right direection.
+
+<!-- To solve this problem, a liberal arts education that returns to an oral and
 in-class tradition of assessing student performance could be a good first step.
 The best way to encourage good student learning is to block the easy way out.
 The problem is that in a future world where humans do not play a major role in
 the means of production, students might not see the value in obtaining an
 education in the first place. Even if it were compulsory, students might not be
-motivated to put effort in.
+motivated to put effort in. -->
 
+<!-- 
 I am not sure how worried we need to be about this, though. The best part about
 this future of education is that everyone has a place, and what more does any
 young person crave than to *belong?* There is no "demand" signal for unique and
 critical thought; every student has something to contribute based on the unique
-circumstances of their own life.[]^(This brings up an important risk: if we push too far toward the homogenization of life–as has already happened somewhat with social media–then discourse breaks down because no one thinks differently. No one wants to push back in a groupthink environment because it harms the group dynamic. We also lose opportunities to develop empathy and morality by learning how to put ourselves in a different person's shoes. How would we bring entropy back in the future so that productive discourse can occur? This is an open question and it needs to be answered before the vision I'm articulating here can be pursued.)
+circumstances of their own life.[]^(This brings up an important risk: if we push too far toward the homogenization of life–as has already happened somewhat with social media–then discourse breaks down because no one thinks differently. No one wants to push back in a groupthink environment because it harms the group dynamic. We also lose opportunities to develop empathy and morality by learning how to put ourselves in a different person's shoes. How would we bring entropy back in the future so that productive discourse can occur? This is an open question and it needs to be answered before the vision I'm articulating here can be pursued.) -->
 
 <!-- 
 There is a delicate and strange balance. The fact that different languages and cultural groups
@@ -319,6 +339,15 @@ schools will be where people go to find their place in the workforce in a
 post-AI world. The irony here is that AI could be ushering in a post-work world,
 which means that finding a place in the workforce is less important than ever,
 and Marxist ideology is probably more pertinent than ever.[]^(I'm not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it's directionally accurate though.)
+
+<!-- We are currently moving farther away from this vision. 
+
+What other obvious evidence of this is there?
+
+Widening wealth gap? 
+SpaceX going public?
+youth anxiety increasing?
+-->
 
 <!--
 Where else are we going?
