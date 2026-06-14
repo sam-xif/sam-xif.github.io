@@ -515,7 +515,8 @@ my own development as a software engineer. I also will continue to question
 whether software engineering is something I want to continue doing. And of
 course, in the spirit of intellectual humility, I'll keep on the lookout for
 signs that I'm wrong, such as the possibility that AI capabilities simply do not
-enable broad job replacement. We have already observed that AI becomes more
+enable broad job replacement, or that our society is more resilient to AI
+diffusion than I thought. We have already observed that AI becomes more
 [incoherent](https://arxiv.org/abs/2601.23045) as the task horizon lengthens,
 but I'm sure this is a solvable problem.
 
