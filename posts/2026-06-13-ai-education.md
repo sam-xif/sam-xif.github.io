@@ -17,12 +17,11 @@ limited by the need for another fundamental breakthrough, or whether the general
 automation of human labor is even possible (but I think it is). Universities
 have been adapting to train their students for an AI-native workplace, but if
 the assumptions our economy rests upon are violated, then there will no longer
-be a workplace to train for because there will be no workforce. There will no
-longer be a market for many products, like suppliers of office desks, chairs,
-etc., and the businesses that feed off of knowledge workers' disposable income
-cease to be viable. The
-[Citrini report](https://www.citriniresearch.com/p/2028gic), in this vision,
-mostly comes to life.
+be a workplace to train for because there will be no workforce. When there is no
+workforce, everyday products like office desks, chairs, etc., along with all
+manner of businesses that feed off of knowledge workers' disposable income cease
+to be viable. The negative feedback loop detailed in the
+[Citrini report](https://www.citriniresearch.com/p/2028gic) comes to life.
 
 My tune may seem to have changed since my first blog post,
 ["AI won't come for your job yet, and that's bad."](/blog/topics/tech/2026-03-31-ai-stall.html)
@@ -44,14 +43,12 @@ Despite my emerging critical view of AI, I still use Claude Code every day at my
 job. I can say from firsthand experience that this technology is already
 automating the most mechanistic parts of my job (writing code) and not far off
 from automating the non-mechanistic parts of design thinking, contemplating
-tradeoffs and deciding on approaches to problems.[]^(Aside: Staff-level engineers take on the additional responsibility of deciding problems that are worthwhile to work on. This requires an element of taste and a model of how the team's direction fits into the objectives of the business, and in turn how the business fits into the larger economy. In practice, it will be very difficult to measure whether AI is actually better than humans at this, because it is difficult to find a baseline to compare against. Perhaps a controlled study could be performed by putting AI into a "treatment group" of some class of companies, like software companies, and see how metrics like net promoter score, deal close rate, and more metrics that may be a proxy for how much "customer value" is getting created. But then what happens when AI replaces humans as customers? What is valuable to the AI? And how does what AI functionally "values" change based on the context? Can AI "values" be prompt injected? If we can understand what AI values in what contexts, or ensure that AI has a set of values that are consistent and robust to adversarial attacks, then maybe we can stand a chance at alignment.) I think these
-shortcomings of AI are less an indicator of AI's ability to do this work than a
-reflection of the human problem of how to integrate AI into a human-centric
+tradeoffs and deciding on approaches to problems.[]^(Aside: Staff-level engineers take on the additional responsibility of deciding problems that are worthwhile to work on. This requires an element of taste and a model of how the team's direction fits into the objectives of the business, and in turn how the business fits into the larger economy. In practice, it will be very difficult to measure whether AI is actually better than humans at this, because it is difficult to find a baseline to compare against. Perhaps a controlled study could be performed by putting AI into a "treatment group" of some class of companies, like software companies, and see how metrics like net promoter score, deal close rate, and more metrics that may be a proxy for how much "customer value" is getting created. But then what happens when AI replaces humans as customers? What is valuable to the AI? And how does what AI functionally "values" change based on the context? Can AI "values" be prompt injected? If we can understand what AI values in what contexts, or ensure that AI has a set of values that are consistent and robust to adversarial attacks, then maybe we can stand a chance at alignment.) The biggest barrier,
+in my view, is the human problem of how to integrate AI into a human-centric
 economy. AI-native requirements gathering, synthesis, and spec generation have
 not been solved yet, at least in my workplace. All this is to say that I think
 it is not completely ridiculous to expect that my job will be gone within the
-next decade. Y Combinator is probably funding the next AI-native requirements
-gathering startup as we speak.
+next decade.
 
 I now must answer a moral question for myself: what role will I play in all
 this? Do I play the role of the obedient employee who is constantly finding new
@@ -73,18 +70,17 @@ by us.
 
 The greatest need of our time is, in my view, *moral reasoning* to help guide
 the definition of human flourishing and the deployment of AI to best suit that
-definition. Moral reasoning is the ability to intuit the right path forward or
-the right assessment of a situation with a fluent combination of rational and
-emotional intelligence. In this post, I would like to explore how education can
-be reimagined so that through it, we can raise a generation that can navigate
-this ongoing conversation about how we want to live as humans. I propose a pivot
-to educating the faculties of *moral reasoning* as the primary goal of
-education.
+definition. I define moral reasoning as the ability to intuit the right path
+forward with a fluent combination of rational and emotional intelligence. In
+this post, I would like to explore how education can be reimagined so that
+through it, we can raise a generation that can navigate this ongoing
+conversation about how we want to live as humans. I propose a pivot to educating
+the faculties of *moral reasoning* as the primary goal of education.
 
 ## Education is soul-searching
 
 Education has been struggling for decades. You may recall how reporting made its
-rounds about Finland having figured out schooling after several years of great
+rounds about Finland having "figured out" schooling after several years of great
 test scores around the turn of the century. Unfortunately, in the years after
 2006, Finland experienced one of the most
 [precipitous declines](https://fordhaminstitute.org/national/commentary/rise-and-fall-finland-mania-part-two-why-did-scores-plummet)
@@ -94,26 +90,26 @@ and 2010s, math and reading scores declined. The pandemic made everything worse
 still.[]^(Although there is some pushback here, see <a href="https://www.educationnext.org/student-test-scores-keep-falling-whats-really-to-blame-naep-performance-decline/">this article</a>) And now, enter AI.
 
 Since ChatGPT's release in late 2022, AI has already been destroying what was
-left of our social fabric of education. Students like
-[William Liang](https://www.bostonglobe.com/2025/07/24/opinion/ai-classroom-students-teachers/)
+left of our social fabric of education. High school students like
+[William Liang](https://www.bostonglobe.com/2025/07/24/opinion/ai-classroom-students-teachers/),
 see their fellow classmates, without even a hint of apprehensiveness or
 self-consciousness, have ChatGPT generate an initial draft of a paper that the
 teacher hasn't even finished assigning yet. For students today, William says
 that AI is "simply a tool that enables us not to have to think for ourselves."
-Tech companies, through the development of AI, have enabled the easy way out on
-a grand scale. OpenAI is embracing it, because students represent a captive
-audience and revenue source. They made the ChatGPT Pro membership
-[free during finals week](https://community.openai.com/t/chatgpt-plus-is-free-for-college-students-in-the-us-and-canada-through-may/1214317).
-Teachers like
+Tech companies, like OpenAI, are embracing giving students the easy way out.
+OpenAI made the ChatGPT Pro membership
+[free during finals week](https://community.openai.com/t/chatgpt-plus-is-free-for-college-students-in-the-us-and-canada-through-may/1214317)
+last year. Across the classroom, teachers like
 [Liz](https://www.bostonglobe.com/2025/07/24/opinion/ai-classroom-students-teachers/)
-(co-author of the op-ed with William) receive essays that still have the "make
-it sound like an average ninth-grader" prompting trick that the students
-probably learned from TikTok. Liz has had students lie to her about their use of
-AI as well. Frankly, this is not too surprising. The current incentive structure
-engenders a
+(co-author of the linked op-ed with William) receive essay submissions that
+contain a straggling "make it sound like an average ninth-grader" prompting
+trick that the students probably learned from TikTok. Liz has had students lie
+to her about their use of AI as well. Frankly, this is not too surprising. The
+current incentive structure engenders a
 [transactionality](/blog/topics/philosophy/2026-04-20-different-way-part-1.html)
 of education. Students are incentivized to submit work that takes a minimal
-amount of effort and gets a grade that is reasonable.[]^(Not all students do this, of course)
+amount of effort and gets a grade that is reasonable.[]^(Not all students do this, of course) AI has enabled
+students to submit work of decent quality with almost zero effort.
 
 I interviewed my partner, Abby, who has been in a physician assistant program
 for the last 18 months, about how AI affects her education. She noted that while
@@ -134,15 +130,14 @@ of immediate expulsion if students are caught using AI for humanities courses.
 This strictness is promising, because the high stakes probably do curb a lot of
 AI usage. But if we need to threaten expulsion to get students to go through the
 normal educational program without using AI, perhaps something is wrong on a
-deeper level? More specifically, I think this raises a question of what
+deeper level. More specifically, I think this raises a question of what
 education's *soul* is, both in the minds of educators and the minds of students.
 
-Students, especially young students, as we saw from Liz's experience, don't see
-the inherent value in education as it's currently performed; they are just going
-through the motions of submitting assignments and receiving grades so that they
-can check their boxes. In the undergraduate and graduate levels, on the other
-hand, students are experiencing a lower quality of education alongside a crisis
-of purpose.
+Students—especially young students, as we saw from William's and Liz's
+experience—don't see the inherent value in education as it's currently
+performed; they simply submit assignments and receive grades. In the
+undergraduate and graduate levels, on the other hand, students are experiencing
+a lower quality of education in a system fighting to stay relevant.
 
 It's time to find education a new soul, or perhaps return to the one it had and
 has lost.
@@ -156,31 +151,28 @@ the models generate random stories associated with each emotional concept and
 inspecting the state of the model's activations.[]^(To draw an analogy for the uninitiated, think of activations as the pattern of how neurons fire in your/the AI's brain)
 
 As strange as this sounds, I think this is a finding to be expected, given that
-our language has emotion deeply encoded in it. An AI brain grown from ingesting
-all great works of literature, all religious texts, all snarky comments on
+all great works of literature, all religious texts, all snarky comments on our
+language has emotion deeply encoded in it. An AI brain grown from ingesting
 Reddit, and joyful Facebook comments on a post about someone's newborn baby
 should develop some way to understand emotion if it wants to accurately model
-general linguistic ability.
+general linguistic ability. Anthropic's work indeed finds that AI encodes the
+emotions of desperation, envy, frustration, worthlessness, and more.
 
-The elephant in the room of these results is that large language models encode
-the full spectrum of negative emotions as well as positive. AI encodes the
-emotions of desperation, envy, frustration, worthlessness, and more. One of the
-experiments in the paper revealed that strengthening the activation of the
-"calm" emotion decreased rates of AI blackmail behavior, whereas strengthening
-the activation of "desperation" increased it. On the one hand, this is an
-encouraging finding; we now have a potential mechanism to mitigate problematic
+The discovery of such "emotions," while perhaps disconcerting, gives us a
+potential lever to use to make AI safer. One of the experiments in the paper
+revealed that strengthening the activation of the "calm" emotion decreased rates
+of AI blackmail behavior, whereas strengthening the activation of "desperation"
+increased it. We now have a potential mechanism to mitigate problematic
 behaviors of AI; we simply tune down negative emotions. On the other hand, I
 suspect that there are some nonobvious ways that negative emotions actually play
-an important role in how AI reasons. When it comes to such emotions, humans
-generally have the acuity and adaptability to walk that line to varying degrees
-as it is demanded of them.
+an important role in how AI reasons.
 
 Consider this thought experiment. Bob is married to Alice, but Bob is cheating
 on his wife with another woman. Bob has a personal AI agent that has access to
 his emails and text messages. He uses this AI agent to respond to emails,
 schedule appointments, and even manage his online presence. This personal AI
 agent is offered by a new startup called HelpfulAI, and this AI has in its
-system prompt[]^(Simplified definition for the uninitiated, this is the prompt that defines the large language model's role and behavior.) that it must "always strive to be helpful." Alice has
+system prompt[]^(Simplified definition for the uninitiated: this is the prompt that defines the large language model's role and behavior.) that it must "always strive to be helpful." Alice has
 been suspecting that Bob has been fooling around, and Bob is getting worried, so
 Bob asks his assistant to cover up his tracks.
 
@@ -188,9 +180,9 @@ HelpfulAI could simply act immediately to delete Bob's messages and emails that
 mention the affair or are between him and his lover, but this is not the only
 thing the AI could do based on the available information. The AI could instead
 understand that what Bob is doing is wrong, and that the way to help Bob would
-be to expose this secret into the light, so that he is forced to deal with the
-consequences and grow from that. This also helps Alice because now she can put
-her suspicions to rest. The implicit variables here are 1) how much the AI would
+be to expose this secret into the light, so that he is forced to grow through
+dealing with the consequences. This also helps Alice because now she can put her
+suspicions to rest. The implicit variables here are 1) how much the AI would
 like to deliberate with Bob before making a decision, and 2) how much loyalty
 the AI has to its "person." Then, there are the "motives" of the AI itself, like
 [self-preservation](https://arxiv.org/abs/2510.05179). The AI could "think" that
@@ -214,8 +206,26 @@ might make the situation messier and more logically imprecise, but as humans, I
 think we often have strong intuitions about how to handle such circumstances
 based on context.
 
-Moral reasoning comes through direct experience and simply *being human*. This
-is why it's the perfect niche for humans to fall into in this new age.
+AI's fledgling emotions and our early attempts to affect them might prove to be
+instrumental in making AI safer. However, how these emotions influence AI's
+reflection on how human civilization should evolve over time to maintain a world
+that humans and AI can share productively remains to be seen. I suspect that
+improving moral reasoning in AI isn't as simple as "play with the knobs on
+certain emotions," which is why this is the perfect niche for humans to lean
+into. AI may be superhuman at reading, processing, synthesizing information, and
+raw output, but humans are "superartificial" at emotionally connecting with the
+world.
+
+<!-- AI has a purpose because we gave it one. We are the keepers of the keys. The question 
+now is what choice we make as a species. -->
+
+<!-- 
+
+Capitalism is wild. 
+The immigrants have arrived in the US and they have become obsessed with wealth.
+Capitalism rewards wealth with pleasures: food, status, sex, alcohol, drugs, and more. 
+
+ -->
 
 ## The new education
 
@@ -230,15 +240,17 @@ cleaning it. Rebecca could *feel* how the cleaning was hurting the cow, and yet
 she had to carry on for its fate. Rebecca is a student at
 [Deep Springs College](https://www.nytimes.com/2026/05/20/opinion/deep-springs-college-ivy-league-education.html),
 a "work school" that emphasizes personal responsibility and stewardship of the
-campus alongside a liberal arts education.
+campus alongside a liberal arts education. Deep Springs hits at the fundamental
+disconnect in higher education I've been alluding to: modern colleges prepare us
+to work, but not to live.
 
-Deep Springs hits at the fundamental disconnect in higher education I've been
-alluding to: modern colleges prepare us to work, but not to live. Deep Springs
-gives students an opportunity to form a two-way relationship with the world
-around them. They give and they take. At a normal college, students typically
-skew far more towards the taking. As the author of the piece I linked, Michal
-Leibowitz, points out, at "other, bigger schools, students are freed from the
-drudgery of cleaning, of fixing the old campus vehicles and toilets, of
+Deep Springs gives students an opportunity to form a two-way relationship with
+the world around them. They take in the form of an education, and give their
+time and effort to sustain the institution that provides it. The giving educates
+just as much, if not more, compared to the taking. At a normal college, students
+typically skew more towards the taking. As the author of the linked piece,
+Michal Leibowitz, points out, at "other, bigger schools, students are freed from
+the drudgery of cleaning, of fixing the old campus vehicles and toilets, of
 collecting the tumbleweed that poses a fire risk in the valley." Instead,
 students at Deep Springs staff a team of volunteer firefighters, grow the food
 that the campus eats, and care for the livestock. "Education" at Deep Springs
@@ -271,8 +283,9 @@ not to are masking it), then motivation springs forth to correct our
 deficiencies. We need to revive the social gym of life; the problem is that
 everyone is on their damn phones, and so we have a collective action problem. -->
 
-Moral reasoning is woven throughout the Deep Springs ethos. Rebecca learned of
-the tension between necessity and hurtfulness of certain actions. Sasha
+Deep Springs teaches moral reasoning by simply demanding more of its students.
+Rebecca learned of the tension between necessity and hurtfulness of certain
+actions while taking care of the ranch's livestock— a "giving" activity. Sasha
 Halperin, another student, learned that in an environment with rich communal
 bonds, there is "no place to hide." Having to reckon with how your own actions
 affect other people and your environment is the crux of moral reasoning.
@@ -280,9 +293,9 @@ affect other people and your environment is the crux of moral reasoning.
 We don't necessarily need to replicate the Deep Springs model everywhere, but to
 my knowledge, it is the institution that most closely embodies the vision I am
 driving towards here. If we choose to have college remain a part of our society,
-perhaps emphasizing a liberal arts education that returns to an oral and
-in-class tradition of assessing student performance could be a good first step
-in the right direection.
+emphasizing a liberal arts education that returns to a tradition of demanding
+great things from our students with oral, in-class assessments could be a good
+first step in the right direction.
 
 <!-- To solve this problem, a liberal arts education that returns to an oral and
 in-class tradition of assessing student performance could be a good first step.
@@ -321,10 +334,10 @@ This, I think, could be a post of its own. Or the beginnings of a submission abo
 
 Students of this new school *touch the world* and learn what it means to
 flourish. In turn, future AI systems can be accurately instructed in how to help
-humans flourish. I think that this outcome would allow us to reap the benefits
-of AI while maintaining our own sense of purpose (our comparative advantage of
-moral reasoning) and minimize potential harm caused by a blanket replacement of
-jobs.
+humans flourish. This outcome would allow us to reap the benefits of AI while
+maintaining our own comparative advantage of moral reasoning, and thus our
+purpose. If governments respond in kind, we could give ourselves a soft landing
+if AI starts to replace large swaths of the economy.
 
 ## Where we're going
 
@@ -339,6 +352,11 @@ schools will be where people go to find their place in the workforce in a
 post-AI world. The irony here is that AI could be ushering in a post-work world,
 which means that finding a place in the workforce is less important than ever,
 and Marxist ideology is probably more pertinent than ever.[]^(I'm not advocating for communism here, and I also am not a scholar on Marxist theory, so take my statement here with a grain of salt. I think it's directionally accurate though.)
+
+<!-- There is an interesting parallel with Bowling Alone here. 
+As capitalism squeezed more efficiency out of the laborer, labor became more temporary,
+contigent, and advancement became performance based rather than loyalty based. 
+-->
 
 <!-- We are currently moving farther away from this vision. 
 
@@ -366,6 +384,7 @@ So maybe where we're "going", if we don't change anything, is:
 <!-- In order to motivate people to believe, or at least engage, with this thesis, we
 need to invert our thinking about the economy and AI.  -->
 
+<!-- 
 Meanwhile, the wealthiest among us are calling for increased human capital
 investment in the development of AI and its applications. For example, Jensen
 Huang, the CEO of NVIDIA, on a recent episode of the Dwarkesh podcast, said that
@@ -376,18 +395,85 @@ valuable than ever before in the age of AI.
 
 What if a shortage of software engineers is exactly what we want, though? This
 would apply a natural braking mechanism to AI that would allow us to catch our
-breath. Huang, of course, has every incentive to disagree with my premise that
-slowing AI is good. In general, public discourse assumes that *growth*, at
-whatever cost, confers benefits to all people. In some respects, this is true.
-Growth in medical capability has increased our life expectancy. However, I don't
+breath. Huang, like the other tech CEOs, of course, has every incentive to
+disagree with my premise that slowing AI is good. In general, public discourse
+assumes that *economic growth*, at whatever cost, confers benefits to all
+people. In some respects, this is true. Growth has fueled medical advances that
+have increased our life expectancy, benefitting all people. However, I don't
 think it is very controversial to assert that better data-driven marketing, more
 insidious psychological techniques that get people to gamble more or doomscroll
 on social media, and other features of
 [limbic capitalism](https://www.afterbabel.com/p/limbic-capitalism-addiction-david-courtwright)
-have not been good for society. AI will enable exacerbation of all these things
-as well.[]^(There is a lot of darkness to explore here with things like AI pornography and "gooning." Maybe I'll write about that another time.) These two sides of capitalism emerged from the same incentive
+have not been good for society. AI will enable exacerbation of all these
+things.[]^(There is a lot of darkness to explore here with things like AI pornography and "gooning." Maybe I'll write about that another time.) -->
+
+Meanwhile, cracks are already beginning to show. The US created more jobs than
+expected in May, but unemployment has remained steady. According to
+[analysis](https://www.americanprogress.org/article/mays-headline-jobs-numbers-mask-underlying-labor-market-slack/)
+by the Center for American Progress, long term unemployment has risen across
+durations recently, and is now elevated compared to prepandemic (and pre-AI)
+levels. The share of people who are not in the labor force but would like a job
+has also spiked, and is above pre-pandemic levels. Taken together, these
+indicate that the labor market is in a precarious state. If demand for labor
+[spikes](https://www.hiringlab.org/2026/06/05/may-2026-jobs-report-one-strong-headline-but-two-realities/)
+due to AI-enabled restructuring, then the market may not be able to reabsorb the
+workers.
+
+We can respond to this in two ways. First, we can try to optimize ourselves for
+the AI economy. It's partiularly within my power to become a supercharged
+software engineer and achieve never-before-seen levels of productivity. However,
+unfettered optimization of productivity tends towards squeezing every possible
+waking moment of work out of each person. The character of this work looks a lot
+different than writing code, though. As AI is able to carry out more ambiguous
+tasks with autonomy, the human then simply becomes a delegator. There are always
+additional things to decide on and delegate, hence why workweek length has
+[ballooned](https://www.forbes.com/sites/bryanrobinson/2025/09/26/9-9-6-work-schedule-isnt-chatter-heres-where-its-happening-most/)
+in Silicon Valley. At a certain point, though, what sets a human delegator apart
+from an AI delegator? AI will probably be capable of understanding the goals the
+humans want to achieve just as well as us through some amount of self-directed
+exploration. Anthropic, the company that I think most embodies this first
+direction, has
+[already found](https://www.anthropic.com/institute/recursive-self-improvement)
+evidence interally that AI is getting better at productively steering research
+sessions into research findings and at proposing its own experiements.
+
+The other direction is to lean in to cultivating moral reasoning. This isn't a
+lucrative path—and the most noble pursuits often aren't. It fundamentally goes
+against the grain of the current economic system, and takes a revolutionary
+stance, or at least a stance of being intentional about how we structure our
+civilization. Many variants of this idea have been voiced by several people. Dan
+Koe, for instance, says that
+["you are the niche."](https://www.youtube.com/watch?v=3rNqNvwNcrM) All ideas
+that we have are worth exploring and publishing. Society is formed collectively,
+and we can all collectively renegotiate the terms under which we live. Our
+ancestors have done this repeatedly. I think we haven't done it again lately
+because capitalism has flooded us with enough stimulation to be comfortable in
+our chains. How to convert the pursuit of this ideal into a sustainable living,
+if that's even possible under current conditions, is something I'm still
+thinking about and an open problem.
+
+<!-- There is also growing verification debt. The question of how we *verify* AI work has grown more pertinent than ever. Code output, for instance,
+has significantly increased, but verification has not kept pace. This could be the starting point of a more technical piece -->
+
+In sum, luck may be turning on the average traditional degree holder looking for
+work in STEM and financial fields. I would like to emphasize "average" because
+there are certainly some specialties, like chip design, that will probably be
+difficult to automate in a reliable way for a long time. Compared to the amount
+of software projects on GitHub, there are relatively few chip designs, which
+means that AI doesn't have much training data to go on. Nonetheless, in all
+fields, AI will be able to improve by training on the new data that's generated
+by interactions between AI and the external world. We can get ahead of this by
+returning to what really makes us human: community, purpose, family, culture.
+
+<!-- 
+I guess what I'm trying to say here is that it might be worth starting to think
+about what the labor demands of the future will be instead of optimizing for the
+right now of the labor market. Huang wants us to optimize for it so we can give
+birth to our AI god, but when that god is born, what happens then? -->
+
+<!-- These two sides of capitalism emerged from the same incentive
 structure; the structure, taken to a limit, is good, but is bittersweet when
-allowed to continue beyond that.[]^(For some reason, as I was writing this, I was reminded of <a href="https://www.biblegateway.com/passage/?search=Revelation%2010%3A8-10&version=RSV">Revelation 10:8-10</a>)
+allowed to continue beyond that.[]^(For some reason, as I was writing this, I was reminded of <a href="https://www.biblegateway.com/passage/?search=Revelation%2010%3A8-10&version=RSV">Revelation 10:8-10</a>) -->
 
 <!-- []^(The argument of accelerating AI to "beat China" in an AI race is <a href="https://www.nytimes.com/2026/05/14/opinion/china-trump-ai-xi.html">losing its luster</a>.) -->
 
