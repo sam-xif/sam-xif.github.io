@@ -162,10 +162,20 @@
     border-radius:0 8px 8px 0; padding:10px 13px; margin:14px 0 4px; font-size:13px; }
   #about .caveat b { color:var(--warn); }
 </style>
+<style>
+  header .homelink { display:inline-flex; align-items:center; gap:6px;
+    color:var(--dim); text-decoration:none; font:500 12.5px/1 var(--sans);
+    padding:5px 10px; border:1px solid var(--edge2); border-radius:7px;
+    background:var(--panel2); white-space:nowrap;
+    transition:color .12s ease, border-color .12s ease; }
+  header .homelink:hover { color:var(--fg); border-color:var(--dim); }
+  header .homelink .arrow { color:var(--dimmer); font-size:13px; }
+</style>
 </head>
 <body>
 
 <header>
+  <a class="homelink" href="https://samx.io/"><span class="arrow">&#8592;</span>samx.io</a>
   <h1>ruby-lean<span class="slash">/</span><span class="sub">type checking Ruby, with a proof</span></h1>
   <button class="ghost icon" id="openabout" title="What is this?">&#9432;&nbsp; What is this?</button>
   <span class="grow"></span>
