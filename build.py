@@ -244,6 +244,33 @@ def format_date(d: datetime.date) -> str:
     return d.strftime("%B {day}, %Y").format(day=d.day)
 
 
+# Browsers italicize single-character <mi>, but LaTeX sets uppercase Greek upright.
+UPPER_GREEK_MI_RE = re.compile(r"<mi>(&#x0*3(?:9[1-9A-Fa-f]|[aA][0-9]);|[Α-Ω])</mi>")
+# latex2mathml emits ':' as an identifier, so `e : \tau` gets no relation spacing.
+# `{:}` (wrapped in its own <mrow>) is left alone, matching TeX's ordinary colon.
+DOUBLE_COLON_RE = re.compile(r"<mi>:</mi><mi>:</mi>(<mo>&#x0*3D;</mo>)?")
+SUBTYPE_RE = re.compile(r"<mo>&#x0*3C;</mo><mi>:</mi>")
+COLON_RE = re.compile(r"(?<!<mrow>)<mi>:</mi>(?!</mrow>)")
+# Same problem for the long arrows (\longrightarrow, \iff, \Longrightarrow).
+LONG_ARROW_MI_RE = re.compile(r"<mi>(&#x0*27F[5-9A];)</mi>")
+REL_SPACE = 'lspace="0.2778em" rspace="0.2778em"'
+# Browsers don't stretch the \overline accent, so draw it as a border (see blog.css).
+OVERLINE_RE = re.compile(
+    r'<mover><mrow>((?:(?!</?mover>).)*?)</mrow><mo accent="true">&#x0*2015;</mo></mover>'
+)
+
+
+def fix_mathml(html: str) -> str:
+    html = UPPER_GREEK_MI_RE.sub(r'<mi mathvariant="normal">\1</mi>', html)
+    html = DOUBLE_COLON_RE.sub(lambda m: f"<mo {REL_SPACE}>::{'=' if m.group(1) else ''}</mo>", html)
+    html = SUBTYPE_RE.sub(f"<mo {REL_SPACE}>&lt;:</mo>", html)
+    html = COLON_RE.sub(f"<mo {REL_SPACE}>:</mo>", html)
+    html = LONG_ARROW_MI_RE.sub(rf"<mo {REL_SPACE}>\1</mo>", html)
+    # TeX's '.' is ordinary (field access `s.decl`, `\forall m.`), not punctuation.
+    html = html.replace("<mo>&#x0002E;</mo>", '<mo lspace="0" rspace="0">.</mo>')
+    return OVERLINE_RE.sub(r'<mrow class="overline">\1</mrow>', html)
+
+
 def parse_post(path: Path) -> PostData:
     content = path.read_text(encoding="utf-8")
     parts = content.split("---", 2)
@@ -272,7 +299,7 @@ def parse_post(path: Path) -> PostData:
         date = datetime.date.today()
 
     md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension(), TooltipExtension()])
-    html_body = add_tooltip_footnotes(md.convert(body))
+    html_body = fix_mathml(add_tooltip_footnotes(md.convert(body)))
 
     return PostData(
         title=title,

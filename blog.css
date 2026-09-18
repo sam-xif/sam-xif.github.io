@@ -161,8 +161,31 @@ a:visited {
     font-size: 1.05em;
 }
 
+.post-body h4 {
+    margin-top: 1.4em;
+    font-size: 1em;
+}
+
 .post-body p {
     margin-bottom: 1em;
+}
+
+/* Display math: wide formulas scroll instead of widening the page */
+.post-body math[display="block"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1em 0;
+    padding-bottom: 4px;
+}
+
+/* Browsers ignore MathML's columnalign attribute */
+.post-body mtd[columnalign="left"] { text-align: left; }
+.post-body mtd[columnalign="right"] { text-align: right; }
+
+/* \overline over more than one glyph (build.py rewrites the accent) */
+.post-body mrow.overline {
+    border-top: 1px solid currentColor;
+    padding-top: 1px;
 }
 
 .post-body ul,
@@ -185,15 +208,16 @@ a:visited {
 }
 
 /* Code blocks (fenced) */
-.post-body pre.code {
+.post-body pre {
     background: var(--code-bg);
     padding: 14px 16px;
     overflow-x: auto;
     border-radius: 4px;
     margin-bottom: 1em;
+    line-height: 1.45;
 }
 
-.post-body pre.code code {
+.post-body pre code {
     background: none;
     padding: 0;
     font-size: 0.85em;
