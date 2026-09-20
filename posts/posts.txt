@@ -9,4 +9,5 @@
 2026-05-28-east-of-eden-reflection.md
 2026-06-13-benediction.md
 2026-06-13-ai-education.md
-2026-09-16-ruby-lean.md
+2026-09-20-ruby-lean.md
+2026-09-20-ruby-lean-technical-appendix.md
