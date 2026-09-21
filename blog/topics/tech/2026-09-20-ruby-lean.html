@@ -10,6 +10,7 @@
     <script src="../../../theme.js"></script>
     <script src="../../../anchors.js"></script>
     <script src="../../../analytics.js"></script>
+    <script src="../../../diagrams.js"></script>
 </head>
 <body>
     <main>
@@ -48,50 +49,17 @@ scale.</em></p>
 <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>. View the
 source code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>.</p>
 <hr />
-<p>The world's software is in danger. It is being attacked on two fronts: on the
-one hand, by increasingly powerful AI able to chisel through every crack in
-software's specification, and on the other, by developers themselves, who are
-merging in countless lines of agent-authored code that may be incorrect or
-<a href="https://www.paperclipped.de/en/blog/ai-generated-code-security-vulnerabilities/">insecure</a>.</p>
-<p>The
-<a href="https://www.cs.cmu.edu/~wing/publications/JacksonWing96.pdf">"Lightweight Formal Methods"</a>
-manifesto concedes that the key benefit unique to formal methods is that it
-offers <em>mechanical analysis</em> of systems. LLMs are capable of mechanically
-analyzing as well, but then we end up in a second-order version of the first
-paragraph's question: is the analyzer trustworthy?</p>
-<p>I think many might say: sure, it's trustworthy enough. Nothing too catastrophic
-has happened yet. But what happens when there's a codebase that has grown with
-AI for months or years, and attrition/retirement/etc. leads to a loss of domain
-expertise? Trying to recover the mental model of the authors from the code is
-already difficult enough, and when foreign LLM intelligences are coming up with
-their own "mental models" and injecting them everywhere, the general
-intelligbility of what software is supposed to do, or <em>why it isn't doing what
-it's not supposed to be doing</em>, with respect to its code, gets worse.</p>
-<p>Formal methods offers a way forward. Tools like
-<a href="https://en.wikipedia.org/wiki/Refinement_(computing)">refinements</a>, model
-checkers, and proof assistants have existed for decades. The specification of a
-system's behavior can be evolved and maintained at a higher level of abstraction
-relative to the raw code, leaving agents free to implement it however they want,
-as long as the proof passes.</p>
-<p>Conveniently, mechanized proof provides a great reinforcement learning
-environment in which to train, and frontier labs have likely already been taking
-advantage of this. As a result, the cost of proof is decreasing precipitiously.</p>
-<p>The first step, however, is modeling the world's software in a domain that's
-amenable to proof. In programming language theory, such models are referred to
-as <em>semantics</em>. We want to build them very, very quickly, and heavily
-accelerated with LLMs.</p>
-<p>To this end, I'm pleased to announce <code>ruby-lean</code>, my semantics of Ruby in Lean.
-<code>ruby-lean</code> is an executable semantics, modeled as an abstract CESK machine,
-about which a system of type judgments based on Sorbet--Ruby's <em>de facto</em> type
-checking tool--has been proven sound. I can probably count on my hands the
-number of lines of actual Lean code I wrote by hand. Frontier AI breezed through
-a lot of the simpler parts of this project, but when it came to the most
-difficult part of proving a hard property about a complex model, the AI required
-me, the human, to unblock it by crystallizing the theorem statements and the
-proof design approach. Admittedly, it was somewhat refreshing to find a task
-that AI does not excel at immediately, and I came away with some learnings about
-how to best steer AI on complex tasks like these. I'll share this and more in
-the following.</p>
+<p>I am pleased to announce <code>ruby-lean</code>, my semantics of Ruby in Lean. <code>ruby-lean</code>
+is an executable semantics, modeled as an abstract CESK machine, about which a
+system of type judgments based on Sorbet--Ruby's <em>de facto</em> type checking
+tool--has been proven sound. I can probably count on my hands the number of
+lines of actual Lean code I wrote by hand. Frontier AI breezed through a lot of
+the simpler parts of this project, but when it came to the most difficult part
+of proving a hard property about a complex model, the AI required me, the human,
+to unblock it by crystallizing the theorem statements and the proof design
+approach. Admittedly, it was somewhat refreshing to find a task that AI does not
+excel at immediately, and I came away with some learnings about how to best
+steer AI on complex tasks like these. I'll share this and more in the following.</p>
 <h2 id="semantics-done-quick">Semantics done quick</h2>
 <p>This summer, I was a fellow in the
 <a href="https://apartresearch.com/research">Apart Research</a>
@@ -175,6 +143,47 @@ this system determines the safety of a program:</p>
    we have a <a href="#theorem-end-to-end-soundness-of-the-type-validator">theorem</a> that
    demonstrates the soundness of this validation procedure.</li>
 </ol>
+<p>Here's how the pieces fit together, and where the trust boundary lies:</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph untrusted[&quot;Untrusted&quot;]
+        corpus[(&quot;Corpus of typed&lt;br/&gt;Ruby programs&quot;)]
+        anyprog[/&quot;Any Ruby program&quot;/]
+        prog([&quot;Program p&quot;])
+        sorbet[&quot;Sorbet&quot;]
+        emitter[&quot;Certificate emitter&quot;]
+        cruby[&quot;CRuby 4.0.5&quot;]
+    end
+
+    subgraph tcb[&quot;Trusted computing base&quot;]
+        subgraph tcbruby[&quot;Ruby&quot;]
+            sigstrip[&quot;sig_strip&quot;]
+            desugarer[&quot;Desugarer&quot;]
+        end
+        subgraph tcblean[&quot;Lean&quot;]
+            validator[&quot;Type Validator&lt;br/&gt;validateD p d&quot;]
+            proof[&quot;Soundness proof&quot;]
+            semantics[&quot;Semantics&lt;br/&gt;(CESK machine)&quot;]
+        end
+    end
+
+    corpus --&gt; prog
+    anyprog --&gt; prog
+    prog --&gt; sigstrip
+    sigstrip --&gt;|&quot;sig_strip(p)&quot;| desugarer
+    prog --&gt; sorbet
+    sorbet --&gt;|&quot;S(p)&quot;| emitter
+    desugarer --&gt;|&quot;core program&quot;| validator
+    emitter --&gt;|&quot;derivation d&quot;| validator
+    proof -.-&gt;|&quot;proves sound&quot;| validator
+    proof -.-&gt;|&quot;over&quot;| semantics
+    cruby -.-&gt;|&quot;differential&lt;br/&gt;testing&quot;| semantics
+    emitter ~~~ sigstrip
+    sigstrip ~~~ proof
+    validator --&gt;|&quot;true&quot;| verdict([&quot;p is stuck-free&quot;])
+
+    style untrusted stroke-dasharray: 6 4
+    style tcb stroke-width: 3px
+</code></pre>
 <h2 id="experience-report">Experience report</h2>
 <p>Building this system was not simple. I went through roughly five phases of
 construction:</p>

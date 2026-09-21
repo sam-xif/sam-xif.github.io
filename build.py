@@ -46,7 +46,7 @@ POST_TEMPLATE = """\
     <link rel="stylesheet" href="../../../blog.css">
     <script src="../../../theme.js"></script>
     <script src="../../../anchors.js"></script>
-    <script src="../../../analytics.js"></script>
+    <script src="../../../analytics.js"></script>{{EXTRA_SCRIPTS}}
 </head>
 <body>
     <main>
@@ -325,8 +325,15 @@ def parse_post(path: Path) -> PostData:
 
 
 def render_post_html(post: PostData) -> str:
+    # Only posts with ```mermaid blocks pay for loading the diagram renderer.
+    extra_scripts = (
+        '\n    <script src="../../../diagrams.js"></script>'
+        if 'class="language-mermaid"' in post.html_body
+        else ""
+    )
     return (
         POST_TEMPLATE
+        .replace("{{EXTRA_SCRIPTS}}", extra_scripts)
         .replace("{{POST_TITLE}}", post.title)
         .replace("{{POST_DATE_ISO}}", post.date.isoformat())
         .replace("{{POST_DATE_DISPLAY}}", format_date(post.date))

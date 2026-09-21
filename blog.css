@@ -639,3 +639,9 @@ blockquote pre {
 .post-body h4, .post-body h5, .post-body h6 {
     scroll-margin-top: 1em;
 }
+
+.mermaid-diagram {
+    margin: 1.5em 0;
+    text-align: center;
+    overflow-x: auto;
+}
