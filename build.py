@@ -21,6 +21,7 @@ except ImportError:
     sys.exit(1)
 
 from tooltip import TooltipExtension, preserve_tooltips, restore_tooltips, add_tooltip_footnotes
+from accordion import AccordionExtension, preserve_accordions, restore_accordions
 from rss import build_feed
 
 ROOT = Path(__file__).parent
@@ -44,6 +45,7 @@ POST_TEMPLATE = """\
     <link rel="stylesheet" href="../../../styles.css">
     <link rel="stylesheet" href="../../../blog.css">
     <script src="../../../theme.js"></script>
+    <script src="../../../anchors.js"></script>
     <script src="../../../analytics.js"></script>
 </head>
 <body>
@@ -298,7 +300,17 @@ def parse_post(path: Path) -> PostData:
     else:
         date = datetime.date.today()
 
-    md = markdown.Markdown(extensions=["fenced_code", "tables", LaTeX2MathMLExtension(), TooltipExtension()])
+    md = markdown.Markdown(
+        extensions=[
+            "fenced_code",
+            "tables",
+            # "toc" gives every heading an id, so [text](#heading-slug) links resolve.
+            "toc",
+            LaTeX2MathMLExtension(),
+            TooltipExtension(),
+            AccordionExtension(),
+        ]
+    )
     html_body = fix_mathml(add_tooltip_footnotes(md.convert(body)))
 
     return PostData(
@@ -416,6 +428,9 @@ def format_posts():
         tooltip_map = {}
         body = preserve_tooltips(body, tooltip_map)
 
+        accordion_map = {}
+        body = preserve_accordions(body, accordion_map)
+
         latex_map = {}
         def replace_latex(m):
             key = f"XLATEX{len(latex_map)}X"
@@ -436,6 +451,7 @@ def format_posts():
         formatted_body = formatted_body.replace(dollar_placeholder, "&dollar;")
         for key, val in latex_map.items():
             formatted_body = formatted_body.replace(key, val)
+        formatted_body = restore_accordions(formatted_body, accordion_map)
         formatted_body = restore_tooltips(formatted_body, tooltip_map)
 
         new_text = f"{frontmatter}{formatted_body}" if frontmatter else formatted_body

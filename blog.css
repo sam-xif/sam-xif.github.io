@@ -579,3 +579,63 @@ blockquote pre {
     display: block;
     line-height: normal;
 }
+/* Accordions (::: details ... :::) */
+.post-body details.accordion {
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    margin: 0 0 1em 0;
+    background: var(--bg);
+    transition: border-color 0.3s ease;
+}
+
+.post-body details.accordion > summary {
+    cursor: pointer;
+    padding: 0.55em 0.8em;
+    color: var(--text-muted-2);
+    font-size: 0.95em;
+    list-style: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    border-radius: 4px;
+}
+
+/* Safari renders the default triangle via this pseudo-element. */
+.post-body details.accordion > summary::-webkit-details-marker {
+    display: none;
+}
+
+.post-body details.accordion > summary::before {
+    content: "\25B8";
+    font-size: 0.85em;
+    transition: transform 0.2s ease;
+    display: inline-block;
+}
+
+.post-body details.accordion[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+.post-body details.accordion > summary:hover {
+    color: var(--text);
+    background: var(--code-bg);
+}
+
+.post-body details.accordion[open] > summary {
+    border-bottom: 1px solid var(--border);
+    border-radius: 4px 4px 0 0;
+}
+
+.post-body .accordion-body {
+    padding: 0.8em 0.8em 0.1em 0.8em;
+}
+
+.post-body .accordion-body > :last-child {
+    margin-bottom: 0.7em;
+}
+
+/* Keep #-anchor targets clear of the viewport edge. */
+.post-body h1, .post-body h2, .post-body h3,
+.post-body h4, .post-body h5, .post-body h6 {
+    scroll-margin-top: 1em;
+}

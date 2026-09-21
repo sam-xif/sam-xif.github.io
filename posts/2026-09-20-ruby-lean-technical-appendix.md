@@ -16,28 +16,6 @@ The content here assumes a familiarity with formal semantics, type theory, and
 the notation with which these results are typically presented in academic papers
 in the field.
 
-## The system
-
-A live demo [playground](/ruby-lean) is available. I encourage you to go play
-with it :).
-
-<img src="/blog_assets/type_pipeline.png" />
-
-The above screenshot is from the playground. It showcases the five stages of how
-this system determines the safety of a program:
-
-1. Run Sorbet on a program with specific flags, so that Sorbet emits annotation
-   information
-1. Strip the program's annotations, since Sorbet annotations are real syntax
-   that's outside of the modeled fragment
-1. Desugar[]^(In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a>) the program, producing an s-expression that builds programs
-   from a core set of Ruby primitives
-1. Run an *untrusted* certificate emitter (a companion program written in Ruby)
-   that proposes type judgements for the program
-1. Run the *trusted* validator--`validateD p d` in `ruby-lean`'s code--that
-   validates the derivation against the program and whether it implies safety,
-   and returns true if so.
-
 ## A stroll through the semantics
 
 Here I'll introduce the semantics very briefly. Also, reminder that you can view
@@ -46,9 +24,9 @@ the Lean code on [GitHub](https://github.com/sam-xif/ruby-lean)!
 We built the Ruby semantics in Lean as an abstract CESK machine.[]^(The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a>) By
 virtue of Lean's dual capability as a fully feature programming language and a
 proof assistant, actual Ruby code can be executed within the `ruby-lean`. See it
-in action on the [playground](/ruby-lean)!
+in action on the [playground](/ruby-lean).
 
-CESK stands for *control*, *environment*, *store*, and *k(c)ontinuation*. These
+CESK stands for *control*, *environment*, *store*, and *c(k)ontinuation*. These
 all live in `ruby-lean`'s `Machine` structure.
 
 ```lean
@@ -95,7 +73,7 @@ the $::$ syntax denote concatenation of arrays (in this case, of objects). A
 heap may be written in its destructured array form when appropriate: $[o_1, o_2, \cdots]$.
 
 And finally, the *continuation* is represented as `kont`, a stack of
-continuations.[]^(for the reader who may be unfamiliar, a *continuation* 
+continuations.[]^(for the reader who may be unfamiliar, a <i>continuation</i> 
 is a representation of what comes next in a program.)
 
 We write configurations in this abstract machine $\langle c \mid K \mid S \mid F \mid h \rangle$ for the `ctl`, `kont`,
@@ -120,7 +98,7 @@ $$
 $$
 
 $$
-\dfrac{o = |h| \quad h' = h :: [\lbrace \text{klass} = \text{String},\ \text{payload} = \text{str}\ s \rbrace]}{\langle \text{eval}\ \texttt{"}s\texttt{"} \mid K \mid h \rangle \longrightarrow \langle \text{value}\ (\text{ref}\ o) \mid K \mid h' \rangle}\ \text{(E-Str)}
+\dfrac{o = |h| \quad h' = h :: [\lbrace \text{class} = \text{String},\ \text{payload} = \text{str}\ s \rbrace]}{\langle \text{eval}\ \texttt{"}s\texttt{"} \mid K \mid h \rangle \longrightarrow \langle \text{value}\ (\text{ref}\ o) \mid K \mid h' \rangle}\ \text{(E-Str)}
 $$
 
 Now, let's look at an example of a more complex expression, assignments to
@@ -198,21 +176,23 @@ What is the definition of safety, though? There are many such definitions, but
 they all follow the schema "this program will not do this bad thing." In
 practice, Ruby developers might use a type checker like Sorbet to gain
 confidence in the safety "theorem" *if the type checker passes, my code will not
-throw type errors*. Now that we have a semantics, we can uplevel this into a
+throw type errors*. Now that we have a semantics, we can promote this into a
 formal statement.
 
-First, we define a type system for Ruby. We have the standard literal types,
-corresponding to primitive values. Class types are defined nominally by their
-tags, which is the standard construction in static type systems hitched onto
-dynamic languages. [Sorbet](https://sorbet.org/docs/class-types) and
+First, before we can express this formal statement, we must define a type system
+for Ruby. We have the standard literal types, corresponding to primitive values.
+Class types are defined nominally by their tags, which is the standard
+construction in static type systems hitched onto dynamic languages.
+[Sorbet](https://sorbet.org/docs/class-types) and
 [mypy](https://mypy.readthedocs.io/en/stable/protocols.html) both encode nominal
 notions of class typing.
 
 Semantically, this becomes tricky, because both languages support
 metaprogramming that can change the bodies of classes and their instances after
 their definition. For more details on how this is handled, I encourage you to
-refer to the forthcoming technical report, and/or the
-[source code](https://github.com/sam-xif/ruby-lean).
+the [source code](https://github.com/sam-xif/ruby-lean).
+
+<!--TODO: see if we adequately answer this in this post? -->
 
 $$
 \begin{array}{rcll}
@@ -252,31 +232,32 @@ environment.
 <!-- 
 #### Subtyping
 
-Subtyping is defined, but it currently is not used anywhere in the judgements.
-In future work, I plan on supporting judgements involving subtyping.
+Subtyping is defined, but it currently is not used anywhere in the judgments.
+In future work, I plan on supporting judgments involving subtyping.
 
 $$
 \sigma <: \tau \iff
 \sigma = \text{never} \ \vee\ \tau = \text{any} \ \vee\ (\tau = \text{nilable}\,\tau' \wedge (\sigma = \text{nil} \vee \sigma = \tau \vee \sigma <: \tau')) \ \vee\ \sigma = \tau
 $$ -->
 
-Syntax in the language is typed through *judgements*. A judgement in our type
+Syntax in the language is typed through *judgments*. A judgment in our type
 system has the form
 
 $$
 \kappa;\ I;\ \Gamma \ \vdash\ e : \tau \ \dashv\ \kappa';\ I';\ \Gamma'
 $$
 
-- $\Gamma$: the local environment (a list of $x : \tau$).
 - $\kappa$: the context — declared classes and their methods, top-level
   definitions, constants, the current `self` type, the enclosing frame, positive
   facts about the boot world, and negative facts (names guaranteed *not* to be
   defined).
 - $I$: the ivar spine of the current `self`.
+- $\Gamma$: the local environment (a list of $x : \tau$).
 
-Where a rule threads a component unchanged, it is elided: $\Gamma \vdash e : \tau \dashv \Gamma'$.
+Where a rule threads a component unchanged, it is elided: $\Gamma \vdash e : \tau \dashv \Gamma'$ implies that
+the rule preserved $\kappa$ and $I$ unchanged.
 
-We also have a set of "companion" judgements (AI's term, not mine), overloading
+We also have a set of "companion" judgments (AI's term, not mine), overloading
 $\vdash$ on the shape of the subject syntax term:
 
 $$
@@ -292,13 +273,13 @@ As before, an overbar marks a finite sequence: $\bar{a}$ is an argument list,
 $\bar\tau$ the corresponding sequence of argument types, $\bar{p}$ a declared
 parameter list.
 
-Now, let's examine some illustrative judgements. As a reminder, in the
-semantics, rules are defined over machine states. Here, typing is defined over
-the syntax of the language. We relate the two in the proof of the soundness
-theorem, covered in the following section.
+Now, let's examine some illustrative judgments. In the semantics, rules are
+defined over machine states; typing, on the other hand, is defined over the
+syntax of the language. We relate the two in the proof of the soundness theorem,
+covered in the next section.
 
-First is the judgement of assignment expressions, Asgn. Intuitively, we have
-$\Gamma \vdash e : \tau \dashv \Gamma'$ in the premise, which is the judgement of the right-hand side's type.
+First is the judgment of assignment expressions, Asgn. Intuitively, we have
+$\Gamma \vdash e : \tau \dashv \Gamma'$ in the premise, which is the judgment of the right-hand side's type.
 
 $$
 \dfrac{
@@ -311,7 +292,7 @@ $$
 
 Note that there are three side conditions, `capStale`, `capStaleCtx`, and
 $\neg$ `isAlias`. These are not totally relevant to the current limited
-system of judgements--these grew from the learnings of previous agents' attempts
+system of judgments--these grew from the learnings of previous agents' attempts
 at formalizing even larger portions of the type system. However, they still
 serve as useful ways of taming the unsoundness of Ruby. `capStale`, for
 instance, sprung out of an agent's attempt to prove safety of the family of
@@ -335,11 +316,13 @@ desugar surface Ruby programs into a smaller core.
 
 Sorbet implements an even stricter notion of whether an assignment is valid:
 assignments can only walk along the subtyping relation in Ruby. The above
-program would fail Sorbet because `lambda { x } <: int` is false. In typical
-Ruby, however, does not restrict the reassignment of a variable to a different
-value, so our type system tries to strike a middle ground. As a consequence,
-**our type system is *more complete* than Sorbet while still maintaining
-provable soundness.**
+program would fail Sorbet because `lambda { x } <: int` is false. Ruby itself,
+however, imposes no restriction on the reassignment of a variable to a
+differently typed value, so our type system strikes a middle ground; instead of
+fixing each variable's type, the judgments reason about how reassignment to
+variables affect stored references to those variables. As a consequence, **our
+type system is *more complete* than Sorbet while still maintaining provable
+soundness.**
 
 The If rule, given below, is much simpler. We type an if expression as the union
 of the types of the two branches.
@@ -369,8 +352,9 @@ end
 "s".speak  # evals to "hello world" on CRuby and Ruby-Lean
 ```
 
-As the type system grows, mode side conditions will likely be needed to account
-for other builtin classes.
+This may feel somewhat strange if you're coming from a Python background, like I
+was. As the type system grows, more side conditions will likely be needed to
+account for other builtin classes.
 
 $$
 \dfrac{
@@ -428,7 +412,8 @@ def x():
 x()
 ```
 
-executes just fine. When agents have a verifiable task, they get things right!
+executes just fine. When agents have a verifiable task, they seem to get things
+right!
 
 Now that your eyes have glazed over from all this fancy LaTeX, let's tie both
 threads together into a soundness theorem.
@@ -462,7 +447,7 @@ these semantics.
 
 ### Definitions
 
-We have devised a system of syntactic judgements, but now we need to link them
+We have devised a system of syntactic judgments, but now we need to link them
 back to the semantics. This first requires a semantic denotation of types. In
 other words, an answer to the question "what does a type mean?" The denotation
 is given here (and in the code) by `denM`:
@@ -497,8 +482,8 @@ actually defined in the heap" and "no other methods except the ones specified in
 the context are defined on this class."
 
 **Answers** represent a notion of how an execution can respond, similar in
-spirit to a result type in Rust. An execution can either deliver a value, or
-some exceptional state.
+spirit to a result type in Rust. An execution can either deliver a value or some
+exceptional state.
 
 ```lean
 inductive Answer where | val (v : Value) | esc (j : Jump)
@@ -556,7 +541,7 @@ conformance is preserved.
 $$
 \begin{array}{rcl}
 \text{SafeA}(m) & = & \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ m) = \text{false} \\
-\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & = & \text{Framed}(m_{\text{orig}}, m) \wedge \text{AnsOk}(\tau, m, a) \\
+\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & = & \text{Framed}(m_{\text{orig}}, m) \\ & & \wedge \text{AnsOk}(\tau, m, a) \\
  & & {} \wedge (\forall v.\ a = \text{val}\,v \Rightarrow \text{StateOk}\,\kappa\,\Gamma\,I\,m) \\
 \end{array}
 $$
@@ -571,9 +556,9 @@ $$
 \forall \tau.\ \text{FirstOrder}(\tau) \Rightarrow \forall v.\ \text{denM}(\tau,m,v) \Rightarrow \text{denM}(\tau,m',v)
 $$
 
-Now that we have the run spec, we can define the full semantic judgement,
-`SemSafeCtxA`. Notice that it has the same signature as the syntactic judgement:
-it takes a context $\kappa$, an i-var spine, $I$, and a type context
+Now that we have the run spec, we can define the full semantic judgment,
+`SemSafeCtxA`. Notice that it has the same signature as the syntactic judgment:
+it takes a context $\kappa$, an ivar spine, $I$, and a type context
 $\Gamma$, an expression $e$, the type of $e$, $\tau$, and leaves
 behind $\kappa';\ I';\ \Gamma'$. This can be read, "$e$ types as $\tau$ if this run
 produces an inhabitant of the semantic denotation of $\tau$, or produces an
@@ -585,10 +570,10 @@ $$
 $$
 
 $$
-\text{evalFrom}(m,e) = m \text{ with } \mathit{ctl} := \text{eval}\,e,\ \mathit{kont} := [\,]
+\text{evalFrom}(m,e) = m \text{ with } \mathit{ctl} \coloneqq \text{eval}\,e,\ \mathit{kont} \coloneqq [\,]
 $$
 
-### The judgement registry
+### The judgment registry
 
 Throughout the course of this project, I found that giving the agents a lot to
 do up front caused them to struggle. Instead, giving agents very accessible
@@ -607,9 +592,44 @@ structure Clink {F : Type} (S T : F) where
                            -- A PROOF, and it is a field
 ```
 
-This structure links the syntactic judgements to the semantic ones. Some light
-Lean metaprogramming is used to select judgement rules from the syntactic
-inductive relation and demand proof obligations for them.
+This structure links the syntactic judgments to the semantic ones. Some light
+Lean metaprogramming is used to select judgment rules from the syntactic
+inductive relation and demand semantic proof obligations for them. The registry
+is parameterized by the "family" of judgment tools, which is what `DFam`
+defines.
+
+::: details DFam definition
+
+```lean
+structure DFam where
+  judge : Env → Ratchet.Expr → Ty → Env → (κ : optParam Ctx ctx0) →
+    (I : optParam Ty .ivar0) → optParam Ctx κ → optParam Ty I → Prop
+  all : Env → List Ratchet.Expr → List Ty → Env → (κ : optParam Ctx ctx0) →
+    (I : optParam Ty .ivar0) → optParam Ctx κ → optParam Ty I → Prop
+  seq : Env → List Ratchet.Expr → Ty → Env → (κ : optParam Ctx ctx0) →
+    (I : optParam Ty .ivar0) → optParam Ctx κ → optParam Ty I → Prop
+  pairs : Env → List (Ratchet.Expr × Ratchet.Expr) → List Ty → List Ty → Env →
+    (κ : optParam Ctx ctx0) → (I : optParam Ty .ivar0) → optParam Ctx κ → optParam Ty I → Prop
+  recBody : Ctx → Ty → RecScope → Env → Ratchet.Expr → Ty → Env → Prop
+  recArgs : Ctx → Ty → RecScope → Env → List Ratchet.Expr → List Ty → Env → Prop
+  init : Ctx → Env → Ty → Ratchet.Expr → Ty → Ctx → Env → Ty → Prop
+  initSeq : Ctx → Env → Ty → List Ratchet.Expr → Ty → Ctx → Env → Ty → Prop
+```
+
+:::
+
+An instantiation of `DFam` can be thought of as a mapping of the overloads of
+$\vdash$, discussed in the last section, to concrete definitions. In this
+codebase, there are two `DFam` instances: the syntactic family and the semantic
+family. The syntactic judgments are given by the `DJudge` relation, while the
+semantic judgements are given as proof obligations that correspond to the cases
+of the `DJudge` relation, where the syntactic judgment operators are replaced by
+the ones from the semantic `DFam`. Refer to the source code for exact
+definitions; they are too long to include here and are subject to change soon
+after this writing.
+
+`DJudgeC` quantifies over families. For every family, a hypothesis, $\text{Closed}(\mathcal{R}, F)$,
+needs to be discharged.
 
 $$
 \begin{array}{rcl}
@@ -618,23 +638,36 @@ $$
 \end{array}
 $$
 
+In the case where $\mathcal{R}$ is a set of `Clink`s, this is discharged trivially
+for both the syntactic and the semantic families by definition of the Clink
+structure. *Proof:* each `Clink` contains a proof for the source (syntactic)
+family in its `syn` field, and one for the target (semantic) family in its `sem`
+field. $\square$
+
+### Soundness
+
+First, we must define what soundness is about, stuck-freedom:
+
 $$
 \text{StuckFree}(m,p) = \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ (\text{evalFrom}(m,p))) = \text{false}
 $$
 
-### Soundness
+A program is stuck-free if for all fuel values, running the program $p$
+from the given machine $m$ does not result in a type-stuck outcome.
 
-**Theorem (Registry soundness, at every size).**
+**Theorem (Registry Soundness).**
 
 $$
 (\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma'\ \kappa\,I\,\kappa'\,I' \Rightarrow \text{SemSafeCtxA}\ \kappa\,\Gamma\,I\,e\,\tau\,\kappa'\,\Gamma'\,I'
 $$
 
-*Proof sketch.* Instantiate $F := \text{dsemFam}$ and discharge $\text{Closed}$ from the clinks'
-own `sem` fields. In Lean this is one line. It is unconditional: it held when
-the registry had one rule in it and cannot stop holding as the registry grows.
+*Proof sketch.* Instantiate $F \coloneqq \text{dsemFam}$ (the semantic judgement family) and
+discharge $\text{Closed}$ from the clinks' own `sem` fields. In Lean this is one line.
+It is unconditional: it held when the registry had one rule in it and cannot
+stop holding as the registry grows. $\text{SemSafeCtxA}$ is the conclusion of the semantic
+judgement, by definition.
 
-**Theorem (Every syntactic derivation is certified).**
+**Theorem (Syntactic Judgments Certified).**
 
 $$
 \text{DJudge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I' \Rightarrow (\text{DJudgeC}\ \text{dclinks}).\text{judge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I'
@@ -643,24 +676,29 @@ $$
 *Proof sketch.* Six-family mutual induction on the derivation, replacing each
 constructor with its registered rule.
 
-**Theorem (End to end).** For all programs $p$ and certificates $d$,
+This is analogous to the "fundamental theorem of logical relations" in
+[RustBelt](https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf).
+
+**Theorem (End-to-End).** For all programs $p$ and certificates
+$d$,
 
 $$
 \text{validateD}\ p\ d = \text{true} \ \wedge\ \text{bootOkB} = \text{true} \ \Longrightarrow\ \text{StuckFree}(\mathit{bootMachine},\ p)
 $$
 
 *Proof sketch.* $\text{validateD}\ p\ d = \text{true}$ yields a `DJudge` derivation by projection
-(`validateD_typed`); the previous theorem lifts it to the certified judgment;
-registry soundness gives its run contract; the contract's safety component at
-the prelude-booted machine is the conclusion, with $\text{StateOk}$ at that machine
-supplied by the `#guard`ed Boolean `bootOkB`.
+(`validateD_typed`); the previous theorem, **Syntactic Judgments Certified**,
+lifts it to the certified judgment; **Registry Soundness** gives its run
+contract; the contract's safety component at the prelude-booted machine is the
+conclusion, with $\text{StateOk}$ at that machine supplied by the `#guard`ed Boolean
+`bootOkB`.
 
 <!-- 
 ### The theorems
 
 #### Definitions
 
-The fundamental definition that semantic type judgements talk about is the
+The fundamental definition that semantic type judgments talk about is the
 denotation of types. This is what relates our syntactic definition of types,
 $\tau$, given above, to sets of machine states and values.
 
