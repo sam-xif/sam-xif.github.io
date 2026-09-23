@@ -6,6 +6,7 @@ Requires: pip install -r requirements.txt
 """
 
 import datetime
+from html import escape as escape_html
 import re
 import sys
 from dataclasses import dataclass
@@ -44,6 +45,8 @@ POST_TEMPLATE = """\
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{POST_TITLE}} - Sam Xifaras</title>
     <link rel="stylesheet" href="../../../styles.css">
+    <link rel="preload" href="../../../fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../../fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../../blog.css">
     <script src="../../../theme.js"></script>
     <script src="../../../anchors.js"></script>
@@ -68,7 +71,10 @@ POST_TEMPLATE = """\
             <article class="post">
                 <header class="post-header">
                     <h1>{{POST_TITLE}}</h1>
-                    <time class="post-date" datetime="{{POST_DATE_ISO}}">{{POST_DATE_DISPLAY}}</time>
+                    <div class="post-byline">
+                        <a class="author-badge" href="../../../index.html" rel="author"><img src="../../../blog_assets/author-avatar.jpg" width="24" height="24" alt="">Sam Xifaras</a>
+                        <time class="post-date" datetime="{{POST_DATE_ISO}}">{{POST_DATE_DISPLAY}}</time>
+                    </div>{{POST_AUDIENCE}}
                 </header>
                 <div class="post-body">
                     {{POST_BODY}}
@@ -99,6 +105,8 @@ INDEX_TEMPLATE = """\
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Sam Xifaras</title>
     <link rel="stylesheet" href="../styles.css">
+    <link rel="preload" href="../fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../blog.css">
     <script src="../theme.js"></script>
     <script src="../analytics.js"></script>
@@ -162,6 +170,8 @@ TOPIC_TEMPLATE = """\
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{TOPIC_LABEL}} - Sam Xifaras</title>
     <link rel="stylesheet" href="../../../styles.css">
+    <link rel="preload" href="../../../fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../../fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../../blog.css">
     <script src="../../../theme.js"></script>
     <script src="../../../analytics.js"></script>
@@ -240,6 +250,7 @@ class PostData:
     html_body: str
     category: str = "blog"
     topic: str = DEFAULT_TOPIC
+    audience: str = ""
 
 
 def format_date(d: datetime.date) -> str:
@@ -289,6 +300,7 @@ def parse_post(path: Path) -> PostData:
     description = meta.get("description", "")
     category = meta.get("category", "blog")
     topic = meta.get("topic", DEFAULT_TOPIC)
+    audience = str(meta.get("audience") or "").strip()
     if topic not in TOPICS:
         print(f"  Warning: {path.name} has unknown topic '{topic}', defaulting to '{DEFAULT_TOPIC}'", file=sys.stderr)
         topic = DEFAULT_TOPIC
@@ -330,6 +342,17 @@ def parse_post(path: Path) -> PostData:
         html_body=html_body,
         category=category,
         topic=topic,
+        audience=audience,
+    )
+
+
+def render_audience_html(audience: str) -> str:
+    if not audience:
+        return ""
+    return (
+        '\n                    <p class="post-audience">'
+        '<span class="post-audience-label">Written for</span> '
+        f'{escape_html(audience)}</p>'
     )
 
 
@@ -346,6 +369,7 @@ def render_post_html(post: PostData) -> str:
         .replace("{{POST_TITLE}}", post.title)
         .replace("{{POST_DATE_ISO}}", post.date.isoformat())
         .replace("{{POST_DATE_DISPLAY}}", format_date(post.date))
+        .replace("{{POST_AUDIENCE}}", render_audience_html(post.audience))
         .replace("{{TOPIC_LABEL}}", TOPIC_LABELS.get(post.topic, post.topic))
         .replace("{{POST_BODY}}", post.html_body)
     )
