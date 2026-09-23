@@ -534,7 +534,8 @@ lends itself nicely to benchmarking and RL hillclimbing on this type of task. --
 <ol>
 <li>Grind the semantics to cover any reasonable Ruby program</li>
 <li>Grind the type system enough to run the type validator on a repo in the wild
-   (Homebrew is my initial target)</li>
+   (Homebrew is my initial target). At a minimum, this includes reasoning about
+   the types of blocks, flow sensitivity, and class inheritance with mixins.</li>
 <li>Attempt to find real Sorbet unsoundness (i.e. not just unsoundness introduced
    by deliberate escape hatches).</li>
 </ol>
