@@ -88,8 +88,7 @@ how to best steer AI on complex tasks like these.</p>
 <p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
 example Ruby programs. Play around with it!</p>
 <p><img src="/blog_assets/type_pipeline.png" /></p>
-<p>The above screenshot is from the playground. It showcases the five stages of how
-this system determines the safety of a program:</p>
+<p>Here are the five stages of the program analysis pipeline:</p>
 <ol>
 <li>Run Sorbet on a program with specific flags, so that Sorbet emits annotation
    information.</li>
@@ -151,44 +150,33 @@ this system determines the safety of a program:</p>
     style tcb stroke-width: 3px
 </code></pre>
 <h2 id="why-this-matters">Why this matters<a class="heading-anchor" href="#why-this-matters" title="Link to this section">#</a></h2>
-<p>If you're a programmer, you have a model of the behavior of your programming
-language of choice living in your head. This is your model of the <em>semantics</em> of
-the language. You probably find that you're able to use this model to predict
-the behavior of programs in the language.</p>
-<p>But we don't need to run programs in our heads, that's what compilers and
-interpreters are for. A compiler/interpreter (ideally) faithfully implements a
-language's semantics. The parenthetical is sadly relevant though; the fact that
-compilers and interpreters need to be patched at all is evidence that compilers
-and interpreters do not perfectly implement a language's semantics.</p>
-<p>Beyond compiler/interpreter incorrectness, the bigger problem is that these
-implementations of the semantics are not usable for mechanical reasoning.
-Mechanical reasoning is cool because it enables computers to develop an
-understanding of a system on their own, without a human poring over every line
-of code.</p>
 <p>I have been in the software engineering industry for several years, and I have
 always had a background voice in my head wondering "will my code break when it
-hits production?" We engineers try to placate our own worries about this by,
-well, poring over every line of code,<a class="tooltip" data-tip="Not so much anymore, though, with agentic development." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> and by writing unit tests. Unit
-tests assert positive facts: "program X does this desirable thing on this
-input", or "program X doesn't throw an exception on this other input." Negative
-facts, like "no input causes program X to do Y," are impossible to assert with
-unit tests. Fuzzers can help, but there is no guarantee that all of the
-interesting parts of the state space of the program were explored, even under
-full code coverage.<a class="tooltip" data-tip="&quot;Program testing can be used to show the presence of bugs, but never to show their absence!&quot; - Edsger Dijkstra" href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></p>
-<p>Formal methods is where claims like these find a home. One negative fact that I
-expect most programmers to be familiar with is that of type checking. The claim
-is, implicitly, <em>if your program passes the type checker, then the typed
-portions of the code do not throw a type error.</em> In order to <em>prove</em> this claim,
-we need an artifact that encodes what programs and their types <em>mean</em>: the
-semantics. This artifact ideally should live in a proof assistant tool so that
-we can reason about it automatically.</p>
-<p>I present a semantics of Ruby and prove such a negative property. This is
-exciting because agent labor has significantly decreased the time and effort
-required to construct semantics generally, making reasoning about programs at
-large tantalizingly tractable. Reasoning about programs may become startlingly
-necessary also, as too-loosely-monitored agents continue to poke around at
-software. The safety properties that could defend against agent misbehavior are
-precisely of this negative sort that we're interested in.</p>
+hits production?" We engineers try to placate our worries by poring over lines
+of code<a class="tooltip" data-tip="Not so much anymore, though, with agentic development." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> and by writing unit tests. Unit tests assert positive facts:
+"program X does this desirable thing on this input", or "program X doesn't throw
+an exception on this other input." Negative facts, like "no input causes program
+X to do Y," are impossible to assert with unit tests.
+<a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> can help, but there is no
+guarantee that all interesting parts of the state space of the program were
+explored in a fuzzing campaign, even under full code coverage.<a class="tooltip" data-tip="&quot;Program testing can be used to show the presence of bugs, but never to show their absence!&quot; - Edsger Dijkstra" href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></p>
+<p>Formal methods is where claims like these find a home. Type checking is one such
+negative fact that most programmers should be familiar with. The claim is,
+implicitly, <em>if your program passes the type checker, then the typed portions of
+the code do not throw a type error.</em> The type checker is <em>sound</em> if whenever it
+accepts a program, that program really is free of type errors. Unsoundness means
+the type checker can't be trusted--if it accepts, we can't conclude with
+certainty that our program is safe in the way we expect it to be.</p>
+<p>Verifying soundness for all programs and all possible behaviors of each program
+is intractable with fuzzing. So, we need a <em>proof</em> that shows this claim holds
+for <em>all</em> programs and <em>all</em> possible inputs to those programs. In order to
+prove this claim, we need an artifact that encodes what programs and their types
+<em>mean</em>: the semantics. This artifact ideally should live in a proof assistant
+tool so that we can reason about it automatically.</p>
+<p>Here, I'm announcing exactly this for Ruby, and I prove the type checking claim.
+I have not found any unsoundness in Sorbet yet, but I plan on driving hard
+towards this soon. Any unsoundness in Sorbet would be immediately relevant to
+all Sorbet users, and this approach has the potential to find it.</p>
 <h2 id="why-should-i-trust-this">"Why should I trust this?"<a class="heading-anchor" href="#why-should-i-trust-this" title="Link to this section">#</a></h2>
 <p>My semantics is validated against Ruby by differential testing. I have
 implemented a multi-pronged conformance suite, where each prong generates test
@@ -212,12 +200,10 @@ puts &quot;hi&quot; + WithToStr.new
 # ruby-lean: TypeError: no implicit conversion of WithToStr into String
 # CRuby: &quot;hiok&quot;
 </code></pre>
-<p>If you still aren't convinced and you think I hardcoded this example, tweak the
-program a bit. The general behavioral difference is that original Ruby
-automatically coerces the right-hand-side of a string's <code>+</code> via a to_str method.
-My Lean semantics has not captured this behavior yet. When this is patched, I'll
-leave behind an option to load up the version of the semantics that was active
-at this time of writing.</p>
+<p>If you think I hardcoded this example, tweak the program a bit. The behavioral
+difference is that original Ruby automatically coerces the right-hand-side of a
+string's <code>+</code> via a to_str method. My Lean semantics has not captured this
+behavior yet. When this is patched, I'll make a note of it here.</p>
 <p>In the type judgments and the soundness proof, I guarded against
 <a href="https://www.lesswrong.com/posts/rhAPh3YzhPoBNpgHg/lies-damned-lies-and-proofs-formal-methods-are-not-slopless">proof-slop</a>
 by carefully auditing the end-to-end theorem statement. This theorem, given in
@@ -252,11 +238,12 @@ suggestion borrowed from
    as of several years ago.</li>
 <li><strong>It's complicated.</strong> Ruby has features that Python does not have that
    complicate static analysis. The example that immediately comes to mind is
-   that of <em>blocks</em>. In Ruby, it's possible to pass a block to a function which
-   is sort of like a lambda except it has different scoping rules and multiple
-   ways that it can return. I believe there's a solid chance that Ruby is
-   "semantics-complete." That is, if we can solve Ruby, we can solve semantics
-   for every other language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
+   that of <a href="https://tech.stonecharioteer.com/posts/2025/ruby-blocks/"><em>blocks</em></a>.
+   In Ruby, it's possible to pass a block to a function which is sort of like a
+   lambda except it has different scoping rules and multiple ways that it can
+   return. I believe there's a solid chance that Ruby is "semantics-complete."
+   That is, if we can solve Ruby, we can solve semantics for every other
+   language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
 <li><strong>It has a <em>de facto</em> type checker.</strong> Sorbet was created at Stripe, and it is
    used at Stripe and beyond. Sorbet is unsound by construction, allowing
    <code>T.untyped(...)</code> as an escape hatch. However, we are particularly interested
@@ -487,48 +474,78 @@ a more reasonable cost profile, but this may also be due to the more rigorous
 ratchet discipline I imposed in my most recent attempt at growth of a sound type
 system.</p>
 <h2 id="limitations">Limitations<a class="heading-anchor" href="#limitations" title="Link to this section">#</a></h2>
-<p>In <code>ruby-lean</code> itself,</p>
+<p>This work is limited by the fragment of Ruby syntax and Ruby types the are
+covered. The semantics has a ways to go before it models the long tail of
+esoteric Ruby features, and the type system still needs to be grown to cover
+frequently used Ruby constructs like blocks.</p>
+<p>The semantics also does not model Ruby programs' interaction with the
+surrounding system context, like the <code>RubyGems</code> package manager, the operating
+system, or the network. Modeling these interactions will be essential for
+industrial-grade reasoning.</p>
+<p>Aside from the limitations of the project as it's currently scoped, there are
+several interesting open research questions in the science of growing these
+semantics and steering agents to complete long-horizon proof tasks within them.</p>
+<p>Specifically,</p>
 <ol>
-<li>The semantics does not model the long tail of all esoteric Ruby features, and
+<li>I have not developed a theory of how best to steer LLMs to obtain useful
+   semantics. This will require time and funding to run more controlled
+   experiments and benchmarks. If you are interested in funding this, let me
+   know.</li>
+<li>I did not run any comparison between different LLMs/harnesses for the tasks
+   here, except for a brief stint playing around with GLM 5.2 and GLM 5.3, to no
+   avail. I expect that performance will vary significantly with respect to
+   model choice, reasoning effort, choice of agent harness, and prompting
+   strategy. <code>ruby-lean</code> provides a nice environment for evaluating how agents
+   can reason about a complex logical system. A benchmark could look like a set
+   of properties about Ruby and its types, and the agent's job is to prove or
+   disprove them.</li>
+</ol>
+<p>If you are interested in working on this or in funding it, let me know.</p>
+<!-- 
+In `ruby-lean` itself,
+
+1. The semantics does not model the long tail of all esoteric Ruby features, and
    there are still lingering conformance issues where the semantics produces
    results that differ from actual CRuby. I do not see this as a major threat to
    validity of the small result I present here, since the proof checks in Lean
    and the semantics is faithful enough to run large programs, such as a
-   thousand-line multi-file slice of Homebrew that I was using as a spot check.</li>
-<li>The semantics does not model the behavior of Ruby programs that interact with
+   thousand-line multi-file slice of Homebrew that I was using as a spot check.
+1. The semantics does not model the behavior of Ruby programs that interact with
    the surrounding operating system, the internet, the file system, or other
-   libraries. Ruby's <code>RubyGems</code> packaging system, however, is written in Ruby,
+   libraries. Ruby's `RubyGems` packaging system, however, is written in Ruby,
    which means that we may get this for free by running the Ruby code in our
    semantics once coverage of the Ruby language is expanded enough to cover all
-   of the source code for <code>RubyGems</code> and other libraries.</li>
-<li>The fragment of the type system is still small. It doesn't cover blocks, for
+   of the source code for `RubyGems` and other libraries.
+1. The fragment of the type system is still small. It doesn't cover blocks, for
    instance, which I have already seen that agents struggle to type in my
    experimentation that led to this result. I will mount another attempt at this
-   soon, since blocks are a pretty essential part of idiomatic Ruby.</li>
-</ol>
-<p>I also think there are several interesting open research questions in the
+   soon, since blocks are a pretty essential part of idiomatic Ruby.
+
+I also think there are several interesting open research questions in the
 science of growing these semantics and steering agents to complete long-horizon
-proof tasks.</p>
+proof tasks. -->
+
 <!-- The grindy nature and "out-of-distribution"-ness of this project
 lends itself nicely to benchmarking and RL hillclimbing on this type of task. -->
 
-<p>Specifically,</p>
-<ol>
-<li>I have not developed a theory of how best to prompt LLMs to obtain useful
+<!-- 
+Specifically,
+
+1. I have not developed a theory of how best to prompt LLMs to obtain useful
    semantics. This will require time and funding to run more controlled
    experiments and benchmarks. If you are interested in funding this, please let
-   me know.</li>
-<li>I did not run any comparison between different LLMs/harnesses for the tasks
+   me know.
+1. I did not run any comparison between different LLMs/harnesses for the tasks
    here, except for a brief stint playing around with GLM 5.2 and GLM 5.3,to no
    avail. I would be excited to work on benchmarking how agents perform at these
    long-horizon proof tasks under variable reasoning effort, harnesses, and
    prompting strategies. If you are interested in working on this or in funding
-   it, let me know.</li>
-<li>The definition of type-stuckness is somewhat arbitrary, and probably could've
+   it, let me know.
+1. The definition of type-stuckness is somewhat arbitrary, and probably could've
    included more types of exceptions that are downstream of type-related issues
    in programs. Expanding the set of exceptions may superlinearly expand the
-   verification burden. More experimentation is needed here to understand this.</li>
-</ol>
+   verification burden. More experimentation is needed here to understand this. -->
+
 <h2 id="future-work">Future work<a class="heading-anchor" href="#future-work" title="Link to this section">#</a></h2>
 <p>My immediate next steps are</p>
 <ol>
@@ -577,7 +594,7 @@ formalize something with respect to some black box oracle. It works quite well,
 and it can even be applied to specific software systems or libraries (e.g. the
 Ruby on Rails framework) instead of plain programming languages. This technique
 is useful anywhere you may want to abstract away the messy details of the
-implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a nice interface between them." href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> You just
+implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them." href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> You just
 need to build confidence that the model is faithful by developing a really
 strong test suite.</p>
 <!-- I am less certain, however, of how well this process would have gone if an agent
@@ -613,7 +630,7 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
         <li id="tooltip-def-5">I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
         <li id="tooltip-def-6">The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each "rung" climbed is a ratchet "clink." <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
         <li id="tooltip-def-7">The lemma is <code>run_pushK</code> in the <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>, and it reads: running the current machine state under continuation stack K is the same as running the machine program state run under an <i>empty</i> continuation stack until it produces an answer, then delivering that answer to continuation stack K and continuing the run. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
-        <li id="tooltip-def-8">The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a nice interface between them. <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
+        <li id="tooltip-def-8">The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them. <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
     </ol>
 </section>
                 </div>
