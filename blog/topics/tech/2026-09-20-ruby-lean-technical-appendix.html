@@ -41,10 +41,40 @@ operationalized.</p>
 <p>The content here assumes a familiarity with formal semantics, type theory, and
 the notation with which these results are typically presented in academic papers
 in the field.</p>
+<h2 id="design-notes">Design notes</h2>
+<p>Two key design decisions also set up the type system growth and soundness proof
+in Phase 3-5 for success. First, <em>I drew inspiration from
+<a href="https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf">RustBelt</a></em>. I introduced a
+clear delination between the syntactic set of judgments, which <em>define</em>
+type-correctness, and a semantic definition of what a judgment <em>means</em>, by which
+the syntactic judgments must be proven correct with respect to the semantics.
+This ensures the set of type judgments stay sound as they grow, and it allows
+for <em>extensionality</em>. A new judgment rule can be proposed in the semantic
+domain, and it is valid as long as it can be proven correct with respect to the
+semantics. RustBelt used this pattern to prove safety of <code>unsafe</code> Rust
+constructs.</p>
+<p>Secondly, <em>I separated the concerns of soundness and completeness</em>, leaving
+completeness to an untrusted emitter that proposes a derivation. The trusted
+validator's proof only asserts soundness. This means that the proof of the
+validator's soundness does not have to account for the soundness/completeness of
+any type inference decision procedure. This is exactly one of the flaws that led
+to me scrap the first attempt at modeling a type system for Ruby and proving it
+sound. I had agent-grinded a type checker that inferred types rather than just
+checking them, and a successful check was a successful inference. This led to
+complex machinery where the inductive safety invariant had to be specified in
+terms of this inference algorithm, and the inference algorithm became a central
+part of the soundness proof itself.<a class="tooltip" data-tip="One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of infer--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
+reference to details such as its case numbering and recursion scheme, greatly
+compromising proof maintainability. I recall seeing several instances of a
+pattern in the agent rollout where an agent would fold a new type judgment into
+infer, and then would proceed to update proof tactics in 10-20 files to get
+everything green again." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> In general, deciding types for
+complex program constructs like functions and loops is much more difficult than
+checking postulated types.</p>
 <h2 id="a-stroll-through-the-semantics">A stroll through the semantics</h2>
 <p>Here I'll introduce the semantics very briefly. Also, reminder that you can view
 the Lean code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>!</p>
-<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> By
+<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> By
 virtue of Lean's dual capability as a fully feature programming language and a
 proof assistant, actual Ruby code can be executed within the <code>ruby-lean</code>. See it
 in action on the <a href="/ruby-lean">playground</a>.</p>
@@ -80,7 +110,7 @@ the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo 
 heap may be written in its destructured array form when appropriate: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><msub><mi>o</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>o</mi><mn>2</mn></msub><mo>&#x0002C;</mo><mo>&#x022EF;</mo><mo stretchy="false">]</mo></mrow></math>.</p>
 <p>And finally, the <em>continuation</em> is represented as <code>kont</code>, a stack of
 continuations.<a class="tooltip" data-tip="for the reader who may be unfamiliar, a continuation 
-is a representation of what comes next in a program." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a></p>
+is a representation of what comes next in a program." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></p>
 <p>We write configurations in this abstract machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x027E8;</mi><mi>c</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>S</mi><mo>&#x02223;</mo><mi>F</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi></mrow></math> for the <code>ctl</code>, <code>kont</code>,
 <code>stack</code>, <code>frames</code> and <code>heap</code> fields. In the following are reduction rules for
 this semantics. Above of the line are written the antecedents, or premises, and
@@ -259,7 +289,7 @@ signatures populate the context, <math display="inline" xmlns="http://www.w3.org
 at the moment of dispatch. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context because it is the
 context that is left after all of the arguments are evaluated, which is what the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi><mo>&#x022A2;</mo><mover><mrow><mi>a</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0.2778em" rspace="0.2778em">:</mo><mrow class="overline"><mi>p</mi><mo lspace="0" rspace="0">.</mo><mi>&#x003C4;</mi></mrow><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> antecedent specifies.</p>
-<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context, you<a class="tooltip" data-tip="I wrote this sentence because I was wondering...lol" href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> may be wondering then why
+<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context, you<a class="tooltip" data-tip="I wrote this sentence because I was wondering...lol" href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a> may be wondering then why
 the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover><mrow><mi>p</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x022A2;</mo><mrow><mi mathvariant="italic">d</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">c</mi><mi mathvariant="italic">l</mi></mrow><mo lspace="0" rspace="0">.</mo><mrow><mi mathvariant="italic">b</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">d</mi><mi mathvariant="italic">y</mi></mrow><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msub><mi mathvariant="normal">&#x00393;</mi><mi>b</mi></msub></mrow></math> antecedent doesn't read <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><mover><mrow><mi>p</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x022A2;</mo><mo>&#x022EF;</mo></mrow></math>. Coming from another language
 like Python, one might expect that a Ruby program like</p>
 <pre><code class="language-ruby">y = 5
@@ -667,10 +697,16 @@ old values survive an <math display="inline" xmlns="http://www.w3.org/1998/Math/
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
-        <li id="tooltip-def-2">for the reader who may be unfamiliar, a <i>continuation</i> 
-is a representation of what comes next in a program. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
-        <li id="tooltip-def-3">I wrote this sentence because <i>I</i> was wondering...lol <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-1">One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
+reference to details such as its case numbering and recursion scheme, greatly
+compromising proof maintainability. I recall seeing several instances of a
+pattern in the agent rollout where an agent would fold a new type judgment into
+<code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
+everything green again. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a> <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-3">for the reader who may be unfamiliar, a <i>continuation</i> 
+is a representation of what comes next in a program. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">I wrote this sentence because <i>I</i> was wondering...lol <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
     </ol>
 </section>
                 </div>

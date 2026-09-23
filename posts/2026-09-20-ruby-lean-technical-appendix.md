@@ -16,6 +16,39 @@ The content here assumes a familiarity with formal semantics, type theory, and
 the notation with which these results are typically presented in academic papers
 in the field.
 
+## Design notes
+
+Two key design decisions also set up the type system growth and soundness proof
+in Phase 3-5 for success. First, *I drew inspiration from
+[RustBelt](https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf)*. I introduced a
+clear delination between the syntactic set of judgments, which *define*
+type-correctness, and a semantic definition of what a judgment *means*, by which
+the syntactic judgments must be proven correct with respect to the semantics.
+This ensures the set of type judgments stay sound as they grow, and it allows
+for *extensionality*. A new judgment rule can be proposed in the semantic
+domain, and it is valid as long as it can be proven correct with respect to the
+semantics. RustBelt used this pattern to prove safety of `unsafe` Rust
+constructs.
+
+Secondly, *I separated the concerns of soundness and completeness*, leaving
+completeness to an untrusted emitter that proposes a derivation. The trusted
+validator's proof only asserts soundness. This means that the proof of the
+validator's soundness does not have to account for the soundness/completeness of
+any type inference decision procedure. This is exactly one of the flaws that led
+to me scrap the first attempt at modeling a type system for Ruby and proving it
+sound. I had agent-grinded a type checker that inferred types rather than just
+checking them, and a successful check was a successful inference. This led to
+complex machinery where the inductive safety invariant had to be specified in
+terms of this inference algorithm, and the inference algorithm became a central
+part of the soundness proof itself.[]^(One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
+reference to details such as its case numbering and recursion scheme, greatly
+compromising proof maintainability. I recall seeing several instances of a
+pattern in the agent rollout where an agent would fold a new type judgment into
+<code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
+everything green again.) In general, deciding types for
+complex program constructs like functions and loops is much more difficult than
+checking postulated types.
+
 ## A stroll through the semantics
 
 Here I'll introduce the semantics very briefly. Also, reminder that you can view

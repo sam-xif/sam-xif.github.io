@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Sep 2026 02:00:15 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Sep 2026 03:09:04 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: An executable Ruby semantics in Lean with a type soundness proof</title>
@@ -50,14 +50,82 @@ and defense-in-depth of software at large.</p>
 semantics of Ruby in Lean. <code>ruby-lean</code> is an executable semantics, modeled as a
 <a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>, about
 which a system of type judgments based on <a href="https://sorbet.org/">Sorbet</a>—Ruby's
-<em>de facto</em> type checking tool—has been proven sound. I can probably count on my
-hands the number of lines of actual Lean code I wrote by hand. Frontier AI
-breezed through a lot of the simpler parts of this project, but when it came to
-the most difficult part of proving a hard property about a complex model, I had
-to step in to unblock it by crystallizing the theorem statements and the proof
-design approach. Admittedly, it was somewhat refreshing to find a task that AI
-does not excel at immediately, and I came away with some learnings about how to
-best steer AI on complex tasks like these.</p>
+<em>de facto</em> type checking tool—has been proven sound. <em>Soundness</em> means: <strong>if a
+program passes the <code>ruby-lean</code> type validator, then it is completely free of a
+certain family of type-related exceptions.</strong></p>
+<p>I can probably count on my hands the number of lines of actual Lean code I wrote
+by hand. Frontier AI breezed through a lot of the simpler parts of this project,
+but when it came to the most difficult part of proving a hard property about a
+complex model, I had to step in to unblock it by crystallizing the theorem
+statements and the proof design approach. Admittedly, it was somewhat refreshing
+to find a task that AI does not excel at immediately, and I came away with some
+learnings about how to best steer AI on complex tasks like these.</p>
+<h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator</h2>
+<p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
+example Ruby programs. Play around with it!</p>
+<p><img src="/blog_assets/type_pipeline.png" /></p>
+<p>The above screenshot is from the playground. It showcases the five stages of how
+this system determines the safety of a program:</p>
+<ol>
+<li>Run Sorbet on a program with specific flags, so that Sorbet emits annotation
+   information.</li>
+<li>Strip the program's annotations, since Sorbet annotations are real syntax
+   that's outside of the modeled fragment.</li>
+<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. I don&#x27;t go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
+   from a core set of Ruby primitives.</li>
+<li>Run an <em>untrusted</em> certificate emitter (a companion program written in Ruby)
+   that proposes type judgments for the program.</li>
+<li>Run the <em>trusted</em> validator, given as <code>validateD p d</code> in <code>ruby-lean</code>'s code.
+   This validates a type <em>derivation</em>--a proposed proof of
+   well-typedness--against the program. The validator returns true if the
+   derivation accurately types the program according to its internal rules, and
+   we have proven a theorem that demonstrates the soundness of this validation
+   procedure.</li>
+</ol>
+<p>Here's how the pieces fit together, and where the trust boundary lies:</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph untrusted[&quot;Untrusted&quot;]
+        corpus[(&quot;Corpus of typed&lt;br/&gt;Ruby programs&quot;)]
+        anyprog[/&quot;Any Ruby program&quot;/]
+        prog([&quot;Program p&quot;])
+        sorbet[&quot;Sorbet&quot;]
+        emitter[&quot;Certificate emitter&quot;]
+        cruby[&quot;CRuby 4.0.5&quot;]
+    end
+
+    subgraph tcb[&quot;Trusted computing base&quot;]
+        subgraph tcbruby[&quot;Ruby&quot;]
+            rubypad[&quot; &quot;]
+            sigstrip[&quot;sig_strip&quot;]
+            desugarer[&quot;Desugarer&quot;]
+        end
+        subgraph tcblean[&quot;Lean&quot;]
+            validator[&quot;Type Validator&lt;br/&gt;validateD p d&quot;]
+            proof[&quot;Soundness proof&quot;]
+            semantics[&quot;Semantics&lt;br/&gt;(CESK machine)&quot;]
+        end
+    end
+
+    corpus --&gt; prog
+    anyprog --&gt; prog
+    prog --&gt; sigstrip
+    sigstrip --&gt;|&quot;sig_strip(p)&quot;| desugarer
+    prog --&gt; sorbet
+    sorbet --&gt;|&quot;type information in p&quot;| emitter
+    desugarer --&gt;|&quot;core program&quot;| validator
+    emitter --&gt;|&quot;derivation d&quot;| validator
+    proof -.-&gt;|&quot;proves sound&quot;| validator
+    proof -.-&gt;|&quot;over&quot;| semantics
+    cruby -.-&gt;|&quot;differential&lt;br/&gt;testing&quot;| semantics
+    cruby -.-&gt;|&quot;differential&lt;br/&gt;testing&quot;| desugarer
+    emitter ~~~ sigstrip
+    sigstrip ~~~ proof
+    validator --&gt;|&quot;true&quot;| verdict([&quot;p has no type errors&quot;])
+
+    style rubypad fill:none,stroke:none
+    style untrusted stroke-dasharray: 6 4
+    style tcb stroke-width: 3px
+</code></pre>
 <h2 id="why-this-matters">Why this matters</h2>
 <p>If you're a programmer, you have a model of the behavior of your programming
 language of choice living in your head. This is your model of the <em>semantics</em> of
@@ -68,23 +136,11 @@ interpreters are for. A compiler/interpreter (ideally) faithfully implements a
 language's semantics. The parenthetical deceptively relevant though; the fact
 that compilers and interpreters need to be patched at all is evidence that
 compilers and interpreters do not perfectly implement a language's semantics.</p>
-<!-- Perhaps I need a paragraph to motivate why we care about type soundness-->
-
 <p>Beyond compiler/interpreter incorrectness, the bigger problem is that these
 implementations of the semantics are not usable for mechanical reasoning.
 Mechanical reasoning is cool because it enables computers to develop an
 understanding of a system on their own, without a human poring over every line
 of code.</p>
-<!-- Armed with just the interpreter as a tool, mechanically arguing the validity of
-a statement about a Ruby program requires
-[fuzzing](https://en.wikipedia.org/wiki/Fuzzing) the interpreter over the space
-of possible inputs. With good enough fuzzing (i.e. the fuzzer's test case
-generator eventually generates every possible input while quickly generating
-"interesting" ones), the validity of the statement is approached asymptotically
-and scales with compute. This works well in certain situations, and it seems
-[bitter lesson](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf)-proof,
-but not so fast. -->
-
 <p>In my several years in industry, I have always had a background voice in my head
 wondering "will my code break when it hits production?" We engineers try to
 placate our own worries about this by, well, poring over every line of code, and
@@ -94,17 +150,7 @@ other input." Negative facts, like "no input causes program X to do Y," are
 impossible to assert with unit tests. Fuzzers can help, but fuzzing effort needs
 to be expended for every program one is interested in, and there is still no
 guarantee that all of the interesting parts of the state space of the program
-were explored, even under full code coverage.<a class="tooltip" data-tip="&quot;Program testing can be used to show the presence of bugs, but never to show their absence!&quot; - Edsger Dijkstra" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a></p>
-<!-- 
-What about a negative claim that ranges over *all programs?* This too can be
-fuzzed, but even more ineffectively. The space of all programs is massive.
-Fuzzing a claim like "If program P satisfies Q, then no run of P satisfies R"
-means fuzzing to find programs that satisfy Q, then fuzzing each program that
-satisfies Q to attempt to find a run that satisfies R. If the code under test is
-pretty close to airtight but has subtle bugs, I would not trust this approach to
-find them, even with lots of time and compute. And remember: not all programs
-terminate! -->
-
+were explored, even under full code coverage.<a class="tooltip" data-tip="&quot;Program testing can be used to show the presence of bugs, but never to show their absence!&quot; - Edsger Dijkstra" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a></p>
 <p>Formal methods is where claims like these find a home. One negative fact that I
 expect most programmers to be familiar with is the claim of type checking. The
 claim is, implicitly, <em>if your program passes the type checker, then the typed
@@ -121,198 +167,6 @@ tantalizingly tractable. Reasoning about programs may become startlingly
 necessary also, as too-loosely-monitored agents continue to poke around at
 software. The safety properties that could defend against agent misbehavior are
 precisely of this negative sort.</p>
-<!-- 
-growing one in the Lean proof assistant with agent labor, and proving such a
-negative property over it that immediately transfers to any Ruby program,
-including ones that have not been written yet. "Prove once, apply anywhere" is
-an underappreciated way in which formal methods can deliver compounding
-benefits. -->
-
-<!-- 
-This matters because properties that assert the safety of software are also
-negative properties, like the type checking one. Safety of software always
-mattered, but it matters more now that highly persistent AI agents may soon be
-doing the fuzzing our the world's software systems for us, and falsifying what
-we believe are valid safety properties. -->
-
-<!-- Formal methods matters a lot in this current moment, because it's the
-only way to enforce containment that scales. -->
-
-<!-- 
-
-
-
-Proving the validator correct means we don't have to fuzz every concrete program
-for type errors. We have a claim about *all* programs, even ones that don't
-exist yet. Authoring a new program requires no extra work, beyond writing the
-program, to trust the validator's claim about type safety. This is a powerful
-illustration of how formal methods, though challenging to bootstrap, can deliver
-compounding benefits.
-
-In this post, I discuss an
-[end-to-end soundness theorem](#theorem-end-to-end-soundness-of-the-type-validator):
-*if a program validates against a proposed type derivation, then it can't go
-wrong.* This matters because Ruby has a type system, implemented by
-[Sorbet](https://sorbet.org/). Sorbet is trusted by large companies like Stripe
-and Shopify every day to detect type errors in their code, but Sorbet is not
-sound. It allows escape hatches like `T.untyped(...)`. But even if we put these
-escape hatches aside, is Sorbet still sound? This is an open question, and
-something that what I'm building here has the potential to answer. A soundness
-bug in Sorbet immediately compromises the trust that Ruby developers across the
-world place in a critical piece of their toolchain.
-
-Formal proof uniquely suits solving this soundness problem because it is hard to
-directly fuzz (program, derivation) pairs that satisfy a type validator. If the
-validator is not satisfied the majority of the time, with the only
-satisfiability witnesses[]^(A "witness" is FM-speak for an example.) being simple programs, then we have not
-gained confidence in the validity of the theorem. All we might learn is that the
-validator rejects nonsensical programs with nonsensical type derivations.
-
-Even if a program *were* to pass the validator, fuzzing is again required to
-mount the argument that it never goes wrong. Perhaps agent teams can be
-instructed to find deep examples, but now this feels potentially more expensive
-than using agent labor to formalize a semantics, a type system, and prove the
-soundness theorem once and for all programs, which is what I did here.[]^(All programs that type according to the supported fragment of the type system. See the <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a> for more details on what's supported at this time of writing.)
-
-In sum, proving safety properties (bad thing X doesn't happen) has better
-scaling properties with a formal semantics embedded in a proof assistant, while
-being very interesting from a high-assurance engineering and cybersecurity
-perspective perspective. -->
-
-<!-- My argument: proving safety properties with agent labor in proof assistants has a better scaling law than proving safety properties outside of them-->
-
-<!-- 
-
-Perhaps the argument thread here is:
-1. We have semantics in our heads.
-2. The compiler/interpreter nominally implements them but even they have little bugs. And: because we don't have specifications of what our own programs do,
-   we are relegated to lower levels on the verification ladder: unit testing and PBT. 
-
-3. The compiler/interpreter are oracles; they don't provide a *computable* semantics.
-4. to truly show the absence of bugs quantified over all inputs, a computable semantics is needed
-5. A sort of informal proof by contradiction: suppose we want to show a type system is safe via fuzzing...we'd have to create a fuzzer that can actually generate well-typed programs, and we would need an oracle that validates that they actually are well-typed by fuzzing the programs.
-This means that slippage can occur on two fronts: 1) we think the theorem is true because we don't see any failures, but 99+% of the test cases are vacuous cases (the program does not type check against its derivation) and 2) fuzzing each program to check stuck freedom could miss something, especially for deeply nested programs.
-
-Proving such safety/negative properties (something doesn't happen) is both very interesting from a high-assurance engineering perspective and a cybersecurity perspective, and it is simply not tractable to do so without a formal semantics embedded in a proof assistant.
-
--->
-
-<!-- Some general philosophical notes: 
-
-we need to think in terms of asymptotes and probabilities here. 
-Does formal methods even matter if we can obtain a 99.9% guarantee of safety? 
-
-I think the problem of authoring a soundness theorem PBT and fuzzing it to quasiprove soundness
- and 
-formally proving soundness with respect to some semantics, and quasiproving that the semantics 
-faithfully models the implementation.
-
-
-Are both sort of the same but their complexities lie in different places.
-
-
-In the PBT formulation, generating a representative set of well-typed programs with random testing is the difficult part.
-A PBT for this might look like:
-
-def types_sound(p: Program, d: Deriv) -> bool:
-  if not type_checks(p, d):  # we need to trust this type derivation checker too
-    return true
-
-  try:
-   p.call  # run the program
-  except e:
-   if isTypeError(e): return false
-
-  return true
-
-
--->
-
-<!-- 
-The compiler/interpreter also (ideally) implements the language's semantics. The
-parenthetical is more relevant than you might think; the fact that interpreters
-and compilers need to be patched is proof that interpreters and compilers do not
-necessarily implement a language's semantics.
-
-Dubiousness of the implementations of the world's programming language semantics
-aside, we are not even able to symbolically execute industry-scale programs in
-our heads. Even if we could, why would we want to? But not scrutinizing changes
-to codebases as they get proposed and merged in is a recipe for poor software
-quality and security. The fact that unit tests exist and are pervasive suggests
-that all programmers need to perform some amount of automated reasoning about
-code before it hits actual users. The commercial pressure incentivizes
-it--software quality has become expected, and it is tied to revenue. -->
-
-<!-- 
-The problem is that a codebase's unit tests generally test a narrow and shallow
-slice of the possible space of behaviors and program states. One 2019
-[paper](https://ieeexplore.ieee.org/document/8816791) found that each additional
-level of control flow nesting in Python programs reduced the probability that it
-is tested by 19%. **Unit tests demand trust of the thoroughness and
-representativeness of contributors' test cases.**
-
-Property-based testing (PBT) offers a stronger guarantee of program correctness
-by allowing a user to specify more abstract "properties" about their program.
-For example, `f(x) = 2x` instead of `f(2) = 4`.
-[Hypothesis](https://hypothesis.works/) is a PBT library for Python, and it
-offers extensible example generation with *strategies.* **PBT demands trust of
-the robustness fuzzing algorithm used to generate examples.** []^(For what it's worth, PBT also demands trust of the the thoroughness and representativeness of the human contributors' <i>properties</i>.)
-
-Formal verification (FM) is the next level up. FM still lets a user specify
-abstract properties about their program, but now the properties actually
-quantify over all inputs. This addresses the systemic problem of fuzzing where
-compute is finite, meaning that all we can hope for is what I like to call
-"quasiproof." A fuzzing campaign may appear to converge while hiding a blind
-spot that the fuzzer's test case generation logic does not cover. **FM demands
-trust of the proof assistant's proof checker, and that the implementer proposes
-actual interesting theorems to be proven,** -->
-
-<!-- 
-In PBT, agents can red team a property to try to really stress test it
-In FM, agents can 
--->
-
-<!-- 
-In order to provide this guarantee, however, FM needs something in return: a
-true specification of what the meaning of a given program is. This is like a
-compiler/interpreter, except it is embedded in the proof assistant so that the
-proof assistant can actually prove theorems about it. No proof assistant that I
-know of supports reasoning about foreign code directly. If a proof assistant
-does, that implies the use of some semantics of the language. Again, the
-compiler/interpreter implements the semantics, but it is a "concrete"
-implementation rather than a "symbolic" one. Executing `f(x)` without supplying
-a value for `x` doesn't make sense in a concrete implementation. -->
-
-<!-- You may ask, *why can't we embed the actual code of the Ruby interpreter into
-the proof assistant, so that we don't need to have this trust boundary?* Great
-question, and the answer is that the actual code of the Ruby interpreter itself
-doesn't have a clear semantics! Ruby's implementation is written in C, and C has
-*undefined behavior* which makes formal reasoning complicated. This doesn't even
-account for the presence of bugs and memory leaks in the Ruby interpreter that
-should not be part of a formal model. -->
-
-<!-- 
-The end-to-end soundness theorem is, *if a program validates against its
-proposed type derivation, then it can't go wrong.* This problem lends itself to
-formal proof because its hypothesis is difficult to satisfy. It is hard to fuzz
-(program, derivation) pairs that satisfy the validator. And if the validator is
-satisfied a tiny fraction of the time, and all of the satisfiability
-witnesses[]^(A "witness" is FM-speak for an example.) are simple programs, then we have not gained much confidence
-in the validity of the theorem. Even if a program were to pass the validator,
-that program may also require fuzzing in order to mount the argument that it
-never goes wrong. Perhaps agent red teams can be instructed to try to generate
-and find deep examples, but this feels potentially more expensive than simply
-using agent labor to formalize type soundness and prove that theorem for all
-programs, which is what I did here. -->
-
-<!-- Simply caching the PBT set once and using it
-leaves it vulnerable to rot on a couple dimensions: 1) the test suite could
-become out of date as the language features evolve, and 2) the agents can reward
-hack if they realize that the test corpus is always the same. So agent tokens
-will need to be spent to generate fresh corpora. Formal proof sidesteps all this
-by requiring the agent to come up with the proofs, and then we can make the
-claim that this approach is actually much cheaper than manual verification. -->
-
 <h2 id="why-should-i-trust-this">"Why should I trust this?"</h2>
 <p>My semantics is validated against Ruby by differential testing. I have
 implemented a multi-pronged conformance suite, where each prong generates test
@@ -344,70 +198,20 @@ leave behind an option to load up the version of the semantics that was active
 at this time of writing.</p>
 <p>In the type judgments and the soundness proof, I guarded against
 <a href="https://www.lesswrong.com/posts/rhAPh3YzhPoBNpgHg/lies-damned-lies-and-proofs-formal-methods-are-not-slopless">proof-slop</a>
-by carefully auditing the
-<a href="#theorem-end-to-end-soundness-of-the-type-validator">end-to-end theorem</a>
-statement. This is a relatively easy-to-understand statement that simply relates
-the validator to a stuck-freedom property. The Lean kernel still has to be
-trusted, but this coupled with the results I've been seeing in testing the
-validator on different programs, gives me confidence that this property truly
-holds of the system. Of course, there is a lot of room for extreme fuzzing to
-try to falsify this property.</p>
+by carefully auditing the end-to-end theorem statement. The end-to-end theorem,
+given in the <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>,
+is an easy-to-interpret statement that directly relates the validator to the
+stuck-freedom property. The Lean kernel still has to be trusted, but this
+coupled with the results I've been seeing in testing the validator on different
+programs, gives me confidence that this property truly holds of the system. Of
+course, there is a lot of room for extreme fuzzing to try to falsify this
+property.</p>
 <p>The Lean kernel has had soundness bugs, but I don't have reason to believe that
 agents used any of them. I took great care to make sure that the tasks the AIs
 were given were achievable. I did not give them impossible goal statements and
 gave them emergency exits from goal pursuit that they could use if needed (a
 suggestion borrowed from
 <a href="https://oath.tech/pub/2026/08/tentative-advice-building-with-ai/">Mike Dodds</a>).</p>
-<!-- 
-## What are semantics?
-
-More generally, "semantics" refers to the study of meaning in languages. In
-human languages just as in programming languages, there is a correct structure
-for forming sentences, known as *syntax*. The semantics of a language is what
-takes syntactically valid sentences and grants them meaning. To get a deeper
-sense of the difference, consider Noam Chomsky's famous example of an English
-sentence that is syntactically valid but has no semantic meaning: "Colorless
-green ideas sleep furiously." This sentence is grammatically correct (syntax)
-but makes no sense. Ideas cannot be green, nor can they be colorless, and they
-definitely can't be green and colorless at the same time--a logical
-contradiction.
-
-In a programming language like Ruby, the semantics of a sentence is its behavior
-or effect on the surrounding system. For instance, the program
-
-
-<pre><code>puts &quot;Hello&quot;
-</code></pre>
-
-
-means "The string of characters 'Hello' is printed to the screen."
-
-But...if you're familiar with computer systems, you may recognize that this is
-not the full story. In English, just as in programming languages, meaning is
-context-dependent, and there are different levels of meaning. For example, the
-meaning of "I run across the yard" changes subtly depending on who is doing the
-running (Are they slow or are they fast? Do they call a light jog "running?"),
-and what a "yard" is and which one is being referenced in the context. As a
-speaker of American English, I associate a "yard" with a grassy outdoor area
-around a typical suburban home. British English associates that semantics more
-closely with the term "garden".
-
-Just as the meaning of "I run across the yard" depends on the variant of English
-being spoken, the initial meaning I assigned to `puts "Hello"` depends on
-certain facts about the context. For example, it assumes that the Ruby program
-is run in something like a terminal and its output is not piped to another
-process or to a file. If that were the case, "Hello" would not be printed to the
-screen. Instead, those bytes would be sent to the destination of the pipe. So a
-more accurate semantic *denotation* (linguistic term for "literal meaning") for
-that program might be "The string of characters 'Hello' is sent to the standard
-output stream."
-
-If you're a programmer, you almost certainly have a model of the semantics of
-your programming languages of choice living in your head. This model probably
-corresponds in some way to the interpreter/compiler, enough so that, given some
-set of programs, you would be able to predict their behavior without having to
-run the code. This model is exactly the artifact I had agents generate in Lean. -->
-
 <h2 id="why-ruby">Why Ruby?</h2>
 <p>I chose Ruby for a few reasons:</p>
 <ol>
@@ -415,14 +219,15 @@ run the code. This model is exactly the artifact I had agents generate in Lean. 
    <a href="https://dl.acm.org/doi/abs/10.1145/2661088.2661101">treated</a>
    <a href="https://arxiv.org/abs/1610.08476">rather</a>
    <a href="https://dl.acm.org/doi/abs/10.1145/2544173.2509536">extensively</a> in the
-   literature. It amusingly appears to be a popular topic
+   literature (but ). It amusingly appears to be a popular topic
    <a href="https://www.researchgate.net/publication/213877472_An_executable_operational_semantics_for_Python">for</a>
    <a href="https://arxiv.org/abs/2109.03139">master's</a>
-   <a href="https://www.ideals.illinois.edu/items/45257">theses</a>.<a class="tooltip" data-tip="I find this especially amusing because I, too, wished to do this for my master&#x27;s thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on finding bugs in Python programs with fuzzing informed by their type annotations instead." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a></li>
-<li><strong>It has high-profile users in industry.</strong> Notably, Stripe has one of the
-   largest Ruby codebases in the world, where it powers their core payment
-   rails. Homebrew is written in Ruby. Ruby on Rails is a mainstay in web
-   development. Shopify is a prominent user of Ruby on Rails, and was funding
+   <a href="https://www.ideals.illinois.edu/items/45257">theses</a>.<a class="tooltip" data-tip="I find this especially amusing because I, too, wished to do this for my master&#x27;s thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on finding bugs in Python programs with fuzzing informed by their type annotations instead." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></li>
+<li><strong>It has high-profile users in industry.</strong> Notably,
+   <a href="https://stripe.com/">Stripe</a> has one of the largest Ruby codebases in the
+   world, where it powers their core payment rails. Homebrew is written in Ruby.
+   Ruby on Rails is a mainstay in web development. Shopify is a prominent user
+   of Ruby on Rails, and was funding
    <a href="https://shopify.engineering/shopify-ruby-at-scale-research-investment">academic research for Ruby</a>
    as of several years ago.</li>
 <li><strong>It's complicated.</strong> Ruby has features that Python does not have that
@@ -431,78 +236,13 @@ run the code. This model is exactly the artifact I had agents generate in Lean. 
    is sort of like a lambda except it has different scoping rules and multiple
    ways that it can return. I believe there's a solid chance that Ruby is
    "semantics-complete." That is, if we can solve Ruby, we can solve semantics
-   for every other language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></li>
+   for every other language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny." href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a></li>
 <li><strong>It has a <em>de facto</em> type checker.</strong> Sorbet was created at Stripe, and it is
    used beyond Stripe as well. For instance, Homebrew makes extensive use of
    Sorbet types. Sorbet is unsound by construction, allowing <code>T.untyped(...)</code> as
    an escape hatch. However, we are particularly interested in what the maximal
    <em>sound fragment</em> of Sorbet is that we can model.</li>
 </ol>
-<h2 id="the-system">The system</h2>
-<p>A live demo <a href="/ruby-lean">playground</a> is available. I encourage you to go play
-with it :).</p>
-<p><img src="/blog_assets/type_pipeline.png" /></p>
-<p>The above screenshot is from the playground. It showcases the five stages of how
-this system determines the safety of a program:</p>
-<ol>
-<li>Run Sorbet on a program with specific flags, so that Sorbet emits annotation
-   information.</li>
-<li>Strip the program's annotations, since Sorbet annotations are real syntax
-   that's outside of the modeled fragment.</li>
-<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. I don&#x27;t go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a> the program, producing an s-expression that builds programs
-   from a core set of Ruby primitives.</li>
-<li>Run an <em>untrusted</em> certificate emitter (a companion program written in Ruby)
-   that proposes type judgments for the program.</li>
-<li>Run the <em>trusted</em> validator, given as <code>validateD p d</code> in <code>ruby-lean</code>'s code.
-   This validates a type <em>derivation</em>--a proposed proof of
-   well-typedness--against the program. The validator returns true if the
-   derivation accurately types the program according to its internal rules, and
-   we have a <a href="#theorem-end-to-end-soundness-of-the-type-validator">theorem</a> that
-   demonstrates the soundness of this validation procedure.</li>
-</ol>
-<p>Here's how the pieces fit together, and where the trust boundary lies:</p>
-<pre><code class="language-mermaid">flowchart TB
-    subgraph untrusted[&quot;Untrusted&quot;]
-        corpus[(&quot;Corpus of typed&lt;br/&gt;Ruby programs&quot;)]
-        anyprog[/&quot;Any Ruby program&quot;/]
-        prog([&quot;Program p&quot;])
-        sorbet[&quot;Sorbet&quot;]
-        emitter[&quot;Certificate emitter&quot;]
-        cruby[&quot;CRuby 4.0.5&quot;]
-    end
-
-    subgraph tcb[&quot;Trusted computing base&quot;]
-        subgraph tcbruby[&quot;Ruby&quot;]
-            rubypad[&quot; &quot;]
-            sigstrip[&quot;sig_strip&quot;]
-            desugarer[&quot;Desugarer&quot;]
-        end
-        subgraph tcblean[&quot;Lean&quot;]
-            validator[&quot;Type Validator&lt;br/&gt;validateD p d&quot;]
-            proof[&quot;Soundness proof&quot;]
-            semantics[&quot;Semantics&lt;br/&gt;(CESK machine)&quot;]
-        end
-    end
-
-    corpus --&gt; prog
-    anyprog --&gt; prog
-    prog --&gt; sigstrip
-    sigstrip --&gt;|&quot;sig_strip(p)&quot;| desugarer
-    prog --&gt; sorbet
-    sorbet --&gt;|&quot;S(p)&quot;| emitter
-    desugarer --&gt;|&quot;core program&quot;| validator
-    emitter --&gt;|&quot;derivation d&quot;| validator
-    proof -.-&gt;|&quot;proves sound&quot;| validator
-    proof -.-&gt;|&quot;over&quot;| semantics
-    cruby -.-&gt;|&quot;differential&lt;br/&gt;testing&quot;| semantics
-    emitter ~~~ sigstrip
-    sigstrip ~~~ proof
-    validator --&gt;|&quot;true&quot;| verdict([&quot;p has no type errors&quot;])
-
-    style rubypad fill:none,stroke:none
-    style untrusted stroke-dasharray: 6 4
-    style tcb stroke-width: 3px
-</code></pre>
 <h2 id="experience-report">Experience report</h2>
 <p>In building this system, I went through roughly five phases of construction:</p>
 <ol>
@@ -520,17 +260,18 @@ this system determines the safety of a program:</p>
    ascent of the full corpus of "ladder" programs.<a class="tooltip" data-tip="The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each &quot;rung&quot; climbed is a ratchet &quot;clink.&quot;" href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
 </ol>
 <h3 id="phase-1-desugaring">Phase 1: desugaring</h3>
-<p>The first phase was simple, to the point where I deceptively thought that the
-rest of this project would be a breeze. AI handily set up the Ruby toolchain,
-scaffolded out a desugarer, and walked me through important design decisions. In
-this phase, I established the <code>difftest</code> differential testing harness, with its
-first mode, <code>--sut desugar</code>. The desugarer is an part of the trusted computing
-base (TCB), so we need to convince ourselves that it does not change program
-behavior. This is where I worked with the agents to establish a baseline
-conformance suite derived from the CRuby implementation's own suite of sanity
-checks: <a href="https://github.com/ruby/ruby/tree/master/bootstraptest">bootstraptest</a>.</p>
-<p>Here's an example original Ruby program that exercises several of the key
-desugaring rules, and its desugared counterpart:</p>
+<p>The first phase was straightforward, to the point where I deceptively thought
+that the rest of this project would be a breeze. AI handily set up the Ruby
+toolchain, scaffolded out a desugarer, and walked me through important design
+decisions. In this phase, I established the <code>difftest</code> differential testing
+harness, with its first mode, <code>--sut desugar</code>. As shown in the above diagram,
+the desugarer is a part of the trusted computing base (TCB), so we need to
+convince ourselves that it does not change program behavior. This is where I
+worked with the agents to establish a baseline conformance suite derived from
+the CRuby implementation's own suite of sanity checks:
+<a href="https://github.com/ruby/ruby/tree/master/bootstraptest">bootstraptest</a>.</p>
+<p>Here's an example Ruby program that exercises several of the key desugaring
+rules, and its desugared counterpart:</p>
 <details class="accordion">
 <summary>Original Ruby program</summary>
 <div class="accordion-body">
@@ -612,30 +353,31 @@ puts cache.values unless cache.empty?
 <p>Notice that the <code>case</code> is replaced with an <code>:if</code>, and all method calls are
 reduced to <code>:send</code> operations.</p>
 <p>The desugarer passes 1,232 out of 1,309 of these bootstrap tests, with the
-remainder not passing because some programs are out of the desugarer's
-recognized syntax fragment, and others are unparseable by the Ruby parser that
-we are using, <a href="https://github.com/ruby/prism">Prism</a>.</p>
-<p>The desugarer, does not <code>eval</code>, for instance, as exhibited by this bootstraptest
-program:</p>
+remainder not passing because some programs are out of the desugarer's supported
+fragment.\
+For instance, the desugarer does not handle <code>eval</code>, as exhibited by this
+bootstraptest program:</p>
 <pre><code>puts &quot;before&quot;
 eval &quot;while true; return; end rescue p $!&quot;
 puts &quot;after (never reached)&quot;
 </code></pre>
+<p>Others are unparseable by the Ruby parser that we are using,
+<a href="https://github.com/ruby/prism">Prism</a>.</p>
 <h3 id="phase-2-the-semantics">Phase 2: the semantics</h3>
-<p>This phase was relatively straightforward. It felt rather effortless to use
-agents to scaffold out a Lean project, set up the Ruby toolchain, and grind the
-semantics up the ladder of complexity of Ruby programs. I think this is because
-there are no difficult proof goals; the work entirely in making sure the
-definition is correct, with the differential testing harness there to guard
-against any regressions. The <code>bootstraptest</code> corpus here again provided a nice
+<p>Moving on to the semantics, agents again rather effortlessly scaffolded a Lean
+project, set up the Ruby toolchain, and grinded the semantics up the ladder of
+complexity of Ruby programs. I think this is because there are no difficult
+proof goals in this phase; the work entirely lies in ensuring the definition is
+correct and complete, with the differential testing harness there to guard
+against any regressions. The <code>bootstraptest</code> corpus again provided a nice
 ratchet discipline against which to grow the semantics.</p>
 <p>As of the time of this writing, the semantics passes 995 / 1,309 <code>bootstraptest</code>
 cases. The gap between the 995 and 1,309 total is explained partially by the
-same 71-case gap in the desugarer's domain. The remainder simply are features
-that the semantics do not yet model. We have no reason to believe we can't model
-these features; expanding the fragment simply requires more time and more
-tokens. The strong ratchet discipline developed for the semantics makes me
-confident in the tractability of modeling these long-tail features.</p>
+same 71-case gap in the desugarer's domain. The remainder are features that the
+semantics do not yet model. I have no reason to believe these features can't be
+modeled; the strong ratchet discipline developed for the semantics makes me
+confident that this is tractable. Expanding the fragment just requires more time
+and more tokens.</p>
 <p>To validate the conformance of the semantics beyond the <code>bootstraptest</code> suite, I
 also devised a multi-pronged differential testing harness. Each method of test
 case generation is assigned a "tier." Tier 0 is the bootstrap test suite. Tier 1
@@ -647,22 +389,13 @@ Ruby programs. Tier 2 was intended to be selected Ruby snippets from Ruby
 programs in the wild, but this has not yet been implemented. This multi-pronged
 fuzzing suite has led to the discovery of several discrepancies over the growth
 of the semantics, including one found very recently that has not yet been
-patched:</p>
-<pre><code class="language-ruby">class WithToStr
-  def to_str = &quot;ok&quot;
-end
-
-puts &quot;hi&quot; + WithToStr.new 
-
-# ruby-lean: TypeError: no implicit conversion of WithToStr into String
-# CRuby: &quot;hiok&quot;
-</code></pre>
+patched, discussed in <a href="#why-should-i-trust-this">"Why should I trust this?"</a>.</p>
 <h3 id="phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof</h3>
 <p>This phase was where both I and the agents met difficulty. As noted above, I
 went through three phases when trying to build a type system and prove soundness
-(i.e. that a typed program cannot go wrong). For the sake of brevity, I'll go
-into depth on my third and final attempt that produced the results in this
-writeup, commenting on learnings from previous modeling attempts as they arise.</p>
+(i.e. that a typed program cannot go wrong). For the sake of brevity, I'll
+comment only on the third attempt that produced the results in this writeup and
+briefly touch on learnings from previous modeling attempts as they arise.</p>
 <p>First and foremost, the learnings from the first two attempts culminated in
 clarification of the task definition. The current working definition of what the
 type system and type validator are supposed to do is:</p>
@@ -673,9 +406,8 @@ emission of symbol and type information, grow a function <code>validate P D</cod
 that when <code>validate sig_strip(p) d = true</code>, running <code>sig_strip(p)</code> will not
 result in a <strong>type-stuck state</strong>.</p>
 </blockquote>
-<p>Type-stuckness is defined as a family of type-related exceptions that, given
-information about the types, I thought would be reasonably straightforward to
-prove the absence of:</p>
+<p>Type-stuckness is defined as a family of type-related exceptions that one might
+expect type-checked programs to be free of (the full set is probably larger):</p>
 <pre><code class="language-lean">def typeErrorFamily : List ObjId :=
   [Boot.noMethodErrorId, Boot.argumentErrorId, Boot.typeErrorId]
 
@@ -689,44 +421,44 @@ def typeStuck : Interp.RunResult → Bool
 <p>The biggest boon to the agent grind was the adoption a strict ratchet discipline
 in this setting as well. I could not, however, use the existing <code>bootstraptest</code>
 ladder, because the input to the type validation pipeline is fully-typed
-programs, of which the <code>bootstraptest</code> suite has none. So, I instead used agents
-to spin up a 232-program
+programs. The <code>bootstraptest</code> suite has none. So, I instead used agents to spin
+up a 232-program
 <a href="https://github.com/sam-xif/ruby-lean/tree/main/ruby-lean/corpus">corpus</a> of
 <em>typed</em> programs. This is the corpus given on the <code>ruby-lean</code>
-<a href="/ruby-lean">playground</a>.</p>
-<p>Two further design decisions also set this phase up for success. First, <em>I drew
-inspiration from <a href="https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf">RustBelt</a></em>.
-I introduce a clear delination between the syntactic set of judgments, which
-<em>define</em> type-correctness via an inductive relation, and a semantic definition
-of what a judgment is, by which the syntactic judgments must be proven correct
-with respect to the semantics. This helped the set of type judgments stay sound
-as they grow, and it allows for <em>extensionality</em>. A new judgment rule can be
-proposed in the semantic domain, and it is valid as long as it can be proven
-correct with respect to the semantics. If desired, this new semantic judgment
-can be lifted to the syntactic domain by extending the syntactic definition of
-types and used in the surface type checker. Rustbelt used this pattern to prove
-safety of <code>unsafe</code> Rust constructs.</p>
-<p>Secondly, <em>I separated the concerns of soundness and completeness</em>, leaving
-completeness to an untrusted emitter that proposes a derivation, and
-constraining the subject of the trusted validator and proof to be about
-soundness. This means that the proof of the validator's soundness does not have
+<a href="/ruby-lean">playground</a>. More design notes can be found in the
+<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
+<!-- Two further design decisions also set this phase up for success. First, *I drew
+inspiration from [RustBelt](https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf)*.
+I introduced a clear delination between the syntactic set of judgments, which
+*define* type-correctness, and a semantic definition of what a judgment *means*,
+by which the syntactic judgments must be proven correct with respect to the
+semantics. This ensures the set of type judgments stay sound as they grow, and
+it allows for *extensionality*. A new judgment rule can be proposed in the
+semantic domain, and it is valid as long as it can be proven correct with
+respect to the semantics. RustBelt used this pattern to prove safety of `unsafe`
+Rust constructs.
+
+Secondly, *I separated the concerns of soundness and completeness*, leaving
+completeness to an untrusted emitter that proposes a derivation. The trusted validator's proof only asserts soundness. 
+This means that the proof of the validator's soundness does not have
 to account for the soundness/completeness of any type inference decision
-procedure. This is exactly one of the flaws that led to me scrapping the first
+procedure. This is exactly one of the flaws that led to me scrap the first
 attempt at modeling a type system for Ruby and proving it sound. I had
 agent-grinded a type checker that inferred types rather than just checking them,
 and a successful check was a successful inference. This led to complex machinery
 where the inductive safety invariant had to be specified in terms of this
 inference algorithm, and the inference algorithm became a central part of the
-soundness proof itself.<a class="tooltip" data-tip="One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of infer--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
+soundness proof itself.[]^(One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
 reference to details such as its case numbering and recursion scheme, greatly
 compromising proof maintainability. I recall seeing several instances of a
 pattern in the agent rollout where an agent would fold a new type judgment into
-infer, and then would proceed to update proof tactics in 10-20 files to get
-everything green again." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a> In general, deciding types for complex program
+<code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
+everything green again.) In general, deciding types for complex program
 constructs like functions and loops is much more difficult than checking
-postulated types.</p>
-<p>With all this in place, the agent grind of "throwing tokens at the problem"
-could begin. The grind process was roughly as follows, in a loop:</p>
+postulated types. -->
+
+<p>With this in place, the agent grind of "throwing tokens at the problem" could
+begin. The grind process was roughly as follows, in a loop:</p>
 <ol>
 <li>For each new corpus program, propose a set of syntactic judgments that can be
    used to type the program.</li>
@@ -743,22 +475,20 @@ climbed until 1) the validator responds correctly for the new corpus element, 2)
 each new type judgment has a corresponding discharged proof obligation and 3)
 the proof for the end-to-end soundness theorem checks. More details about this
 theorem and its helper theorems and lemmas are given in the
-<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>. Since this
-is the central result, however, I also include the end-to-end soundness theorem
-below.</p>
-<h4 id="theorem-end-to-end-soundness-of-the-type-validator">Theorem: end-to-end soundness of the type validator</h4>
-<p>For all programs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math> and certificates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math> (where <code>validateD</code> is the
-aforementioned <code>validate</code> function in the actual Lean code),</p>
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>validateD</mtext><mtext>&#x000A0;</mtext><mi>p</mi><mtext>&#x000A0;</mtext><mi>d</mi><mo>&#x0003D;</mo><mtext>true</mtext><mtext>&#x000A0;</mtext><mo>&#x02227;</mo><mtext>&#x000A0;</mtext><mtext>bootOkB</mtext><mo>&#x0003D;</mo><mtext>true</mtext><mtext>&#x000A0;</mtext><mo lspace="0.2778em" rspace="0.2778em">&#x027F9;</mo><mtext>&#x000A0;</mtext><mtext>StuckFree</mtext><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="italic">b</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">t</mi><mi mathvariant="italic">M</mi><mi mathvariant="italic">a</mi><mi mathvariant="italic">c</mi><mi mathvariant="italic">h</mi><mi mathvariant="italic">i</mi><mi mathvariant="italic">n</mi><mi mathvariant="italic">e</mi></mrow><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math>
-<p><em>Proof sketch.</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>validateD</mtext><mtext>&#x000A0;</mtext><mi>p</mi><mtext>&#x000A0;</mtext><mi>d</mi><mo>&#x0003D;</mo><mtext>true</mtext></mrow></math> yields a <code>DJudge</code> derivation by projection (Lemma
-<code>validateD_typed</code>); the adequacy theorem between the syntactic and semantic
-judgments produces an equivalent semantic judgment; each semantic judgment's
-conclusion carries the stuck-freedom (safety) property, proven via another
-soundness helper theorem over the entire semantic judgment registry, so the
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>StuckFree</mtext></mrow></math> conclusion falls out naturally. <code>bootOkB</code> is a <code>#guard</code>ed Boolean that
-asserts well-formedness of the inital state of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mrow><mi mathvariant="italic">b</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">t</mi><mi mathvariant="italic">M</mi><mi mathvariant="italic">a</mi><mi mathvariant="italic">c</mi><mi mathvariant="italic">h</mi><mi mathvariant="italic">i</mi><mi mathvariant="italic">n</mi><mi mathvariant="italic">e</mi></mrow></mrow></math>, which is the state of
-the machine after a large Ruby program that seeds many core definitions, called
-the <em>prelude</em>, has run.</p>
+<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
+<!-- 
+#### Theorem: end-to-end soundness of the type validator
+
+For all programs $p$ and certificates $d$, where `validate` is the
+aforementioned type validator,
+
+$$
+\text{validate}\ p\ d = \text{true} \ \Longrightarrow\ \text{StuckFree}(\mathit{bootMachine},\ p)
+$$
+
+*Proof sketch:* Given in the
+[Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html). -->
+
 <h2 id="cost-of-verification">Cost of verification</h2>
 <p>Following
 <a href="https://www.lesswrong.com/posts/SG82BkTDQDAjANRWj/please-measure-verification-burden">Quinn's</a>
@@ -766,22 +496,17 @@ advice, I report the verification burden here.</p>
 <p>The work to obtain this result unfolded over the course of ~2.5 months, at 10-20
 hours per week of human labor, with $9,000 of token budget provided by Apart
 Research.</p>
-<p>The model used to author most of the code was Claude Opus 5. Claude Fable 5 was
-occasionally used as a consultant, but I shied away from using it for grindy
+<p>The model used to author most of the code was Claude Opus 5. I occasionally used
+Claude Fable 5 as a consultant, but I shied away from using it for grindy
 sessions because I found that it burned through tokens far faster than I
-would've liked, without that much of an uplift in the speed towards closure of
-goals. The final push towards the soundness proof over a nontrivial fragment of
-Ruby that is presented here was grinded with the new GPT 6 Astra model, which I
-found did a very good job at a more reasonable cost profile, but this may also
-be due to the more structured ratchet discipline I have created in the most
-recent attempt at growth of a sound type system.</p>
+intended, without much of a speedup of the ladder-climb. The final push towards
+the soundness proof over a nontrivial fragment of Ruby that is presented here
+was grinded with the new GPT 6 Astra model, which I found did a very good job at
+a more reasonable cost profile, but this may also be due to the more rigorous
+ratchet discipline I imposed in my most recent attempt at growth of a sound type
+system.</p>
 <h2 id="limitations">Limitations</h2>
-<p>This work has several limitations. One obvious limitation is the fact that the
-grind isn't complete; this can be solved with more token budget. There are other
-limitations that relate more to the design approach, however, and require
-exploration/treatment in future work.</p>
-<p>Here is a sampling of limitations, roughly in order from most severe to least
-severe.</p>
+<p>In <code>ruby-lean</code> itself,</p>
 <ol>
 <li>The semantics, while largely conformant for typical on-rails Ruby, does not
    fully model the long tail of all esoteric Ruby features, and there are still
@@ -801,25 +526,49 @@ severe.</p>
 <li>The fragment of the type system is still small. It doesn't cover blocks, for
    instance, which I have already seen that agents struggle to type in my
    experimentation that led to this result.</li>
+</ol>
+<p>I also think there are a lot of interesting open research questions about the
+science of growing these semantics and steering agents to complete long-horizon
+proof tasks. The grindy nature and "out-of-distribution"-ness of this project
+lends itself nicely to benchmarking and RL hillclimbing on this type of task.</p>
+<p>Specifically,</p>
+<ol>
 <li>I have not developed a theory of how best to prompt LLMs to obtain useful
    semantics. This will require time and funding to run more controlled
    experiments and benchmarks. If you are interested in funding this, please let
    me know.</li>
-<li>I did not run any comparison between different LLMs for the tasks here,
-   except for a brief stint playing around with GLM 5.2 and GLM 5.3,to no avail.
-   Benchmarking how agents perform at these long-horizon proof tasks under
-   variable reasoning effort, harnesses, and prompting strategies would be very
-   exciting to work on in my view. If you are interested in working on this, or
-   interested in funding it, let me know.</li>
+<li>I did not run any comparison between different LLMs/harnesses for the tasks
+   here, except for a brief stint playing around with GLM 5.2 and GLM 5.3,to no
+   avail. I would be excited to work on benchmarking how agents perform at these
+   long-horizon proof tasks under variable reasoning effort, harnesses, and
+   prompting strategies. If you are interested in working on this or in funding
+   it, let me know.</li>
 <li>The definition of type-stuckness is somewhat arbitrary, and probably could've
    included more types of exceptions that are downstream of type-related issues
    in programs. Expanding the set of exceptions may superlinearly expand the
    verification burden. More experimentation is needed here to understand this.</li>
 </ol>
 <h2 id="future-work">Future work</h2>
-<p>A lot of future work lays before us. Here I catalog some of the directions I
-find most exciting.</p>
-<p><em>Continue the grind.</em> To make this Ruby semantics viable for commercial use, the
+<p>My immediate next steps are</p>
+<ol>
+<li>Grind the semantics to cover any reasonable Ruby program</li>
+<li>Grind the type system enough to run the type validator on a repo in the wild
+   (Homebrew is my initial target)</li>
+<li>Attempt to find real Sorbet unsoundness (i.e. not just unsoundness introduced
+   by deliberate escape hatches).</li>
+</ol>
+<p>Beyond these, something I would like to explore more is leveraging the semantics
+for adversarial synthesis of
+<a href="https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain">deserialization attack chains</a>.
+This is a recurring bug class in Ruby, and frankly in general; deserialization
+of an uncontrolled input is a huge attack surface. I unlock deep mechanical
+reasoning about this once I grind the semantics to near-complete coverage of
+Ruby.</p>
+<!-- 
+A lot of future work lays before us. Here I catalog some of the directions I
+find most exciting.
+
+*Continue the grind.* To make this Ruby semantics viable for commercial use, the
 supported fragment of the Ruby semantics needs to be grown. A rough target to
 shoot for, not just in this project, but in all such projects of formalizing an
 industrial programming language, is to cover the 99.9th percentile of programs.
@@ -827,45 +576,48 @@ Put another way, suppose I have a sampler for Ruby programs that the average
 Ruby developer would write. Assume that the existing set of Ruby programs
 already in the wild is drawn from this distribution also. If a Ruby program has
 99 transitive dependencies (suppose each transitive dependency is a program the
-sampler could produce), this implies a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>99.9</mn><msup><mi>&#x00025;</mi><mrow><mn>100</mn></mrow></msup><mo>&#x02248;</mo><mn>90.5</mn><mi>&#x00025;</mi></mrow></math> chance that the transitive
+sampler could produce), this implies a $99.9\% ^{100} \approx 90.5\%$ chance that the transitive
 closure of the program is runnable in the semantics. These are pretty good odds.
 Two 9s of support wouldn't be enough: a 100-program complex would have a
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>99</mn><msup><mi>&#x00025;</mi><mrow><mn>100</mn></mrow></msup><mo>&#x02248;</mo><mn>36.6</mn><mi>&#x00025;</mi></mrow></math> chance of being fully supported in that case.</p>
-<p><em>Generalize to all industry use-cases.</em> If pushing support beyond 99% proves to
+$99\%^{100} \approx 36.6\%$ chance of being fully supported in that case.
+
+*Generalize to all industry use-cases.* If pushing support beyond 99% proves to
 be extremely challenging, then we can explore intermixing code that's modeled by
 the semantics and code that is not, with a linkage established through some
 oracle semantics (demonic or
-<a href="https://link.springer.com/chapter/10.1007/978-3-319-21690-4_19">angelic</a>), or
+[angelic](https://link.springer.com/chapter/10.1007/978-3-319-21690-4_19)), or
 an LLM-proposed formal interface that is validated against the unmodeled library
-via differential testing.</p>
-<p><em>Identify real Sorbet gaps.</em> I will consider this formal model truly
+via differential testing.
+
+*Identify real Sorbet gaps.* I will consider this formal model truly
 battle-tested when we can identify real gaps in the current Ruby state of the
 art in static program verification, Sorbet (with
-<a href="https://github.com/soutaro/steep">Steep</a> as what appears to be an emerging
-challenger). Some ways we could find gaps include:</p>
-<ul>
-<li>Leveraging the extensionality of our system of type judgments with our type
+[Steep](https://github.com/soutaro/steep) as what appears to be an emerging
+challenger). Some ways we could find gaps include:
+
+- Leveraging the extensionality of our system of type judgments with our type
   system extended with a complex new judgment, we accept a program Sorbet
-  doesn't. We become more <em>complete</em> than Sorbet.</li>
-<li>Sorbet accepts a fully-typed program that we reject, and we can find a
+  doesn't. We become more *complete* than Sorbet.
+- Sorbet accepts a fully-typed program that we reject, and we can find a
   counterexample that shows the program is not type safe. We show Sorbet is
-  dangerously <em>unsound</em>. This unsoundness is dangerous because even code in the
-  strictly typed fragment can't be trusted.</li>
-<li>We show via proof/disproof that some of Sorbet's type inference rules are
+  dangerously *unsound*. This unsoundness is dangerous because even code in the
+  strictly typed fragment can't be trusted.
+- We show via proof/disproof that some of Sorbet's type inference rules are
   unsound. This would require a differential testing harness that deeply probes
   Sorbet's behavior, coupled with agentic analysis of Sorbet's documentation, to
   produce a trustworthy collection of Sorbet's actual type judgments. The
   architecture I have supports this, but I have not made it an explicit part of
-  the most recent agent grind loop.</li>
-</ul>
-<p><em>Prove safety properties beyond types.</em> I have explored this area least so far
+  the most recent agent grind loop.
+
+*Prove safety properties beyond types.* I have explored this area least so far
 in this workstream. As a first use-case to target in this specific project, I am
 particularly excited about formalizing a safety property that specifies the
 absence of Ruby
-<a href="https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain">deserialization RCE exploits</a>,
+[deserialization RCE exploits](https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain),
 since bugs in this class have recurred repeatedly for many years. The latest
 attack exploits behaviors that would be impractical to patch because doing so
-would require fundamental changes to the Ruby langauge.</p>
+would require fundamental changes to the Ruby langauge. -->
+
 <h2 id="final-thoughts">Final thoughts</h2>
 <p>This post is less of an announcement of a finalized piece of work than a
 check-in on one that is deeply in progress. Modern frontier models have shown
@@ -882,17 +634,11 @@ achieve our formalization goals.</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">"Program testing can be used to show the presence of bugs, but never to show their absence!" - Edsger Dijkstra <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
-        <li id="tooltip-def-2">I find this especially amusing because I, too, wished to do this for my master's thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on <a href="https://samx.io/papers/thesis.pdf">finding bugs in Python programs with fuzzing informed by their type annotations instead</a>. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
-        <li id="tooltip-def-3">I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
-        <li id="tooltip-def-4">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
+        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">"Program testing can be used to show the presence of bugs, but never to show their absence!" - Edsger Dijkstra <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-3">I find this especially amusing because I, too, wished to do this for my master's thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on <a href="https://samx.io/papers/thesis.pdf">finding bugs in Python programs with fuzzing informed by their type annotations instead</a>. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
         <li id="tooltip-def-5">The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each "rung" climbed is a ratchet "clink." <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
-        <li id="tooltip-def-6">One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
-reference to details such as its case numbering and recursion scheme, greatly
-compromising proof maintainability. I recall seeing several instances of a
-pattern in the agent rollout where an agent would fold a new type judgment into
-<code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
-everything green again. <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
     </ol>
 </section>]]></content:encoded>
     </item>
