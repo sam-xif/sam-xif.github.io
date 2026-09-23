@@ -2,10 +2,13 @@
 """Generate RSS 2.0 feed for samx.io blog."""
 
 import datetime
+import re
 from pathlib import Path
 
 BASE_URL = "https://samx.io"
 FEED_PATH = Path(__file__).parent / "feed.xml"
+# Heading "#" permalinks are page chrome; feed readers would show them as stray text.
+HEADING_ANCHOR_RE = re.compile(r'<a class="heading-anchor"[^>]*>.*?</a>')
 
 
 def _rfc822(date: datetime.date) -> str:
@@ -35,7 +38,7 @@ def _build_xml(posts) -> str:
             f"      <guid isPermaLink=\"true\">{url}</guid>\n"
             f"      <pubDate>{_rfc822(post.date)}</pubDate>\n"
             f"      <description>{_cdata(post.description or post.title)}</description>\n"
-            f"      <content:encoded>{_cdata(post.html_body)}</content:encoded>\n"
+            f"      <content:encoded>{_cdata(HEADING_ANCHOR_RE.sub("", post.html_body))}</content:encoded>\n"
             f"    </item>"
         )
 

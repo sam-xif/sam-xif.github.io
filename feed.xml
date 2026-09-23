@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Wed, 23 Sep 2026 03:09:04 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Sep 2026 03:14:18 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: An executable Ruby semantics in Lean with a type soundness proof</title>
@@ -508,26 +508,24 @@ system.</p>
 <h2 id="limitations">Limitations</h2>
 <p>In <code>ruby-lean</code> itself,</p>
 <ol>
-<li>The semantics, while largely conformant for typical on-rails Ruby, does not
-   fully model the long tail of all esoteric Ruby features, and there are still
-   lingering conformance issues where the semantics produces results that differ
-   from actual CRuby. I do not see this as a major threat to validity of the
-   small result presented here, since the proof checks in Lean and the semantics
-   is faithful enough to run large programs, such as a thousand-line multi-file
-   slice of Homebrew that I was using as a benchmark.</li>
-<li>Beyond features of Ruby itself, the semantics also has a blind spot when it
-   comes to modeling the behavior of Ruby programs that interact with the
-   surrounding operating system, the internet, the file system, or other
+<li>The semantics does not model the long tail of all esoteric Ruby features, and
+   there are still lingering conformance issues where the semantics produces
+   results that differ from actual CRuby. I do not see this as a major threat to
+   validity of the small result I present here, since the proof checks in Lean
+   and the semantics is faithful enough to run large programs, such as a
+   thousand-line multi-file slice of Homebrew that I was using as a spot check.</li>
+<li>The semantics does not model the behavior of Ruby programs that interact with
+   the surrounding operating system, the internet, the file system, or other
    libraries. Ruby's <code>RubyGems</code> packaging system, however, is written in Ruby,
-   which means that we may not need to explicitly model all of Ruby's dependency
-   management. We may simply get this for free by running the Ruby code in our
+   which means that we may get this for free by running the Ruby code in our
    semantics once coverage of the Ruby language is expanded enough to cover all
    of the source code for <code>RubyGems</code> and other libraries.</li>
 <li>The fragment of the type system is still small. It doesn't cover blocks, for
    instance, which I have already seen that agents struggle to type in my
-   experimentation that led to this result.</li>
+   experimentation that led to this result. I will mount another attempt at this
+   soon, since blocks are a pretty essential part of idiomatic Ruby.</li>
 </ol>
-<p>I also think there are a lot of interesting open research questions about the
+<p>I also think there are a lot of interesting open research questions in the
 science of growing these semantics and steering agents to complete long-horizon
 proof tasks. The grindy nature and "out-of-distribution"-ness of this project
 lends itself nicely to benchmarking and RL hillclimbing on this type of task.</p>

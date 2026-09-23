@@ -49,7 +49,7 @@ technically inclined, see the
 <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>. View the
 source code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>.</p>
 <hr />
-<h2 id="semantics-done-quick">Semantics done quick</h2>
+<h2 id="semantics-done-quick">Semantics done quick<a class="heading-anchor" href="#semantics-done-quick" title="Link to this section">#</a></h2>
 <p>This summer, I was a fellow in the
 <a href="https://apartresearch.com/research">Apart Research</a>
 <a href="https://www.lesswrong.com/posts/8wtrLoDPyCfMLuHkt/how-to-solve-secure-program-synthesis">Secure Program Synthesis</a>
@@ -79,7 +79,7 @@ complex model, I had to step in to unblock it by crystallizing the theorem
 statements and the proof design approach. Admittedly, it was somewhat refreshing
 to find a task that AI does not excel at immediately, and I came away with some
 learnings about how to best steer AI on complex tasks like these.</p>
-<h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator</h2>
+<h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator<a class="heading-anchor" href="#ruby-lean-and-its-type-validator" title="Link to this section">#</a></h2>
 <p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
 example Ruby programs. Play around with it!</p>
 <p><img src="/blog_assets/type_pipeline.png" /></p>
@@ -145,7 +145,7 @@ this system determines the safety of a program:</p>
     style untrusted stroke-dasharray: 6 4
     style tcb stroke-width: 3px
 </code></pre>
-<h2 id="why-this-matters">Why this matters</h2>
+<h2 id="why-this-matters">Why this matters<a class="heading-anchor" href="#why-this-matters" title="Link to this section">#</a></h2>
 <p>If you're a programmer, you have a model of the behavior of your programming
 language of choice living in your head. This is your model of the <em>semantics</em> of
 the language. You probably find that you're able to use this model to predict
@@ -186,7 +186,7 @@ tantalizingly tractable. Reasoning about programs may become startlingly
 necessary also, as too-loosely-monitored agents continue to poke around at
 software. The safety properties that could defend against agent misbehavior are
 precisely of this negative sort.</p>
-<h2 id="why-should-i-trust-this">"Why should I trust this?"</h2>
+<h2 id="why-should-i-trust-this">"Why should I trust this?"<a class="heading-anchor" href="#why-should-i-trust-this" title="Link to this section">#</a></h2>
 <p>My semantics is validated against Ruby by differential testing. I have
 implemented a multi-pronged conformance suite, where each prong generates test
 cases via a different methodology. This is explained in more detail
@@ -231,7 +231,7 @@ were given were achievable. I did not give them impossible goal statements and
 gave them emergency exits from goal pursuit that they could use if needed (a
 suggestion borrowed from
 <a href="https://oath.tech/pub/2026/08/tentative-advice-building-with-ai/">Mike Dodds</a>).</p>
-<h2 id="why-ruby">Why Ruby?</h2>
+<h2 id="why-ruby">Why Ruby?<a class="heading-anchor" href="#why-ruby" title="Link to this section">#</a></h2>
 <p>I chose Ruby for a few reasons:</p>
 <ol>
 <li><strong>It isn't Python.</strong> Python has been
@@ -262,7 +262,7 @@ suggestion borrowed from
    an escape hatch. However, we are particularly interested in what the maximal
    <em>sound fragment</em> of Sorbet is that we can model.</li>
 </ol>
-<h2 id="experience-report">Experience report</h2>
+<h2 id="experience-report">Experience report<a class="heading-anchor" href="#experience-report" title="Link to this section">#</a></h2>
 <p>In building this system, I went through roughly five phases of construction:</p>
 <ol>
 <li>Growing a desugaring function that takes high level Ruby and translates it
@@ -278,7 +278,7 @@ suggestion borrowed from
    follow. <code>ruby-lean</code> is the culmination of this approach, partway along in its
    ascent of the full corpus of "ladder" programs.<a class="tooltip" data-tip="The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each &quot;rung&quot; climbed is a ratchet &quot;clink.&quot;" href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
 </ol>
-<h3 id="phase-1-desugaring">Phase 1: desugaring</h3>
+<h3 id="phase-1-desugaring">Phase 1: desugaring<a class="heading-anchor" href="#phase-1-desugaring" title="Link to this section">#</a></h3>
 <p>The first phase was straightforward, to the point where I deceptively thought
 that the rest of this project would be a breeze. AI handily set up the Ruby
 toolchain, scaffolded out a desugarer, and walked me through important design
@@ -382,7 +382,7 @@ puts &quot;after (never reached)&quot;
 </code></pre>
 <p>Others are unparseable by the Ruby parser that we are using,
 <a href="https://github.com/ruby/prism">Prism</a>.</p>
-<h3 id="phase-2-the-semantics">Phase 2: the semantics</h3>
+<h3 id="phase-2-the-semantics">Phase 2: the semantics<a class="heading-anchor" href="#phase-2-the-semantics" title="Link to this section">#</a></h3>
 <p>Moving on to the semantics, agents again rather effortlessly scaffolded a Lean
 project, set up the Ruby toolchain, and grinded the semantics up the ladder of
 complexity of Ruby programs. I think this is because there are no difficult
@@ -409,7 +409,7 @@ programs in the wild, but this has not yet been implemented. This multi-pronged
 fuzzing suite has led to the discovery of several discrepancies over the growth
 of the semantics, including one found very recently that has not yet been
 patched, discussed in <a href="#why-should-i-trust-this">"Why should I trust this?"</a>.</p>
-<h3 id="phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof</h3>
+<h3 id="phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof<a class="heading-anchor" href="#phase-3-5-type-system-and-soundness-proof" title="Link to this section">#</a></h3>
 <p>This phase was where both I and the agents met difficulty. As noted above, I
 went through three phases when trying to build a type system and prove soundness
 (i.e. that a typed program cannot go wrong). For the sake of brevity, I'll
@@ -508,7 +508,7 @@ $$
 *Proof sketch:* Given in the
 [Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html). -->
 
-<h2 id="cost-of-verification">Cost of verification</h2>
+<h2 id="cost-of-verification">Cost of verification<a class="heading-anchor" href="#cost-of-verification" title="Link to this section">#</a></h2>
 <p>Following
 <a href="https://www.lesswrong.com/posts/SG82BkTDQDAjANRWj/please-measure-verification-burden">Quinn's</a>
 advice, I report the verification burden here.</p>
@@ -524,29 +524,27 @@ was grinded with the new GPT 6 Astra model, which I found did a very good job at
 a more reasonable cost profile, but this may also be due to the more rigorous
 ratchet discipline I imposed in my most recent attempt at growth of a sound type
 system.</p>
-<h2 id="limitations">Limitations</h2>
+<h2 id="limitations">Limitations<a class="heading-anchor" href="#limitations" title="Link to this section">#</a></h2>
 <p>In <code>ruby-lean</code> itself,</p>
 <ol>
-<li>The semantics, while largely conformant for typical on-rails Ruby, does not
-   fully model the long tail of all esoteric Ruby features, and there are still
-   lingering conformance issues where the semantics produces results that differ
-   from actual CRuby. I do not see this as a major threat to validity of the
-   small result presented here, since the proof checks in Lean and the semantics
-   is faithful enough to run large programs, such as a thousand-line multi-file
-   slice of Homebrew that I was using as a benchmark.</li>
-<li>Beyond features of Ruby itself, the semantics also has a blind spot when it
-   comes to modeling the behavior of Ruby programs that interact with the
-   surrounding operating system, the internet, the file system, or other
+<li>The semantics does not model the long tail of all esoteric Ruby features, and
+   there are still lingering conformance issues where the semantics produces
+   results that differ from actual CRuby. I do not see this as a major threat to
+   validity of the small result I present here, since the proof checks in Lean
+   and the semantics is faithful enough to run large programs, such as a
+   thousand-line multi-file slice of Homebrew that I was using as a spot check.</li>
+<li>The semantics does not model the behavior of Ruby programs that interact with
+   the surrounding operating system, the internet, the file system, or other
    libraries. Ruby's <code>RubyGems</code> packaging system, however, is written in Ruby,
-   which means that we may not need to explicitly model all of Ruby's dependency
-   management. We may simply get this for free by running the Ruby code in our
+   which means that we may get this for free by running the Ruby code in our
    semantics once coverage of the Ruby language is expanded enough to cover all
    of the source code for <code>RubyGems</code> and other libraries.</li>
 <li>The fragment of the type system is still small. It doesn't cover blocks, for
    instance, which I have already seen that agents struggle to type in my
-   experimentation that led to this result.</li>
+   experimentation that led to this result. I will mount another attempt at this
+   soon, since blocks are a pretty essential part of idiomatic Ruby.</li>
 </ol>
-<p>I also think there are a lot of interesting open research questions about the
+<p>I also think there are a lot of interesting open research questions in the
 science of growing these semantics and steering agents to complete long-horizon
 proof tasks. The grindy nature and "out-of-distribution"-ness of this project
 lends itself nicely to benchmarking and RL hillclimbing on this type of task.</p>
@@ -567,7 +565,7 @@ lends itself nicely to benchmarking and RL hillclimbing on this type of task.</p
    in programs. Expanding the set of exceptions may superlinearly expand the
    verification burden. More experimentation is needed here to understand this.</li>
 </ol>
-<h2 id="future-work">Future work</h2>
+<h2 id="future-work">Future work<a class="heading-anchor" href="#future-work" title="Link to this section">#</a></h2>
 <p>My immediate next steps are</p>
 <ol>
 <li>Grind the semantics to cover any reasonable Ruby program</li>
@@ -637,7 +635,7 @@ since bugs in this class have recurred repeatedly for many years. The latest
 attack exploits behaviors that would be impractical to patch because doing so
 would require fundamental changes to the Ruby langauge. -->
 
-<h2 id="final-thoughts">Final thoughts</h2>
+<h2 id="final-thoughts">Final thoughts<a class="heading-anchor" href="#final-thoughts" title="Link to this section">#</a></h2>
 <p>This post is less of an announcement of a finalized piece of work than a
 check-in on one that is deeply in progress. Modern frontier models have shown
 great aptitude for authoring proofs about programs and coming up with reasonable

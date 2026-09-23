@@ -645,3 +645,42 @@ blockquote pre {
     text-align: center;
     overflow-x: auto;
 }
+
+/* "#" permalinks after each heading (added by the toc extension in build.py).
+   Inline and faint by default, which suits touch screens and narrow gutters. */
+.post-body .heading-anchor {
+    margin-left: 0.35em;
+    color: var(--text-muted);
+    font-weight: normal;
+    text-decoration: none;
+    opacity: 0.5;
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.post-body .heading-anchor:hover,
+.post-body .heading-anchor:focus-visible {
+    color: var(--link);
+    opacity: 1;
+}
+
+/* With a mouse and room in the margin, hang the "#" left of the heading
+   and reveal it only on hover, like most blogs do. */
+@media (hover: hover) and (min-width: 769px) {
+    .post-body :is(h1, h2, h3, h4, h5, h6):has(> .heading-anchor) {
+        position: relative;
+    }
+
+    .post-body .heading-anchor {
+        position: absolute;
+        top: 0;
+        right: 100%;
+        margin: 0;
+        padding-right: 0.35em;
+        opacity: 0;
+    }
+
+    .post-body :is(h1, h2, h3, h4, h5, h6):hover > .heading-anchor,
+    .post-body .heading-anchor:focus-visible {
+        opacity: 1;
+    }
+}
