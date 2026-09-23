@@ -48,8 +48,8 @@ Sorbet over the semantics. The semantics is validated by differential testing
 against Ruby, and passes a large swath of conformance tests. Through this
 project, I learned firstly that agents do great at long-horizon tasks if the
 task definition is clear; if it is not clear, they mess up in unpredictable
-ways. Secondly, I learned that deep formal methods expertise is still needed to
-steer these systems.</em></p>
+ways. Secondly, I learned that deep human expertise is still needed to unblock
+agents on complex proofs about programs.</em></p>
 <p>Check out the <code>ruby-lean</code> <a href="/ruby-lean">playground</a> and see it in action. For the
 technically inclined, see the
 <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>. View the
@@ -66,11 +66,10 @@ project,
 accelerate the speed at which we can author and build on
 <a href="https://en.wikipedia.org/wiki/Semantics_(programming_languages)">semantics</a>
 of programming languages and systems. Normally, these semantics are typically
-formulated deep in research labs, with multi PhD-year long efforts culminating
-in abstract theoretical results that make it to academic conferences but then
-don't find usefulness in the real world, with the possible exception of
-safety-critical work. Applications of these semantics include agent containment
-and defense-in-depth of software at large.</p>
+formulated deep in research labs in multi PhD-year long efforts. The results
+make it to academic conferences but don't find usefulness in the real world,
+with the possible exception of safety-critical work. Applications of these
+semantics include agent containment and defense-in-depth of software at large.</p>
 <p>As an outcome of this project, I am pleased to announce <code>ruby-lean</code>, my
 semantics of Ruby in Lean 4. <code>ruby-lean</code> is an executable semantics, modeled as
 a <a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>, about
@@ -80,11 +79,11 @@ program passes the <code>ruby-lean</code> type validator, then it is completely 
 certain family of type-related exceptions.</strong></p>
 <p>I can probably count on my hands the number of lines of actual Lean code I wrote
 by hand. Frontier AI breezed through a lot of the simpler parts of this project,
-but when it came to the most difficult part of proving a hard property about a
-complex model, I had to step in to unblock it by crystallizing the theorem
-statements and the proof design approach. Admittedly, it was somewhat refreshing
-to find a task that AI does not excel at immediately, and I came away with some
-learnings about how to best steer AI on complex tasks like these.</p>
+but when it came to the most difficult part of proving a hard property, the AI
+struggled, and I intervened by crystallizing the theorem statements and the
+proof design approach. Admittedly, it was somewhat refreshing to find a task
+that AI does not excel at immediately, and I came away with some learnings about
+how to best steer AI on complex tasks like these.</p>
 <h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator<a class="heading-anchor" href="#ruby-lean-and-its-type-validator" title="Link to this section">#</a></h2>
 <p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
 example Ruby programs. Play around with it!</p>
@@ -96,7 +95,7 @@ this system determines the safety of a program:</p>
    information.</li>
 <li>Strip the program's annotations, since Sorbet annotations are real syntax
    that's outside of what the Lean model supports today.</li>
-<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. I don&#x27;t go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
+<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. I don&#x27;t go into much depth in this particular post for brevity, but this s-expression is roughly what the desugaring step does. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
    from a core set of Ruby primitives.</li>
 <li>Run an <em>untrusted</em> certificate emitter (a companion program written in Ruby)
    that proposes a type <em>derivation</em> for the program. A derivation is like a
@@ -259,10 +258,11 @@ suggestion borrowed from
    "semantics-complete." That is, if we can solve Ruby, we can solve semantics
    for every other language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
 <li><strong>It has a <em>de facto</em> type checker.</strong> Sorbet was created at Stripe, and it is
-   used beyond Stripe as well. For instance, Homebrew makes extensive use of
-   Sorbet types. Sorbet is unsound by construction, allowing <code>T.untyped(...)</code> as
-   an escape hatch. However, we are particularly interested in what the maximal
-   <em>sound fragment</em> of Sorbet is that we can model.</li>
+   used at Stripe and beyond. Sorbet is unsound by construction, allowing
+   <code>T.untyped(...)</code> as an escape hatch. However, we are particularly interested
+   in what the maximal <em>sound fragment</em> of Sorbet is that we can model. Any
+   soundness bug in Sorbet, where it claims a typed program is safe when it's
+   not, would be immediately relevant to this audience.</li>
 </ol>
 <h2 id="experience-report">Experience report<a class="heading-anchor" href="#experience-report" title="Link to this section">#</a></h2>
 <p>In building this system, I went through roughly five phases of construction:</p>
@@ -572,28 +572,29 @@ don't have to tear down your work multiple times like I did :).</p>
 <p>This post is less of an announcement of a finalized piece of work than a
 check-in on one that is deeply in progress, so I'm sure I'll have more learnings
 to report soon.</p>
-<p>Ultimately, what I think is most salient for you to take away is that this
-pattern of using an agent to formalize something with respect to some black box
-oracle works quite well, and it can even be applied to specific software systems
-or libraries (e.g. the Ruby on Rails framework) instead of plain programming
-languages. This technique is useful anywhere you may want to abstract away the
-messy details of the implementation and reason about the higher-level behavior.
-You just need to build confidence that the model is faithful by developing a
-really strong test suite.</p>
-<p>I am less certain, however, of how well this process would have gone if an agent
+<p>Ultimately, I think you should take away this pattern of using an agent to
+formalize something with respect to some black box oracle. It works quite well,
+and it can even be applied to specific software systems or libraries (e.g. the
+Ruby on Rails framework) instead of plain programming languages. This technique
+is useful anywhere you may want to abstract away the messy details of the
+implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a nice interface between them." href="#tooltip-def-8" id="tooltip-ref-8"><sup>8</sup></a> You just
+need to build confidence that the model is faithful by developing a really
+strong test suite.</p>
+<!-- I am less certain, however, of how well this process would have gone if an agent
 didn't have a reference for how the resultant semantics should look. In the case
-of <code>ruby-lean</code>, the agent was familiar with the literature enough to be able to
+of `ruby-lean`, the agent was familiar with the literature enough to be able to
 select from a menu of semantics shapes. It selected the CEKS model, which
 happened to work out well. But even CEKS may not be the best choice in the long
 run. Much of the proof machinery has to do with translating the "syntax" world
 into the "machine" world, but there are other approaches, like
-<a href="https://cakeml.org/esop16.pdf">Functional big-step interpreters</a>, that
+[Functional big-step interpreters](https://cakeml.org/esop16.pdf), that
 implement the semantics as structural recursion over the language syntax. With
-this alternative model, type-related proofs could become a lot easier.</p>
+this alternative model, type-related proofs could become a lot easier. -->
+
 <p>Finally, I have simply been blown away by how good LLMs are at most engineering
 tasks, but they are only as good as the task definition you give them. Sadly,
 this makes me more afraid than I used to be about deployment of AI agents at
-scale on tasks where its performance is not being properly evaluated or not
+scale on tasks where their performance is not being properly evaluated or not
 evaluable in the first place...</p>
 <h2 id="acknowledgements">Acknowledgements<a class="heading-anchor" href="#acknowledgements" title="Link to this section">#</a></h2>
 <p>Thank you, Eitan Sprejer and the Apart Research team, for your support in this
@@ -605,13 +606,14 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the *desugaring* step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the <i>desugaring</i> step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
         <li id="tooltip-def-2">Not so much anymore, though, with agentic development. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
         <li id="tooltip-def-3">"Program testing can be used to show the presence of bugs, but never to show their absence!" - Edsger Dijkstra <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
         <li id="tooltip-def-4">I find this especially amusing because I, too, wished to do this for my master's thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on <a href="https://samx.io/papers/thesis.pdf">finding bugs in Python programs with fuzzing informed by their type annotations instead</a>. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
         <li id="tooltip-def-5">I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
         <li id="tooltip-def-6">The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each "rung" climbed is a ratchet "clink." <a class="tooltip-back" href="#tooltip-ref-6">↩</a></li>
         <li id="tooltip-def-7">The lemma is <code>run_pushK</code> in the <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>, and it reads: running the current machine state under continuation stack K is the same as running the machine program state run under an <i>empty</i> continuation stack until it produces an answer, then delivering that answer to continuation stack K and continuing the run. <a class="tooltip-back" href="#tooltip-ref-7">↩</a></li>
+        <li id="tooltip-def-8">The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a nice interface between them. <a class="tooltip-back" href="#tooltip-ref-8">↩</a></li>
     </ol>
 </section>
                 </div>
