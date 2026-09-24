@@ -9,6 +9,8 @@ BASE_URL = "https://samx.io"
 FEED_PATH = Path(__file__).parent / "feed.xml"
 # Heading "#" permalinks are page chrome; feed readers would show them as stray text.
 HEADING_ANCHOR_RE = re.compile(r'<a class="heading-anchor"[^>]*>.*?</a>')
+# Same for the [TOC] block: its #links don't resolve outside the post page.
+TOC_RE = re.compile(r'<nav class="post-toc".*?</nav>', re.DOTALL)
 
 
 def _rfc822(date: datetime.date) -> str:
@@ -18,6 +20,10 @@ def _rfc822(date: datetime.date) -> str:
 
 def _escape_xml(text: str) -> str:
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _strip_page_chrome(html: str) -> str:
+    return TOC_RE.sub("", HEADING_ANCHOR_RE.sub("", html))
 
 
 def _cdata(text: str) -> str:
@@ -38,7 +44,7 @@ def _build_xml(posts) -> str:
             f"      <guid isPermaLink=\"true\">{url}</guid>\n"
             f"      <pubDate>{_rfc822(post.date)}</pubDate>\n"
             f"      <description>{_cdata(post.description or post.title)}</description>\n"
-            f"      <content:encoded>{_cdata(HEADING_ANCHOR_RE.sub("", post.html_body))}</content:encoded>\n"
+            f"      <content:encoded>{_cdata(_strip_page_chrome(post.html_body))}</content:encoded>\n"
             f"    </item>"
         )
 

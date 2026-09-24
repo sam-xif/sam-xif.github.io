@@ -54,6 +54,25 @@ revolutionize how we manage the correctness of software.</em></p>
 technically inclined, see the
 <a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>. View the
 source code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>.</p>
+<nav class="post-toc" aria-label="Table of contents"><span class="toctitle">Contents</span><ul>
+<li><a href="#semantics-done-quick">Semantics done quick</a></li>
+<li><a href="#ruby-lean-and-its-type-validator">ruby-lean and its type validator</a></li>
+<li><a href="#why-this-matters">Why this matters</a></li>
+<li><a href="#why-should-i-trust-this">"Why should I trust this?"</a></li>
+<li><a href="#why-ruby">Why Ruby?</a></li>
+<li><a href="#experience-report">Experience report</a><ul>
+<li><a href="#phase-1-desugaring">Phase 1: desugaring</a></li>
+<li><a href="#phase-2-the-semantics">Phase 2: the semantics</a></li>
+<li><a href="#phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof</a></li>
+</ul>
+</li>
+<li><a href="#cost-of-verification">Cost of verification</a></li>
+<li><a href="#limitations">Limitations</a></li>
+<li><a href="#future-work">Future work</a></li>
+<li><a href="#learnings-and-final-thoughts">Learnings and final thoughts</a></li>
+<li><a href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</nav>
 <hr />
 <h2 id="semantics-done-quick">Semantics done quick<a class="heading-anchor" href="#semantics-done-quick" title="Link to this section">#</a></h2>
 <p>This summer, I was a fellow in the
