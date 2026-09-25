@@ -41,14 +41,13 @@
                 </header>
                 <div class="post-body">
                     <p><strong>Bottom line up front:</strong> <em>I, with heavy augmentation from LLMs, have built an
-executable Lean model of Ruby's semantics as a
-<a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>, together
-with a proof of type soundness of a small fragment of Sorbet's type system. The
-semantics is validated by differential testing against Ruby, and passes a large
-swath of conformance tests. Through this project, I learned firstly that agents
-do great at long-horizon tasks if the task definition is clear; if it is not
-clear, they mess up in unpredictable ways. Secondly, I learned that advanced AI,
-via its ability to work with proof assistants, has the potential to
+executable Lean model of Ruby's semantics, together with a proof of type
+soundness of a small fragment of Sorbet's type system built on the semantics.
+The semantics is validated by differential testing against Ruby, and passes a
+large swath of conformance tests. Through this project, I learned firstly that
+agents do great at long-horizon tasks if the task definition is clear; if it is
+not clear, they mess up in unpredictable ways. Secondly, I learned that advanced
+AI, via its ability to work with proof assistants, has the potential to
 revolutionize how we manage the correctness of software.</em></p>
 <p>Check out the <code>ruby-lean</code> <a href="/ruby-lean">playground</a> and see it in action. For the
 technically inclined, see the
@@ -84,26 +83,37 @@ project,
 <p>The thesis of this project is simple: advanced AI should be able to greatly
 accelerate the construction of useful
 <a href="https://en.wikipedia.org/wiki/Semantics_(programming_languages)">semantics</a>
-of programming languages and systems. Normally, these semantics are typically
-formulated deep in research labs in multi PhD-year long efforts. The results
-make it to academic conferences but don't find usefulness in the real world,
-with the possible exception of safety-critical work. Applications of these
-semantics include agent containment and defense-in-depth of software at large.</p>
+of programming languages and systems. Typically, these semantics are formulated
+deep in research labs with multiple PhD-years of effort. The results make it to
+academic conferences but don't find broad use in industry because 1) they often
+have severe limitations, such as not being able to model the most complex parts
+of a given language, and 2) authoring proofs against the semantics requires
+technical expertise in formal methods and on the specific nature of a given
+language's semantics. Advanced AI shows promise to address both of these
+impediments to widespread utility of semantics.</p>
 <p>As an outcome of this project, I am pleased to announce <code>ruby-lean</code>, my
-semantics of Ruby in Lean 4. <code>ruby-lean</code> is an executable semantics, meaning
-that it can execute real Ruby code. It is modeled as a
+semantics of <a href="https://www.ruby-lang.org/en/">Ruby</a> in
+<a href="https://lean-lang.org/">Lean 4</a>. <code>ruby-lean</code> is an executable semantics,
+meaning that it can execute real Ruby code. It is modeled as a
 <a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>. I have
 also developed a system of type judgments based on
 <a href="https://sorbet.org/">Sorbet</a>—Ruby's <em>de facto</em> type checking tool—and proven it
-sound. <em>Soundness</em> means: <strong>if a program passes the <code>ruby-lean</code> type validator,
-then it is completely free of a certain family of type-related exceptions.</strong></p>
+sound. <em>Soundness</em> means: if a program passes the <code>ruby-lean</code> type validator,
+then it is completely free of a certain family of type-related exceptions.
+<strong>Both of the aforementioned limitations are effectively addressed:</strong> the
+semantics models complex features of Ruby like
+<a href="https://noelrappin.com/2023/10/better-know-a-ruby-thing-10-method_missing/"><code>method_missing</code></a>
+and
+<a href="https://suchdevblog.com/lessons/ExplainingRubySingletonClass.html">eigenclass reopening</a>,
+and a substantial theorem about a type system has been written and proven
+against these semantics.</p>
 <p>I can probably count on my hands the number of lines of actual Lean code I wrote
-by hand. Frontier AI breezed through a lot of the simpler parts of this project,
-but when it came to the most difficult part of proving a hard property, the AI
-struggled, and I intervened by crystallizing the theorem statements and the
-proof design approach. Admittedly, it was somewhat refreshing to find a task
-that AI does not excel at immediately, and I came away with some learnings about
-how to best steer AI on complex tasks like these.</p>
+by hand. Frontier AI breezed through a lot of this project, but when it came to
+the most difficult part of proving a hard property against the semantics, AI
+struggled, and I intervened by crystallizing the task definition, the theorem
+statements, and the proof design approach. Admittedly, it was somewhat
+refreshing to find a task that AI does not immediately excel at, and I came away
+with some learnings about how to best steer AI on complex tasks like these.</p>
 <h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator<a class="heading-anchor" href="#ruby-lean-and-its-type-validator" title="Link to this section">#</a></h2>
 <p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
 example Ruby programs. Play around with it!</p>
@@ -114,7 +124,7 @@ example Ruby programs. Play around with it!</p>
    information.</li>
 <li>Strip the program's annotations, since Sorbet annotations are real syntax
    that's outside of what the Lean model supports today.</li>
-<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. I don&#x27;t go into much depth in this particular post for brevity, but this s-expression is roughly what the desugaring step does. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
+<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
    from a core set of Ruby primitives.</li>
 <li>Run an <em>untrusted</em> certificate emitter (a companion program written in Ruby)
    that proposes a type <em>derivation</em> for the program. A derivation is like a
@@ -203,6 +213,11 @@ My results here illustrate that</p>
 <!-- I have not found any unsoundness in Sorbet yet, but I plan on driving hard
 towards this soon. Any unsoundness in Sorbet would be immediately relevant to
 all Sorbet users, and this approach has the potential to find it. -->
+
+<!-- 
+These semantics are generally useful for making *strong, provable claims* about
+software. Given today's threats posed by advanced AI, applications of these
+semantics include agent containment and defense-in-depth of software at large. -->
 
 <h2 id="why-should-i-trust-this">"Why should I trust this?"<a class="heading-anchor" href="#why-should-i-trust-this" title="Link to this section">#</a></h2>
 <p>My semantics is validated against Ruby by differential testing. I have
@@ -390,9 +405,8 @@ puts cache.values unless cache.empty?
 reduced to <code>:send</code> operations.</p>
 <p>The desugarer passes 1,232 out of 1,309 of these bootstrap tests, with the
 remainder not passing because some programs are out of the desugarer's supported
-fragment.\
-For instance, the desugarer does not handle <code>eval</code>, as exhibited by this
-bootstraptest program:</p>
+fragment. For instance, the desugarer does not handle <code>eval</code>, as exhibited by
+this bootstraptest program:</p>
 <pre><code>puts &quot;before&quot;
 eval &quot;while true; return; end rescue p $!&quot;
 puts &quot;after (never reached)&quot;
@@ -500,10 +514,14 @@ a more reasonable cost profile, but this may also be due to the more rigorous
 ratchet discipline I imposed in my most recent attempt at growth of a sound type
 system.</p>
 <h2 id="limitations">Limitations<a class="heading-anchor" href="#limitations" title="Link to this section">#</a></h2>
-<p>This work is limited by the fragment of Ruby syntax and Ruby types the are
+<p>This work is limited by the fragments of Ruby semantics and Ruby types that are
 covered. The semantics has a ways to go before it models the long tail of
 esoteric Ruby features, and the type system still needs to be grown to cover
-frequently used Ruby constructs like blocks.</p>
+frequently used Ruby constructs like blocks. <strong>In case it is not clear: the
+semantics and the type system cover two different sets of Ruby constructs.
+Blocks are well supported by the <em>semantics</em>, but not yet covered by the <em>type
+system</em>.</strong> As a rule of thumb, it is much harder to admit a construct to the
+type system than to the semantics, because of the proof required.</p>
 <p>The semantics also does not model Ruby programs' interaction with the
 surrounding system context, like the <code>RubyGems</code> package manager, the operating
 system, or the network. Modeling these interactions will be essential for
@@ -594,7 +612,8 @@ don't have to tear down your work multiple times like I did :).</p>
 <li>ALWAYS have a clear idea of what you want the agent to do, unless you're
    deliberately exploring and okay with potentially throwing out whatever the
    agent gives you.</li>
-<li>The ratchet discipline is important.</li>
+<li>Having a ratchet discipline, where an agent can only make progress if some
+   metric only goes up, is important.</li>
 <li>Do not be wishy-washy in prompts. Be direct about what you're asking for and
    what the definition of done is.</li>
 <li>Clean up the code regularly to remove the buildup of agent-authored cruft.
@@ -649,7 +668,7 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. I don't go into much depth in this particular post for brevity, but this s-expression is roughly what the <i>desugaring</i> step does. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a> <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
         <li id="tooltip-def-2">"Program testing can be used to show the presence of bugs, but never to show their absence!" - Edsger Dijkstra <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
         <li id="tooltip-def-3">I find this especially amusing because I, too, wished to do this for my master's thesis I conducted with Pete Manolios, but we eventually steered away from this idea on the premise that it would be too much of a lift without much practical value, so we settled on <a href="https://samx.io/papers/thesis.pdf">finding bugs in Python programs with fuzzing informed by their type annotations instead</a>. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
         <li id="tooltip-def-4">I could be completely wrong here. I invite those who know much more than me in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
