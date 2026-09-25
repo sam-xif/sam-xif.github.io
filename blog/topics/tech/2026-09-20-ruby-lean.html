@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ruby-lean: An executable Ruby semantics in Lean with a type soundness proof - Sam Xifaras</title>
+    <title>ruby-lean: A Ruby semantics with a type soundness proof - Sam Xifaras</title>
     <link rel="stylesheet" href="../../../styles.css">
     <link rel="preload" href="../../../fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../../fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -32,7 +32,7 @@
             </div>
             <article class="post">
                 <header class="post-header">
-                    <h1>ruby-lean: An executable Ruby semantics in Lean with a type soundness proof</h1>
+                    <h1>ruby-lean: A Ruby semantics with a type soundness proof</h1>
                     <div class="post-byline">
                         <a class="author-badge" href="../../../index.html" rel="author"><img src="../../../blog_assets/author-avatar.jpg" width="24" height="24" alt="">Sam Xifaras</a>
                         <time class="post-date" datetime="2026-09-20">September 20, 2026</time>
@@ -41,7 +41,7 @@
                 </header>
                 <div class="post-body">
                     <p><strong>Bottom line up front:</strong> <em>I, with heavy augmentation from LLMs, have built an
-executable Lean model of Ruby's semantics, together with a proof of type
+executable model of Ruby's semantics in Lean, together with a proof of type
 soundness of a small fragment of Sorbet's type system built on the semantics.
 The semantics is validated by differential testing against Ruby, and passes a
 large swath of conformance tests. Through this project, I learned firstly that
@@ -58,7 +58,7 @@ source code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>.</p>
 <li><a href="#ruby-lean-and-its-type-validator">ruby-lean and its type validator</a></li>
 <li><a href="#why-this-matters">Why this matters</a></li>
 <li><a href="#why-should-i-trust-this">"Why should I trust this?"</a></li>
-<li><a href="#why-ruby">Why Ruby?</a></li>
+<li><a href="#why-ruby">"Why Ruby?"</a></li>
 <li><a href="#cost-of-verification">Cost of verification</a></li>
 <li><a href="#limitations">Limitations</a></li>
 <li><a href="#future-work">Future work</a></li>
@@ -253,7 +253,7 @@ achievable. I did not give them impossible goal statements and gave them
 emergency exits from goal pursuit they could use if needed (a suggestion
 borrowed from
 <a href="https://oath.tech/pub/2026/08/tentative-advice-building-with-ai/">Mike Dodds</a>).</p>
-<h2 id="why-ruby">Why Ruby?<a class="heading-anchor" href="#why-ruby" title="Link to this section">#</a></h2>
+<h2 id="why-ruby">"Why Ruby?"<a class="heading-anchor" href="#why-ruby" title="Link to this section">#</a></h2>
 <p>I chose Ruby for a few reasons:</p>
 <ol>
 <li><strong>It isn't Python.</strong> Python has been

@@ -4,6 +4,7 @@ date: 2026-09-20
 description: "Appendix of technical notes from the ruby-lean project"
 category: blog
 topic: tech
+audience: "Computer scientists with some formal methods expertise"
 ---
 
 In the [original post](2026-09-20-ruby-lean.html), I introduced `ruby-lean`, an
