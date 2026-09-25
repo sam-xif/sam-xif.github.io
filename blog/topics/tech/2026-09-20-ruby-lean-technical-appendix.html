@@ -46,6 +46,232 @@ operationalized.</p>
 <p>The content here assumes a familiarity with formal semantics, type theory, and
 the notation with which these results are typically presented in academic papers
 in the field.</p>
+<nav class="post-toc" aria-label="Table of contents"><span class="toctitle">Contents</span><ul>
+<li><a href="#experience-report">Experience report</a><ul>
+<li><a href="#phase-1-desugaring">Phase 1: desugaring</a></li>
+<li><a href="#phase-2-the-semantics">Phase 2: the semantics</a></li>
+<li><a href="#phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof</a></li>
+</ul>
+</li>
+<li><a href="#design-notes">Design notes</a></li>
+<li><a href="#a-stroll-through-the-semantics">A stroll through the semantics</a></li>
+<li><a href="#the-type-system">The type system</a></li>
+<li><a href="#the-soundness-theorem">The soundness theorem</a><ul>
+<li><a href="#definitions">Definitions</a></li>
+<li><a href="#run-spec">Run spec</a></li>
+<li><a href="#the-judgment-registry">The judgment registry</a></li>
+<li><a href="#soundness">Soundness</a></li>
+</ul>
+</li>
+<li><a href="#lemmata">Lemmata</a></li>
+</ul>
+</nav>
+<hr />
+<h2 id="experience-report">Experience report<a class="heading-anchor" href="#experience-report" title="Link to this section">#</a></h2>
+<p>In building this system, I went through roughly five phases of construction:</p>
+<ol>
+<li>Growing a desugaring function that takes high level Ruby and translates it
+   into a smaller core language.</li>
+<li>Growing the semantics out of lots of tokens and a differential testing.
+   harness that compares to actual CRuby, version 4.0.5.</li>
+<li>The first attempt at building a verified type checking decision procedure in
+   Lean with an accompanying safety proof.</li>
+<li>The second attempt, where instead of building a verified type checker, I
+   built a type validator, that takes a program and an untrusted, emitted
+   derivation of the types of the program.</li>
+<li>The <em>third</em> attempt, where I gave the agents a strict ratchet discipline to
+   follow. <code>ruby-lean</code> is the culmination of this approach, partway along in its
+   ascent of the full corpus of "ladder" programs.<a class="tooltip" data-tip="The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each &quot;rung&quot; climbed is a ratchet &quot;clink.&quot;" href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a></li>
+</ol>
+<p>I describe this work with the verb "grow" because this process of setting a task
+and letting an agent run with it feels like growth to me, as opposed to
+programming or hacking. Ideally, tokens go in, and the semantics grows as an
+outcome.</p>
+<h3 id="phase-1-desugaring">Phase 1: desugaring<a class="heading-anchor" href="#phase-1-desugaring" title="Link to this section">#</a></h3>
+<p>LLM agents handily set up the Ruby toolchain, scaffolded out a desugarer, and
+walked me through important design decisions. In this phase, I established the
+<code>difftest</code> differential testing harness, with its first mode, <code>--sut desugar</code>.
+As shown in the above diagram, the desugarer is a part of the trusted computing
+base (TCB), so we need to convince ourselves that it does not change program
+behavior. This is where I worked with the agents to establish a baseline
+conformance suite derived from the CRuby implementation's own suite of sanity
+checks: <a href="https://github.com/ruby/ruby/tree/master/bootstraptest">bootstraptest</a>.</p>
+<p>Here's an example Ruby program that exercises several of the key desugaring
+rules, and its desugared counterpart:</p>
+<details class="accordion">
+<summary>Original Ruby program</summary>
+<div class="accordion-body">
+<pre><code class="language-ruby">def label(x)
+  kind =
+    case x
+    when Integer then &quot;int&quot;
+    when String  then &quot;str&quot;
+    else &quot;other&quot;
+    end
+  &quot;#{x.inspect} is a #{kind}&quot;
+end
+
+cache = {}
+[1, &quot;a&quot;, 1].each do |v|
+  cache[v] ||= label(v)
+end
+puts cache.values unless cache.empty?
+</code></pre>
+</div>
+</details>
+<details class="accordion">
+<summary>Desugared output</summary>
+<div class="accordion-body">
+<pre><code class="language-ruby">[:seq,
+ [:def, &quot;label&quot;, [[:preq, &quot;x&quot;]],
+  [:seq,
+   [:vasgn, :local, &quot;kind&quot;,
+    [:seq,
+     [:vasgn, :local, &quot;__dt_t1&quot;, [:var, :local, &quot;x&quot;]],
+     [:if,
+      [:send, [:const, &quot;Integer&quot;], &quot;===&quot;, [[:var, :local, &quot;__dt_t1&quot;]], nil],
+      [:str, &quot;int&quot;],
+      [:if,
+       [:send, [:const, &quot;String&quot;], &quot;===&quot;, [[:var, :local, &quot;__dt_t1&quot;]], nil],
+       [:str, &quot;str&quot;],
+       [:str, &quot;other&quot;]]]]],
+   [:send,
+    [:send,
+     [:seq,
+      [:vasgn, :local, &quot;__dt_t2&quot;, [:send, [:var, :local, &quot;x&quot;], &quot;inspect&quot;, [], nil]],
+      [:if,
+       [:send, [:const, &quot;String&quot;], &quot;===&quot;, [[:var, :local, &quot;__dt_t2&quot;]], nil],
+       [:var, :local, &quot;__dt_t2&quot;],
+       [:send, [:var, :local, &quot;__dt_t2&quot;], &quot;__as_string&quot;, [], nil]]],
+     &quot;+&quot;,
+     [[:str, &quot; is a &quot;]],
+     nil],
+    &quot;+&quot;,
+    [[:seq,
+      [:vasgn, :local, &quot;__dt_t3&quot;, [:var, :local, &quot;kind&quot;]],
+      [:if,
+       [:send, [:const, &quot;String&quot;], &quot;===&quot;, [[:var, :local, &quot;__dt_t3&quot;]], nil],
+       [:var, :local, &quot;__dt_t3&quot;],
+       [:send, [:var, :local, &quot;__dt_t3&quot;], &quot;__as_string&quot;, [], nil]]]],
+    nil]]],
+ [:vasgn, :local, &quot;cache&quot;, [:hash, []]],
+ [:send,
+  [:array, [[:int, 1], [:str, &quot;a&quot;], [:int, 1]]],
+  &quot;each&quot;,
+  [],
+  [:block, [[:preq, &quot;v&quot;]], [], [],
+   [:seq,
+    [:vasgn, :local, &quot;__dt_t4&quot;, [:var, :local, &quot;cache&quot;]],
+    [:vasgn, :local, &quot;__dt_t5&quot;, [:var, :local, &quot;v&quot;]],
+    [:vasgn, :local, &quot;__dt_t6&quot;,
+     [:send, [:var, :local, &quot;__dt_t4&quot;], &quot;[]&quot;, [[:var, :local, &quot;__dt_t5&quot;]], nil]],
+    [:if, [:var, :local, &quot;__dt_t6&quot;], [:var, :local, &quot;__dt_t6&quot;],
+     [:send, [:var, :local, &quot;__dt_t4&quot;], &quot;[]=&quot;,
+      [[:var, :local, &quot;__dt_t5&quot;], [:send, nil, &quot;label&quot;, [[:var, :local, &quot;v&quot;]], nil]],
+      nil]]]]],
+ [:if,
+  [:send, [:send, [:var, :local, &quot;cache&quot;], &quot;empty?&quot;, [], nil], &quot;!&quot;, [], nil],
+  [:send, nil, &quot;puts&quot;, [[:send, [:var, :local, &quot;cache&quot;], &quot;values&quot;, [], nil]], nil],
+  nil]]
+</code></pre>
+</div>
+</details>
+<p>Notice that the <code>case</code> is replaced with an <code>:if</code>, and all method calls are
+reduced to <code>:send</code> operations.</p>
+<p>The desugarer passes 1,232 out of 1,309 of these bootstrap tests, with the
+remainder not passing because some programs are out of the desugarer's supported
+fragment. For instance, the desugarer does not handle <code>eval</code>, as exhibited by
+this bootstraptest program:</p>
+<pre><code>puts &quot;before&quot;
+eval &quot;while true; return; end rescue p $!&quot;
+puts &quot;after (never reached)&quot;
+</code></pre>
+<p>Others are unparseable by the Ruby parser that we are using,
+<a href="https://github.com/ruby/prism">Prism</a>.</p>
+<h3 id="phase-2-the-semantics">Phase 2: the semantics<a class="heading-anchor" href="#phase-2-the-semantics" title="Link to this section">#</a></h3>
+<p>Moving on to the semantics, agents again rather effortlessly scaffolded a Lean
+project, set up the Ruby toolchain, and grinded the semantics up the ladder of
+complexity of Ruby programs. I think this is because there are no difficult
+proof goals in this phase; the work entirely lies in ensuring the definition is
+correct and complete, with the differential testing harness there to guard
+against any regressions. The <code>bootstraptest</code> corpus again provided a nice
+ratchet discipline against which to grow the semantics.</p>
+<p>As of the time of this writing, the semantics passes 995 / 1,309 <code>bootstraptest</code>
+cases. The gap between the 995 and 1,309 total is explained partially by the
+same 71-case gap in the desugarer's domain. The remainder are features that the
+semantics do not yet model. I have no reason to believe these features can't be
+modeled; the strong ratchet discipline developed for the semantics makes me
+confident that this is tractable. Expanding the fragment just requires more time
+and more tokens.</p>
+<p>To validate the conformance of the semantics beyond the <code>bootstraptest</code> suite, I
+also devised a multi-pronged differential testing harness. Each method of test
+case generation is assigned a "tier." Tier 0 is the bootstrap test suite. Tier 1
+comprises fuzzed programs generated via <a href="https://hypothesis.works/">Hypothesis</a>
+strategies. Tier 1.5 is Tier 1, extended to insert print statements at various
+points in the program to assert equivalence of effect ordering. Tier 2 was
+intended to contain selected Ruby snippets from Ruby programs in the wild, but
+this has not yet been implemented. Tier 3 contains AI-generated complex Ruby
+programs. This test suite has led to the discovery of several discrepancies over
+the growth of the semantics, including one found very recently that has not yet
+been patched, discussed in
+<a href="2026-09-20-ruby-lean.html#why-should-i-trust-this">"Why should I trust this?"</a>.</p>
+<h3 id="phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof<a class="heading-anchor" href="#phase-3-5-type-system-and-soundness-proof" title="Link to this section">#</a></h3>
+<p>This phase was where both I and the agents met difficulty. As noted above, I
+went through three phases when trying to build a type system and prove soundness
+(recall: soundness is "a well-typed program cannot go wrong"). For the sake of
+brevity, I'll comment only on the third attempt that produced the results in
+this writeup and briefly touch on learnings from previous modeling attempts as
+they arise.</p>
+<p>First and foremost, the learnings from the first two attempts culminated in
+clarification of the task definition. The current working definition of what the
+type system and type validator are supposed to do is:</p>
+<blockquote>
+<p>Given a fully typed program <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math>, and a derivation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>, generated by
+an untrusted emitter <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>E</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x0002C;</mo><mi>S</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is the Sorbet type checker's
+emission of symbol and type information, grow a function <code>validate P D</code> such
+that when <code>validate sig_strip(p) d = true</code>, running <code>sig_strip(p)</code> will not
+result in a <strong>type-stuck state</strong>.</p>
+</blockquote>
+<p>Type-stuckness is defined as a family of type-related exceptions that one might
+expect type-checked programs to be free of (the full set is probably larger):</p>
+<pre><code class="language-lean">def typeErrorFamily : List ObjId :=
+  [Boot.noMethodErrorId, Boot.argumentErrorId, Boot.typeErrorId]
+
+def isTypeError (h : Heap) (exc : Value) : Bool :=
+  typeErrorFamily.any (isA h exc)
+
+def typeStuck : Interp.RunResult → Bool
+  | .uncaught exc m =&gt; isTypeError m.heap exc
+  | _ =&gt; false
+</code></pre>
+<p>The biggest boon to the agent grind was the adoption a strict ratchet discipline
+in this setting as well. I could not, however, use the existing <code>bootstraptest</code>
+ladder, because the input to the type validation pipeline is fully-typed
+programs. The <code>bootstraptest</code> suite has none. So, I instead used agents to spin
+up a 232-program
+<a href="https://github.com/sam-xif/ruby-lean/tree/main/ruby-lean/corpus">corpus</a> of
+<em>typed</em> programs. This is the corpus given on the <code>ruby-lean</code>
+<a href="/ruby-lean">playground</a>. More design notes can be found in the
+<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
+<p>With this in place, the agent grind of "throwing tokens at the problem" could
+begin. The grind process was roughly as follows, in a loop:</p>
+<ol>
+<li>For each new corpus program, propose a set of syntactic judgments that can be
+   used to type the program.</li>
+<li>Interpret the syntactic judgments as semantic judgments with respect to the
+   Ruby abstract machine and a denotation of types as predicates over the
+   abstract machine and program values.</li>
+<li>Prove the semantic judgments correct. <em>Part of the definition of correctness
+   is stuck-freedom</em>. Hence, well-typedness implies the safety property we're
+   interested in.</li>
+<li>Repair the end-to-end soundness theorem.</li>
+</ol>
+<p>At each step, the agent was instructed that it cannot call a rung on the ladder
+climbed until 1) the validator responds correctly for the new corpus element, 2)
+each new type judgment has a corresponding discharged proof obligation and 3)
+the proof for the end-to-end soundness theorem checks. More details about this
+theorem and its helper theorems and lemmas are given in the
+<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
 <h2 id="design-notes">Design notes<a class="heading-anchor" href="#design-notes" title="Link to this section">#</a></h2>
 <p>Two key design decisions also set up the type system growth and soundness proof
 in Phase 3-5 for success. First, <em>I drew inspiration from
@@ -73,13 +299,13 @@ reference to details such as its case numbering and recursion scheme, greatly
 compromising proof maintainability. I recall seeing several instances of a
 pattern in the agent rollout where an agent would fold a new type judgment into
 infer, and then would proceed to update proof tactics in 10-20 files to get
-everything green again." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> In general, deciding types for
+everything green again." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> In general, deciding types for
 complex program constructs like functions and loops is much more difficult than
 checking postulated types.</p>
 <h2 id="a-stroll-through-the-semantics">A stroll through the semantics<a class="heading-anchor" href="#a-stroll-through-the-semantics" title="Link to this section">#</a></h2>
 <p>Here I'll introduce the semantics very briefly. Also, reminder that you can view
 the Lean code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>!</p>
-<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a> By
+<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis" href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> By
 virtue of Lean's dual capability as a fully feature programming language and a
 proof assistant, actual Ruby code can be executed within the <code>ruby-lean</code>. See it
 in action on the <a href="/ruby-lean">playground</a>.</p>
@@ -115,11 +341,11 @@ the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo 
 heap may be written in its destructured array form when appropriate: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><msub><mi>o</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>o</mi><mn>2</mn></msub><mo>&#x0002C;</mo><mo>&#x022EF;</mo><mo stretchy="false">]</mo></mrow></math>.</p>
 <p>And finally, the <em>continuation</em> is represented as <code>kont</code>, a stack of
 continuations.<a class="tooltip" data-tip="for the reader who may be unfamiliar, a continuation 
-is a representation of what comes next in a program." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a></p>
-<p>We write configurations in this abstract machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x027E8;</mi><mi>c</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>S</mi><mo>&#x02223;</mo><mi>F</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi></mrow></math> for the <code>ctl</code>, <code>kont</code>,
-<code>stack</code>, <code>frames</code> and <code>heap</code> fields. In the following are reduction rules for
-this semantics. Above of the line are written the antecedents, or premises, and
-below each line is the consequent.</p>
+is a representation of what comes next in a program." href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a></p>
+<p>We write configurations in this abstract machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x027E8;</mi><mi>c</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>S</mi><mo>&#x02223;</mo><mi>F</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi></mrow></math> for the <code>ctl</code>,
+<code>kont</code>, <code>stack</code>, <code>frames</code> and <code>heap</code> fields. In the following are reduction
+rules for this semantics. Above of the line are written the antecedents, or
+premises, and below each line is the consequent.</p>
 <p>The following are three simple reduction rules. The first, E-Int, states that
 for an integer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math>, we evaluate an integer value. E-Var is the rule for
 evaluating an expression of a single variable by looking it up in the
@@ -294,7 +520,7 @@ signatures populate the context, <math display="inline" xmlns="http://www.w3.org
 at the moment of dispatch. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context because it is the
 context that is left after all of the arguments are evaluated, which is what the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi><mo>&#x022A2;</mo><mover><mrow><mi>a</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0.2778em" rspace="0.2778em">:</mo><mrow class="overline"><mi>p</mi><mo lspace="0" rspace="0">.</mo><mi>&#x003C4;</mi></mrow><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> antecedent specifies.</p>
-<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context, you<a class="tooltip" data-tip="I wrote this sentence because I was wondering...lol" href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a> may be wondering then why
+<p>If <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> is the dispatch context, you<a class="tooltip" data-tip="I wrote this sentence because I was wondering...lol" href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a> may be wondering then why
 the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover><mrow><mi>p</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x022A2;</mo><mrow><mi mathvariant="italic">d</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">c</mi><mi mathvariant="italic">l</mi></mrow><mo lspace="0" rspace="0">.</mo><mrow><mi mathvariant="italic">b</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">d</mi><mi mathvariant="italic">y</mi></mrow><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msub><mi mathvariant="normal">&#x00393;</mi><mi>b</mi></msub></mrow></math> antecedent doesn't read <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><mover><mrow><mi>p</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x022A2;</mo><mo>&#x022EF;</mo></mrow></math>. Coming from another language
 like Python, one might expect that a Ruby program like</p>
 <pre><code class="language-ruby">y = 5
@@ -476,10 +702,10 @@ from the given machine <math display="inline" xmlns="http://www.w3.org/1998/Math
 <p><strong>Theorem (Registry Soundness).</strong></p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">&#x00028;</mo><mtext>DJudgeC</mtext><mtext>&#x000A0;</mtext><mi>&#x0211B;</mi><mo stretchy="false">&#x00029;</mo><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo>&#x021D2;</mo><mtext>SemSafeCtxA</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi>I</mi><mi>&#x02032;</mi></msup></mrow></math>
 <p><em>Proof sketch.</em> Instantiate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>&#x02254;</mo><mtext>dsemFam</mtext></mrow></math> (the semantic judgement family) and
-discharge <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>Closed</mtext></mrow></math> from the clinks' own <code>sem</code> fields. In Lean this is one line.
-It is unconditional: it held when the registry had one rule in it and cannot
-stop holding as the registry grows. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>SemSafeCtxA</mtext></mrow></math> is the conclusion of the semantic
-judgement, by definition.</p>
+discharge <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>Closed</mtext></mrow></math> from the clinks' own <code>sem</code> fields. In Lean this is one
+line. It is unconditional: it held when the registry had one rule in it and
+cannot stop holding as the registry grows. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>SemSafeCtxA</mtext></mrow></math> is the conclusion of the
+semantic judgement, by definition.</p>
 <p><strong>Theorem (Syntactic Judgments Certified).</strong></p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>DJudge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>e</mi><mtext>&#x000A0;</mtext><mi>&#x003C4;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo>&#x021D2;</mo><mo stretchy="false">&#x00028;</mo><mtext>DJudgeC</mtext><mtext>&#x000A0;</mtext><mtext>dclinks</mtext><mo stretchy="false">&#x00029;</mo><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>e</mi><mtext>&#x000A0;</mtext><mi>&#x003C4;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup></mrow></math>
 <p><em>Proof sketch.</em> Six-family mutual induction on the derivation, replacing each
@@ -702,16 +928,17 @@ old values survive an <math display="inline" xmlns="http://www.w3.org/1998/Math/
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
+        <li id="tooltip-def-1">The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each "rung" climbed is a ratchet "clink." <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">One concrete way in which this led to negative consequences was that all of the metatheory in the initial attempt became dependent on implementation and compilation details of <code>infer</code>--the name of the function that defined the original inference algorithm. Proofs across the codebase made explicit
 reference to details such as its case numbering and recursion scheme, greatly
 compromising proof maintainability. I recall seeing several instances of a
 pattern in the agent rollout where an agent would fold a new type judgment into
 <code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
-everything green again. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
-        <li id="tooltip-def-2">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a> <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
-        <li id="tooltip-def-3">for the reader who may be unfamiliar, a <i>continuation</i> 
-is a representation of what comes next in a program. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
-        <li id="tooltip-def-4">I wrote this sentence because <i>I</i> was wondering...lol <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
+everything green again. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+        <li id="tooltip-def-3">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a> <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">for the reader who may be unfamiliar, a <i>continuation</i> 
+is a representation of what comes next in a program. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
+        <li id="tooltip-def-5">I wrote this sentence because <i>I</i> was wondering...lol <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
     </ol>
 </section>
                 </div>

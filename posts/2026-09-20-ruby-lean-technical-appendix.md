@@ -16,6 +16,238 @@ The content here assumes a familiarity with formal semantics, type theory, and
 the notation with which these results are typically presented in academic papers
 in the field.
 
+[TOC]
+
+______________________________________________________________________
+
+## Experience report
+
+In building this system, I went through roughly five phases of construction:
+
+1. Growing a desugaring function that takes high level Ruby and translates it
+   into a smaller core language.
+1. Growing the semantics out of lots of tokens and a differential testing.
+   harness that compares to actual CRuby, version 4.0.5.
+1. The first attempt at building a verified type checking decision procedure in
+   Lean with an accompanying safety proof.
+1. The second attempt, where instead of building a verified type checker, I
+   built a type validator, that takes a program and an untrusted, emitted
+   derivation of the types of the program.
+1. The *third* attempt, where I gave the agents a strict ratchet discipline to
+   follow. `ruby-lean` is the culmination of this approach, partway along in its
+   ascent of the full corpus of "ladder" programs.[]^(The agents introduced some fun metaphors, like the corpus as a ladder of programs to climb, with a ratchet discipline referring to the monotonic nature of ascent up this ladder. And each "rung" climbed is a ratchet "clink.")
+
+I describe this work with the verb "grow" because this process of setting a task
+and letting an agent run with it feels like growth to me, as opposed to
+programming or hacking. Ideally, tokens go in, and the semantics grows as an
+outcome.
+
+### Phase 1: desugaring
+
+LLM agents handily set up the Ruby toolchain, scaffolded out a desugarer, and
+walked me through important design decisions. In this phase, I established the
+`difftest` differential testing harness, with its first mode, `--sut desugar`.
+As shown in the above diagram, the desugarer is a part of the trusted computing
+base (TCB), so we need to convince ourselves that it does not change program
+behavior. This is where I worked with the agents to establish a baseline
+conformance suite derived from the CRuby implementation's own suite of sanity
+checks: [bootstraptest](https://github.com/ruby/ruby/tree/master/bootstraptest).
+
+Here's an example Ruby program that exercises several of the key desugaring
+rules, and its desugared counterpart:
+
+::: details Original Ruby program
+
+```ruby
+def label(x)
+  kind =
+    case x
+    when Integer then "int"
+    when String  then "str"
+    else "other"
+    end
+  "#{x.inspect} is a #{kind}"
+end
+
+cache = {}
+[1, "a", 1].each do |v|
+  cache[v] ||= label(v)
+end
+puts cache.values unless cache.empty?
+```
+
+:::
+
+::: details Desugared output
+
+```ruby
+[:seq,
+ [:def, "label", [[:preq, "x"]],
+  [:seq,
+   [:vasgn, :local, "kind",
+    [:seq,
+     [:vasgn, :local, "__dt_t1", [:var, :local, "x"]],
+     [:if,
+      [:send, [:const, "Integer"], "===", [[:var, :local, "__dt_t1"]], nil],
+      [:str, "int"],
+      [:if,
+       [:send, [:const, "String"], "===", [[:var, :local, "__dt_t1"]], nil],
+       [:str, "str"],
+       [:str, "other"]]]]],
+   [:send,
+    [:send,
+     [:seq,
+      [:vasgn, :local, "__dt_t2", [:send, [:var, :local, "x"], "inspect", [], nil]],
+      [:if,
+       [:send, [:const, "String"], "===", [[:var, :local, "__dt_t2"]], nil],
+       [:var, :local, "__dt_t2"],
+       [:send, [:var, :local, "__dt_t2"], "__as_string", [], nil]]],
+     "+",
+     [[:str, " is a "]],
+     nil],
+    "+",
+    [[:seq,
+      [:vasgn, :local, "__dt_t3", [:var, :local, "kind"]],
+      [:if,
+       [:send, [:const, "String"], "===", [[:var, :local, "__dt_t3"]], nil],
+       [:var, :local, "__dt_t3"],
+       [:send, [:var, :local, "__dt_t3"], "__as_string", [], nil]]]],
+    nil]]],
+ [:vasgn, :local, "cache", [:hash, []]],
+ [:send,
+  [:array, [[:int, 1], [:str, "a"], [:int, 1]]],
+  "each",
+  [],
+  [:block, [[:preq, "v"]], [], [],
+   [:seq,
+    [:vasgn, :local, "__dt_t4", [:var, :local, "cache"]],
+    [:vasgn, :local, "__dt_t5", [:var, :local, "v"]],
+    [:vasgn, :local, "__dt_t6",
+     [:send, [:var, :local, "__dt_t4"], "[]", [[:var, :local, "__dt_t5"]], nil]],
+    [:if, [:var, :local, "__dt_t6"], [:var, :local, "__dt_t6"],
+     [:send, [:var, :local, "__dt_t4"], "[]=",
+      [[:var, :local, "__dt_t5"], [:send, nil, "label", [[:var, :local, "v"]], nil]],
+      nil]]]]],
+ [:if,
+  [:send, [:send, [:var, :local, "cache"], "empty?", [], nil], "!", [], nil],
+  [:send, nil, "puts", [[:send, [:var, :local, "cache"], "values", [], nil]], nil],
+  nil]]
+```
+
+:::
+
+Notice that the `case` is replaced with an `:if`, and all method calls are
+reduced to `:send` operations.
+
+The desugarer passes 1,232 out of 1,309 of these bootstrap tests, with the
+remainder not passing because some programs are out of the desugarer's supported
+fragment. For instance, the desugarer does not handle `eval`, as exhibited by
+this bootstraptest program:
+
+```
+puts "before"
+eval "while true; return; end rescue p $!"
+puts "after (never reached)"
+```
+
+Others are unparseable by the Ruby parser that we are using,
+[Prism](https://github.com/ruby/prism).
+
+### Phase 2: the semantics
+
+Moving on to the semantics, agents again rather effortlessly scaffolded a Lean
+project, set up the Ruby toolchain, and grinded the semantics up the ladder of
+complexity of Ruby programs. I think this is because there are no difficult
+proof goals in this phase; the work entirely lies in ensuring the definition is
+correct and complete, with the differential testing harness there to guard
+against any regressions. The `bootstraptest` corpus again provided a nice
+ratchet discipline against which to grow the semantics.
+
+As of the time of this writing, the semantics passes 995 / 1,309 `bootstraptest`
+cases. The gap between the 995 and 1,309 total is explained partially by the
+same 71-case gap in the desugarer's domain. The remainder are features that the
+semantics do not yet model. I have no reason to believe these features can't be
+modeled; the strong ratchet discipline developed for the semantics makes me
+confident that this is tractable. Expanding the fragment just requires more time
+and more tokens.
+
+To validate the conformance of the semantics beyond the `bootstraptest` suite, I
+also devised a multi-pronged differential testing harness. Each method of test
+case generation is assigned a "tier." Tier 0 is the bootstrap test suite. Tier 1
+comprises fuzzed programs generated via [Hypothesis](https://hypothesis.works/)
+strategies. Tier 1.5 is Tier 1, extended to insert print statements at various
+points in the program to assert equivalence of effect ordering. Tier 2 was
+intended to contain selected Ruby snippets from Ruby programs in the wild, but
+this has not yet been implemented. Tier 3 contains AI-generated complex Ruby
+programs. This test suite has led to the discovery of several discrepancies over
+the growth of the semantics, including one found very recently that has not yet
+been patched, discussed in
+["Why should I trust this?"](2026-09-20-ruby-lean.html#why-should-i-trust-this).
+
+### Phase 3-5: type system and soundness proof
+
+This phase was where both I and the agents met difficulty. As noted above, I
+went through three phases when trying to build a type system and prove soundness
+(recall: soundness is "a well-typed program cannot go wrong"). For the sake of
+brevity, I'll comment only on the third attempt that produced the results in
+this writeup and briefly touch on learnings from previous modeling attempts as
+they arise.
+
+First and foremost, the learnings from the first two attempts culminated in
+clarification of the task definition. The current working definition of what the
+type system and type validator are supposed to do is:
+
+> Given a fully typed program $p$, and a derivation $d$, generated by
+> an untrusted emitter $E(p, S(p))$, where $S(p)$ is the Sorbet type checker's
+> emission of symbol and type information, grow a function `validate P D` such
+> that when `validate sig_strip(p) d = true`, running `sig_strip(p)` will not
+> result in a **type-stuck state**.
+
+Type-stuckness is defined as a family of type-related exceptions that one might
+expect type-checked programs to be free of (the full set is probably larger):
+
+```lean
+def typeErrorFamily : List ObjId :=
+  [Boot.noMethodErrorId, Boot.argumentErrorId, Boot.typeErrorId]
+
+def isTypeError (h : Heap) (exc : Value) : Bool :=
+  typeErrorFamily.any (isA h exc)
+
+def typeStuck : Interp.RunResult → Bool
+  | .uncaught exc m => isTypeError m.heap exc
+  | _ => false
+```
+
+The biggest boon to the agent grind was the adoption a strict ratchet discipline
+in this setting as well. I could not, however, use the existing `bootstraptest`
+ladder, because the input to the type validation pipeline is fully-typed
+programs. The `bootstraptest` suite has none. So, I instead used agents to spin
+up a 232-program
+[corpus](https://github.com/sam-xif/ruby-lean/tree/main/ruby-lean/corpus) of
+*typed* programs. This is the corpus given on the `ruby-lean`
+[playground](/ruby-lean). More design notes can be found in the
+[Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html).
+
+With this in place, the agent grind of "throwing tokens at the problem" could
+begin. The grind process was roughly as follows, in a loop:
+
+1. For each new corpus program, propose a set of syntactic judgments that can be
+   used to type the program.
+1. Interpret the syntactic judgments as semantic judgments with respect to the
+   Ruby abstract machine and a denotation of types as predicates over the
+   abstract machine and program values.
+1. Prove the semantic judgments correct. *Part of the definition of correctness
+   is stuck-freedom*. Hence, well-typedness implies the safety property we're
+   interested in.
+1. Repair the end-to-end soundness theorem.
+
+At each step, the agent was instructed that it cannot call a rung on the ladder
+climbed until 1) the validator responds correctly for the new corpus element, 2)
+each new type judgment has a corresponding discharged proof obligation and 3)
+the proof for the end-to-end soundness theorem checks. More details about this
+theorem and its helper theorems and lemmas are given in the
+[Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html).
+
 ## Design notes
 
 Two key design decisions also set up the type system growth and soundness proof
@@ -109,10 +341,10 @@ And finally, the *continuation* is represented as `kont`, a stack of
 continuations.[]^(for the reader who may be unfamiliar, a <i>continuation</i> 
 is a representation of what comes next in a program.)
 
-We write configurations in this abstract machine $\langle c \mid K \mid S \mid F \mid h \rangle$ for the `ctl`, `kont`,
-`stack`, `frames` and `heap` fields. In the following are reduction rules for
-this semantics. Above of the line are written the antecedents, or premises, and
-below each line is the consequent.
+We write configurations in this abstract machine $\langle c \mid K \mid S \mid F \mid h \rangle$ for the `ctl`,
+`kont`, `stack`, `frames` and `heap` fields. In the following are reduction
+rules for this semantics. Above of the line are written the antecedents, or
+premises, and below each line is the consequent.
 
 The following are three simple reduction rules. The first, E-Int, states that
 for an integer $n$, we evaluate an integer value. E-Var is the rule for
@@ -695,10 +927,10 @@ $$
 $$
 
 *Proof sketch.* Instantiate $F \coloneqq \text{dsemFam}$ (the semantic judgement family) and
-discharge $\text{Closed}$ from the clinks' own `sem` fields. In Lean this is one line.
-It is unconditional: it held when the registry had one rule in it and cannot
-stop holding as the registry grows. $\text{SemSafeCtxA}$ is the conclusion of the semantic
-judgement, by definition.
+discharge $\text{Closed}$ from the clinks' own `sem` fields. In Lean this is one
+line. It is unconditional: it held when the registry had one rule in it and
+cannot stop holding as the registry grows. $\text{SemSafeCtxA}$ is the conclusion of the
+semantic judgement, by definition.
 
 **Theorem (Syntactic Judgments Certified).**
 
