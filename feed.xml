@@ -7,12 +7,12 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 14:36:29 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 14:39:18 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
-      <link>https://samx.io/blog/topics/tech/2026-09-26-ruby-lean.html</link>
-      <guid isPermaLink="true">https://samx.io/blog/topics/tech/2026-09-26-ruby-lean.html</guid>
+      <link>https://samx.io/blog/topics/devlog/2026-09-26-ruby-lean.html</link>
+      <guid isPermaLink="true">https://samx.io/blog/topics/devlog/2026-09-26-ruby-lean.html</guid>
       <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
       <description><![CDATA[A significant leap forward in AI-accelerated formal verification]]></description>
       <content:encoded><![CDATA[<p><strong>Bottom line up front:</strong> <em>I, with heavy augmentation from LLMs, have built an
@@ -439,8 +439,8 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
     </item>
     <item>
       <title>ruby-lean Technical Appendix</title>
-      <link>https://samx.io/blog/topics/tech/2026-09-26-ruby-lean-technical-appendix.html</link>
-      <guid isPermaLink="true">https://samx.io/blog/topics/tech/2026-09-26-ruby-lean-technical-appendix.html</guid>
+      <link>https://samx.io/blog/topics/devlog/2026-09-26-ruby-lean-technical-appendix.html</link>
+      <guid isPermaLink="true">https://samx.io/blog/topics/devlog/2026-09-26-ruby-lean-technical-appendix.html</guid>
       <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
       <description><![CDATA[Appendix of technical notes from the ruby-lean project]]></description>
       <content:encoded><![CDATA[<p>In the <a href="2026-09-26-ruby-lean.html">original post</a>, I introduced <code>ruby-lean</code>, an

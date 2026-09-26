@@ -31,8 +31,8 @@ BLOG_DIR = ROOT / "blog"
 TOPICS_DIR = BLOG_DIR / "topics"
 POSTS_LIST = POSTS_DIR / "posts.txt"
 
-TOPICS = ["tech", "philosophy", "personal"]
-TOPIC_LABELS = {"tech": "Tech", "philosophy": "Philosophy", "personal": "Personal"}
+TOPICS = ["tech", "devlog", "philosophy", "personal"]
+TOPIC_LABELS = {"tech": "Tech", "devlog": "DevLog", "philosophy": "Philosophy", "personal": "Personal"}
 DEFAULT_TOPIC = "personal"
 HEADING_ANCHOR_CLASS = "heading-anchor"
 TOC_CLASS = "post-toc"
@@ -135,6 +135,7 @@ INDEX_TEMPLATE = """\
                 <div class="topic-nav">
                     <span class="topic-nav-label">Topics:</span>
                     <a href="topics/tech/index.html" data-tip="Software, AI, and the industry.">Tech</a>
+                    <a href="topics/devlog/index.html" data-tip="Notes and reports from my own projects.">DevLog</a>
                     <a href="topics/philosophy/index.html" data-tip="Ways of thinking and being.">Philosophy</a>
                     <a href="topics/personal/index.html" data-tip="Catch-all for personal reflections and creative writing.">Personal</a>
                 </div>

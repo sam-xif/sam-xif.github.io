@@ -3,7 +3,7 @@ title: "ruby-lean Technical Appendix"
 date: 2026-09-26
 description: "Appendix of technical notes from the ruby-lean project"
 category: blog
-topic: tech
+topic: devlog
 audience: "Computer scientists with some formal methods expertise"
 ---
 
