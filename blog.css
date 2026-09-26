@@ -88,6 +88,53 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Page content fades in on load; the body background stays put so the theme
+   color never flashes. Opacity only: a transform here would break
+   position: fixed descendants. */
+@keyframes page-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+body > main,
+body > footer {
+    animation: page-fade-in 0.35s ease-out both;
+}
+
+/* Where supported (Chrome, Safari), crossfade between blog pages. theme.js
+   tags the root with .vt-nav when a transition is running, so the fade-in
+   above doesn't stack on top of it. */
+@media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+        navigation: auto;
+    }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.35s;
+}
+
+html.vt-nav body > main,
+html.vt-nav body > footer {
+    animation: none;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body > main,
+    body > footer {
+        animation: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 a {
     color: var(--link);
     text-decoration: underline;

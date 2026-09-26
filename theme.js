@@ -3,6 +3,12 @@
     if (stored) document.documentElement.setAttribute('data-theme', stored);
 })();
 
+// Fires before first render. If this page arrived via a cross-document view
+// transition, the crossfade handles it, so skip the CSS fade-in (blog.css).
+window.addEventListener('pagereveal', function (e) {
+    if (e.viewTransition) document.documentElement.classList.add('vt-nav');
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     var buttons = document.querySelectorAll('.theme-btn');
     var current = localStorage.getItem('blog-theme') || 'normal';

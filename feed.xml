@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 19:26:07 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 19:32:27 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
@@ -306,8 +306,7 @@ semantics and steering agents to complete long-horizon proof tasks within them.<
 <ol>
 <li>I have not developed a theory of how best to steer LLMs to obtain useful
    semantics. This will require time and funding to run more controlled
-   experiments and benchmarks. If you are interested in funding this, let me
-   know.</li>
+   experiments and benchmarks.</li>
 <li>I did not run any comparison between different LLMs/harnesses for the tasks
    here, except for a brief stint playing around with GLM 5.2 and GLM 5.3, to no
    avail. I expect that performance will vary significantly with respect to
@@ -317,7 +316,8 @@ semantics and steering agents to complete long-horizon proof tasks within them.<
    of properties about Ruby and its types, where the agent's job is to prove or
    disprove them.</li>
 </ol>
-<p>If you are interested in working on this or in funding it, let me know.</p>
+<p>If you are interested in working on/funding this project or its future
+directions, let me know.</p>
 <h2 id="future-work">Future work</h2>
 <p>My immediate next steps are:</p>
 <ol>
@@ -379,7 +379,8 @@ evaluable in the first place...</p>
 <p>Thank you, Eitan Sprejer and the Apart Research team, for your support in this
 project.</p>
 <p>Thank you, Mike Dodds, for your mentorship and feedback on this piece. Thank
-you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
+you, Max von Hippel, Victor Arsenescu, and Dana Wensberg for your helpful
+comments as well.</p>
 <p>And thank you for reading. Want to get involved? Reach out at
 <a href="mailto:s.xifaras999@gmail.com">s.xifaras999@gmail.com</a>!</p>
 <section class="tooltip-footnotes">
