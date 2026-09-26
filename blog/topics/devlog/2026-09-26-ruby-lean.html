@@ -74,60 +74,77 @@ So, you need a mathematical argument. This is where
 <a href="https://en.wikipedia.org/wiki/Formal_methods">formal methods</a> shines.</p>
 <p>How might you mount a mathematical argument of the correctness of a program
 though? First, you need to define correctness. A simple definition is "this
-program terminates and returns a value." Now, you need a way to encode
-<em>meaning</em>. To see why, take the program <code>"2" + 2</code>. The meaning of this is
-ambiguous because it depends on the programming language. If you've ever written
-JavaScript, you may recognize that this program evaluates to <code>"22"</code>. In Ruby,
-this program throws an exception because <code>2</code> cannot be automatically coerced
-into a string. These outcomes hint at the <em>computational intent</em> of the
-statement in each language. In JavaScript, the meaning is approximately
-"concatenate the string '2' with the result of coercing 2 into a string." In
-Ruby, the meaning is "attempt to call the string's <code>+</code> operator, which attempts
-to coerce using the <code>to_str</code> method, with 2 as an operand," which then proceeds
-to fail as the code for <code>String#+</code> executes. The definition of meaning given by
-computational intent is known as a programming language's
+program terminates and returns a value." Now, you need to define <em>meaning</em>. To
+see why, take the program <code>"2" + 2</code>. The meaning of this is ambiguous because it
+depends on the programming language. If you've ever written JavaScript, you may
+recognize that this program evaluates to <code>"22"</code>. In
+<a href="https://www.ruby-lang.org/en/">Ruby</a>, this program throws an exception. These
+outcomes hint at the <em>computational intent</em> of the statement in each language.
+In JavaScript, the meaning is approximately "concatenate the string '2' with the
+result of coercing 2 into a string." In Ruby, the meaning is "attempt to call
+the string's <code>+</code> operator, which attempts to coerce using the <code>to_str</code> method,
+with 2 as an operand," which then proceeds to fail as the code for <code>String#+</code>
+executes because there is no <code>to_str</code> method on the <code>Integer</code> class. The
+definition of meaning given by computational intent is known as a programming
+language's
 <a href="https://en.wikipedia.org/wiki/Semantics_(programming_languages)"><em>semantics</em></a>.<a class="tooltip" data-tip="A fun lightning talk by Gary Bernhardt on the weirdness of the semantics of these two languages can be found here." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a>
 When the semantics is loaded into a proof assistant like
 <a href="https://lean-lang.org/">Lean</a>, we can now mechanically reason about programs
 and their correctness!</p>
-<p>Armed with a definition of correctness and a semantics, we can consider a
-program like <code>"2" + x</code>, where <code>x</code> is some input variable. In JavaScript, this
-program is correct for any <code>x</code> that evaluates to a value (in other words,
-evaluating <code>x</code> cannot result in an exception or non-termination). In Ruby, this
-program is correct for <code>x</code> that can be coerced into a string (has a <code>to_str</code>
-method defined). To make the Ruby program correct for all inputs, we can make
-the <code>to_str</code> check explicit:</p>
+<p>Armed with a definition of correctness and a semantics, consider a program like
+<code>"2" + x</code>, where <code>x</code> is some input variable. In JavaScript, this program is
+correct for any <code>x</code> that evaluates to a value (in other words, evaluating <code>x</code>
+cannot result in an exception or non-termination). In Ruby, this program is
+correct for <code>x</code> that can be coerced into a string (has a <code>to_str</code> method
+defined). To make the Ruby program correct for all inputs, we can make the
+<code>to_str</code> check explicit:</p>
 <pre><code class="language-ruby">&quot;2&quot; + x if x.respond_to?(:to_str)
 </code></pre>
 <p>The astute reader might notice that even this is not correct! Evaluating <code>x</code>
-could still raise an exception or not terminate. Termination is
-<a href="https://en.wikipedia.org/wiki/Halting_problem">undecidable</a> in general, but
-reasoning about <em>type safety</em> can help with the possibility of exceptions. A
-typical type checker, like <a href="https://sorbet.org/">Sorbet</a> for Ruby, claims <em>if
-your program passes, then the typed portions of the code never throw a type
-error.</em> The type checker is <em>sound</em> if a successful type check implies that the
-program truly is free of type errors. Unsoundness means the type checker can't
-be trusted; it could accept a program that has type errors. A rigorous semantics
-allows us to prove type soundness—another correctness property.</p>
+could still raise an exception or not terminate.</p>
 <!-- Such a proof is hard to author and check by hand, so ideally,
 the semantics is an artifact that is defined in a proof assistant like
 [Lean](https://lean-lang.org/). With a semantics in a proof assistant, we can
 reason about programs mechanically! -->
 
-<p>This is all well and good, but these example programs are dead simple, and yet
-they still have edge cases that are hard to reason about. This is why modeling
-the semantics of entire programming languages has historically taken multiple
-PhD-years of effort. <a href="https://mikedodds.org/">Mike Dodds</a> proposed
+<p>So, these example programs are dead simple, and yet they still have many edge
+cases that are hard to reason about. This is why modeling the semantics of
+entire programming languages has historically taken multiple PhD-years of
+effort. <a href="https://mikedodds.org/">Mike Dodds</a> proposed
 <a href="https://oath.tech/pub/2026/05/semantics-done-quick/">Semantics Done Quick</a> out
 of the belief that advanced AI should be able to greatly accelerate the
-construction of useful semantics of programming languages and systems. I say
-"useful" because results about semantics make it to academic conferences but
-don't find broad use in industry. Why? 1) They often have severe limitations,
-such as not being able to model the complex parts of a given language which tend
-to be the most useful, and 2) authoring proofs against the semantics requires
-technical expertise in formal methods and in the specific nature of the given
-semantics. Advanced AI shows promise in addressing both of these impediments to
-widespread utility of semantics.</p>
+construction of useful semantics. I say "useful" because results about semantics
+make it to academic conferences but don't find broad use in industry.</p>
+<p>Why? It's not because semantics are not inherently useful. Quite the opposite:
+they have high potential utility because we can vary our definition of
+correctness to suit the task at hand. They can be used, for instance, to prove
+type safety, which has immediate business value by eliminating certain uncaught
+exceptions in production code, and they can be used to prove robustness against
+malicious inputs so that software can be relied on in security-critical
+contexts.</p>
+<p>Instead, semantics are not adopted because:</p>
+<ol>
+<li>they often have severe limitations, such as not being able to model the
+   complex parts of a given language which tend to be the most useful.</li>
+<li>authoring proofs against them requires technical expertise in formal methods
+   and in the specific nature of the semantics.</li>
+</ol>
+<p>Advanced AI shows promise in addressing both of these impediments.</p>
+<!-- Termination is
+[undecidable](https://en.wikipedia.org/wiki/Halting_problem) in general, but
+reasoning about *type safety* can help with the possibility of exceptions. -->
+
+<!-- 
+Type checkers, like [Sorbet](https://sorbet.org/) for Ruby, claims *if your
+program passes, then the typed portions of the code never throw a type error.* A
+type checker is *sound* if a successful type check implies that the program
+truly is free of type errors. Unsoundness means the type checker can't be
+trusted; it could accept a program that has type errors. This has real-world
+implications; type checkers have seen great adoption in industry because
+uncaught exceptions have real negative business impact. Soundness is therefore a
+type checker's definition of correctness, and the semantics are useful because
+they let us prove it. -->
+
 <!-- 
 It's much in the same way you might mount an argument that $"2 + 2 = 4"$ is a true
 statement. This statement seems obviously true, but let's say I have some mental
@@ -191,21 +208,19 @@ written against it and machine-checked. -->
 <a href="https://apartresearch.com/research">Apart Research</a>
 <a href="https://www.lesswrong.com/posts/8wtrLoDPyCfMLuHkt/how-to-solve-secure-program-synthesis">Secure Program Synthesis</a>
 fellowship. As an outcome of this project, I am pleased to announce <code>ruby-lean</code>,
-my semantics of <a href="https://www.ruby-lang.org/en/">Ruby</a> in Lean 4. <code>ruby-lean</code> is
-an executable semantics, meaning that it can execute real Ruby code. It is
-modeled as a
-<a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>. I have
-also developed a system of type judgments based on Sorbet and proven it sound. I
-defined soundness previously, but in this concrete case it means: if a program
-passes the <code>ruby-lean</code> type validator, then it is completely free of a certain
-family of type-related exceptions. <strong>Both of the aforementioned impediments to
-widespread use are effectively addressed:</strong> the semantics models complex
-features of Ruby like
+my semantics of Ruby in Lean 4. <code>ruby-lean</code> is an executable semantics, meaning
+that it can execute real Ruby code. It is modeled as a
+<a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>. To
+demonstrate that this semantics is <em>useful</em>, I have also developed a system of
+type judgments based on Sorbet and proven it sound. <em>Soundness</em> means: if a
+program passes the <code>ruby-lean</code> type validator, then it is completely free of a
+certain family of type-related exceptions. <strong>Both of the aforementioned
+impediments to widespread use of this semantics are effectively addressed:</strong> the
+semantics models complex features of Ruby like
 <a href="https://noelrappin.com/2023/10/better-know-a-ruby-thing-10-method_missing/"><code>method_missing</code></a>
 and
 <a href="https://suchdevblog.com/lessons/ExplainingRubySingletonClass.html">eigenclass reopening</a>,
-and a substantial theorem about a type system has been written and proven
-against this semantics.</p>
+and a substantial theorem about a type system has been written and proven.</p>
 <p>I can probably count on my hands the number of lines of actual Lean code I wrote
 by hand. Frontier AI breezed through a lot of this project, but when it came to
 the most difficult part of proving a hard property against the semantics, AI
