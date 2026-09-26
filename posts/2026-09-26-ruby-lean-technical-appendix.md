@@ -7,7 +7,7 @@ topic: tech
 audience: "Computer scientists with some formal methods expertise"
 ---
 
-In the [original post](2026-09-20-ruby-lean.html), I introduced `ruby-lean`, an
+In the [original post](2026-09-26-ruby-lean.html), I introduced `ruby-lean`, an
 executable semantics of Ruby in Lean, with an associated type system and type
 soundness proof. This post is the technical appendix that offers a deeper view
 into how the semantics, type system, and soundness result are modeled and
@@ -48,8 +48,10 @@ outcome.
 LLM agents handily set up the Ruby toolchain, scaffolded out a desugarer, and
 walked me through important design decisions. In this phase, I established the
 `difftest` differential testing harness, with its first mode, `--sut desugar`.
-As shown in the above diagram, the desugarer is a part of the trusted computing
-base (TCB), so we need to convince ourselves that it does not change program
+As shown in the
+[pipeline diagram](2026-09-26-ruby-lean.html#ruby-lean-and-its-type-validator)
+in the original post, the desugarer is a part of the trusted computing base
+(TCB), so we need to convince ourselves that it does not change program
 behavior. This is where I worked with the agents to establish a baseline
 conformance suite derived from the CRuby implementation's own suite of sanity
 checks: [bootstraptest](https://github.com/ruby/ruby/tree/master/bootstraptest).
@@ -167,8 +169,8 @@ ratchet discipline against which to grow the semantics.
 As of the time of this writing, the semantics passes 995 / 1,309 `bootstraptest`
 cases. The gap between the 995 and 1,309 total is explained partially by the
 same 71-case gap in the desugarer's domain. The remainder are features that the
-semantics does not yet model. I have no reason to believe these features can't be
-modeled; the strong ratchet discipline developed for the semantics makes me
+semantics does not yet model. I have no reason to believe these features can't
+be modeled; the strong ratchet discipline developed for the semantics makes me
 confident that this is tractable. Expanding the fragment just requires more time
 and more tokens.
 
@@ -183,7 +185,7 @@ this has not yet been implemented. Tier 3 contains AI-generated complex Ruby
 programs. This test suite has led to the discovery of several discrepancies over
 the growth of the semantics, including one found very recently that has not yet
 been patched, discussed in
-["Why should I trust this?"](2026-09-20-ruby-lean.html#why-should-i-trust-this).
+["Why should I trust this?"](2026-09-26-ruby-lean.html#why-should-i-trust-this).
 
 ### Phases 3–5: type system and soundness proof
 
@@ -219,15 +221,15 @@ def typeStuck : Interp.RunResult → Bool
   | _ => false
 ```
 
-The biggest boon to the agent grind was the adoption of a strict ratchet discipline
-in this setting as well. I could not, however, use the existing `bootstraptest`
-ladder, because the input to the type validation pipeline is fully-typed
-programs. The `bootstraptest` suite has none. So, I instead used agents to spin
-up a 232-program
+The biggest boon to the agent grind was the adoption of a strict ratchet
+discipline in this setting as well. I could not, however, use the existing
+`bootstraptest` ladder, because the input to the type validation pipeline is
+fully-typed programs. The `bootstraptest` suite has none. So, I instead used
+agents to spin up a 232-program
 [corpus](https://github.com/sam-xif/ruby-lean/tree/main/ruby-lean/corpus) of
 *typed* programs. This is the corpus given on the `ruby-lean`
 [playground](/ruby-lean). More design notes can be found in the
-[Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html).
+[Design notes](#design-notes) section below.
 
 With this in place, the agent grind of "throwing tokens at the problem" could
 begin. The grind process was roughly as follows, in a loop:
@@ -246,8 +248,8 @@ At each step, the agent was instructed that it cannot call a rung on the ladder
 climbed until 1) the validator responds correctly for the new corpus element, 2)
 each new type judgment has a corresponding discharged proof obligation, and 3)
 the proof for the end-to-end soundness theorem checks. More details about this
-theorem and its helper theorems and lemmas are given in the
-[Technical Appendix](2026-09-20-ruby-lean-technical-appendix.html).
+theorem and its helper theorems and lemmas are given in
+[The soundness theorem](#the-soundness-theorem) and [Lemmata](#lemmata) below.
 
 ## Design notes
 
@@ -284,13 +286,13 @@ checking postulated types.
 
 ## A stroll through the semantics
 
-Here I'll introduce the semantics very briefly. Also, a reminder that you can view
-the Lean code on [GitHub](https://github.com/sam-xif/ruby-lean)!
+Here I'll introduce the semantics very briefly. Also, a reminder that you can
+view the Lean code on [GitHub](https://github.com/sam-xif/ruby-lean)!
 
 We built the Ruby semantics in Lean as an abstract CESK machine.[]^(The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a>.) By
 virtue of Lean's dual capability as a fully featured programming language and a
-proof assistant, actual Ruby code can be executed within `ruby-lean`. See it
-in action on the [playground](/ruby-lean).
+proof assistant, actual Ruby code can be executed within `ruby-lean`. See it in
+action on the [playground](/ruby-lean).
 
 CESK stands for *control*, *environment*, *store*, and *c(k)ontinuation*. These
 all live in `ruby-lean`'s `Machine` structure.
@@ -343,9 +345,9 @@ continuations.[]^(For the reader who may be unfamiliar, a <i>continuation</i>
 is a representation of what comes next in a program.)
 
 We write configurations of this abstract machine as $\langle c \mid K \mid S \mid F \mid h \rangle$ for the `ctl`,
-`kont`, `stack`, `frames` and `heap` fields. What follows are reduction
-rules for this semantics. Above each line are the antecedents, or
-premises, and below each line is the consequent.
+`kont`, `stack`, `frames` and `heap` fields. What follows are reduction rules
+for this semantics. Above each line are the antecedents, or premises, and below
+each line is the consequent.
 
 The following are three simple reduction rules. The first, E-Int, states that
 for an integer $n$, we evaluate to an integer value. E-Var is the rule for
@@ -383,12 +385,12 @@ $$
 \dfrac{F' = \text{setLocal}(S, F, x, v)}{\langle \text{value}\ v \mid \text{asgnK}\ x :: K \mid F \rangle \longrightarrow \langle \text{value}\ v \mid K \mid F' \rangle}\ \text{(K-Asgn)}
 $$
 
-Now, let's take a brief look at one of the most complex sets of rules, those
-for calling a method. In Ruby, this is referred to as a *send*. Everything in
-Ruby is an object, and method invocations are modeled as messages that are sent
+Now, let's take a brief look at one of the most complex sets of rules, those for
+calling a method. In Ruby, this is referred to as a *send*. Everything in Ruby
+is an object, and method invocations are modeled as messages that are sent
 between objects. Ruby even has a `respond_to?` builtin that tests whether an
 object "responds to" a certain message (a method name). Even what appears to be
-an assignment to an instance variable, `a.x = 5`, gets written roughly as
+a plain attribute assignment, `a.x = 5`, gets written roughly as
 `(send a "x=" (intLit 5))` in the desugared intermediate syntax.
 
 A send is discharged by five rules that compose with each other. E-Send is the
@@ -455,8 +457,8 @@ notions of class typing.
 
 Semantically, this becomes tricky, because both languages support
 metaprogramming that can change the bodies of classes and their instances after
-their definition. For more details on how this is handled, I encourage you to consult
-the [source code](https://github.com/sam-xif/ruby-lean).
+their definition. For more details on how this is handled, I encourage you to
+consult the [source code](https://github.com/sam-xif/ruby-lean).
 
 <!--TODO: see if we adequately answer this in this post? -->
 
@@ -492,8 +494,8 @@ true of the current `self`. In the future, I may consider separating this out.
 Also defined are arrow types, which represent callables, and a closure type,
 which is defined by $i$, the index into the global list of closures,
 stored in the machine state, $C$, the captured binding spine (an instance
-of the $\iota$ just described), and $S$, the type of `self` in the captured
-environment.
+of the $\iota$ just described), and $S$, the type of `self` in the
+captured environment.
 
 <!-- 
 #### Subtyping
@@ -520,8 +522,8 @@ $$
 - $I$: the ivar spine of the current `self`.
 - $\Gamma$: the local environment (a list of $x : \tau$).
 
-Where a rule threads a component unchanged, it is elided: $\Gamma \vdash e : \tau \dashv \Gamma'$ indicates that
-the rule leaves $\kappa$ and $I$ unchanged.
+Where a rule threads a component unchanged, it is elided: $\Gamma \vdash e : \tau \dashv \Gamma'$ indicates
+that the rule leaves $\kappa$ and $I$ unchanged.
 
 We also have a set of "companion" judgments (AI's term, not mine), overloading
 $\vdash$ on the shape of the subject syntax term:
@@ -572,13 +574,13 @@ x.call + 1  # NoMethodError, on CRuby and ruby-lean
 
 `capStale` returns true for `x` on the second line because `x` is captured in
 the lambda body, but Ruby captures *by reference*. So, when the body of the
-lambda is evaluated on line three, `x` evaluates to `lambda { x }`. Trying to add
-this to 1 results in an error due to the type mismatch.
+lambda is evaluated on line three, `x` evaluates to `lambda { x }`. Trying to
+add this to 1 results in an error due to the type mismatch.
 
 `capStale` (and the related `capStaleCtx`) can therefore be thought of as
 predicates about whether `x` is safe to assign to this new type $\tau$.
-`isAlias` is similar, but its existence has to do purely with the way we
-desugar surface Ruby programs into a smaller core.
+`isAlias` is similar, but its existence has to do purely with the way we desugar
+surface Ruby programs into a smaller core.
 
 Sorbet implements an even stricter notion of whether an assignment is valid:
 assignments can only walk along the subtyping relation in Ruby. The above
@@ -668,8 +670,9 @@ x
 ```
 
 would be reasonable. It turns out that *this is a type error*. Ruby attempts to
-call `y` on the current `self`, which is the top-level object in which the program
-is running, and `y` is not a method on `self`! Contrast this with Python, where
+call `y` on the current `self`, which is the top-level object in which the
+program is running, and `y` is not a method on `self`! Contrast this with
+Python, where
 
 ```python
 y = 5
@@ -690,19 +693,8 @@ Type soundness basically means "typed programs can't go wrong." This requires a
 definition of "wrong."
 
 In `ruby-lean` so far, we define "wrong" as the type error family that accepted
-programs are provably free of, as shown below.
-
-```lean
-def typeErrorFamily : List ObjId :=
-  [Boot.noMethodErrorId, Boot.argumentErrorId, Boot.typeErrorId]
-
-def isTypeError (h : Heap) (exc : Value) : Bool :=
-  typeErrorFamily.any (isA h exc)
-
-def typeStuck : Interp.RunResult → Bool
-  | .uncaught exc m => isTypeError m.heap exc
-  | _ => false
-```
+programs are provably free of: the `typeStuck` predicate over `typeErrorFamily`,
+defined earlier in the experience report.
 
 This set can and should be expanded in the future. I find this construction
 elegant because it demonstrates how the safety property proven about a program
@@ -742,10 +734,10 @@ $$
 $$
 
 **Conformance** between a machine state and a typing context is defined by
-$\text{StateOk}\ \kappa\ \Gamma\ I\ m$, which is a structure with 41 fields, too large to include here. Frankly,
-even I have not fully grokked this yet. It asserts facts like "this class is
-actually defined in the heap" and "no other methods except the ones specified in
-the context are defined on this class."
+$\text{StateOk}\ \kappa\ \Gamma\ I\ m$, which is a structure with 41 fields, too large to include here.
+Frankly, even I have not fully grokked this yet. It asserts facts like "this
+class is actually defined in the heap" and "no other methods except the ones
+specified in the context are defined on this class."
 
 **Answers** represent a notion of how an execution can respond, similar in
 spirit to a result type in Rust. An execution can either deliver a value or some
@@ -824,11 +816,11 @@ $$
 
 Now that we have the run spec, we can define the full semantic judgment,
 `SemSafeCtxA`. Notice that it has the same signature as the syntactic judgment:
-it takes a context $\kappa$, an ivar spine $I$, a type context
-$\Gamma$, an expression $e$, and the type of $e$, $\tau$, and leaves
-behind $\kappa';\ I';\ \Gamma'$. This can be read, "$e$ types as $\tau$ if this run
-produces an inhabitant of the semantic denotation of $\tau$, or produces an
-otherwise safe answer."
+it takes a context $\kappa$, an ivar spine $I$, a type context $\Gamma$,
+an expression $e$, and the type of $e$, $\tau$, and leaves behind
+$\kappa';\ I';\ \Gamma'$. This can be read, "$e$ types as $\tau$ if this run produces
+an inhabitant of the semantic denotation of $\tau$, or produces an otherwise
+safe answer."
 
 $$
 \text{SemSafeCtxA}\ \kappa\ \Gamma\ I\ e\ \tau\ \kappa'\ \Gamma'\ I'

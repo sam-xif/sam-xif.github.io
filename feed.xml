@@ -7,14 +7,14 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 14:28:48 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 14:36:29 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
       <link>https://samx.io/blog/topics/tech/2026-09-26-ruby-lean.html</link>
       <guid isPermaLink="true">https://samx.io/blog/topics/tech/2026-09-26-ruby-lean.html</guid>
-      <pubDate>Sun, 20 Sep 2026 00:00:00 +0000</pubDate>
-      <description><![CDATA[Experience report with an appendix of technical details]]></description>
+      <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
+      <description><![CDATA[A significant leap forward in AI-accelerated formal verification]]></description>
       <content:encoded><![CDATA[<p><strong>Bottom line up front:</strong> <em>I, with heavy augmentation from LLMs, have built an
 executable model of Ruby's semantics in Lean, together with a proof of type
 soundness of a small fragment of Sorbet's type system built on the semantics.
@@ -441,9 +441,9 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
       <title>ruby-lean Technical Appendix</title>
       <link>https://samx.io/blog/topics/tech/2026-09-26-ruby-lean-technical-appendix.html</link>
       <guid isPermaLink="true">https://samx.io/blog/topics/tech/2026-09-26-ruby-lean-technical-appendix.html</guid>
-      <pubDate>Sun, 20 Sep 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 26 Sep 2026 00:00:00 +0000</pubDate>
       <description><![CDATA[Appendix of technical notes from the ruby-lean project]]></description>
-      <content:encoded><![CDATA[<p>In the <a href="2026-09-20-ruby-lean.html">original post</a>, I introduced <code>ruby-lean</code>, an
+      <content:encoded><![CDATA[<p>In the <a href="2026-09-26-ruby-lean.html">original post</a>, I introduced <code>ruby-lean</code>, an
 executable semantics of Ruby in Lean, with an associated type system and type
 soundness proof. This post is the technical appendix that offers a deeper view
 into how the semantics, type system, and soundness result are modeled and
@@ -456,14 +456,14 @@ in the field.</p>
 <h2 id="experience-report">Experience report</h2>
 <p>In building this system, I went through roughly five phases of construction:</p>
 <ol>
-<li>Growing a desugaring function that takes high level Ruby and translates it
+<li>Growing a desugaring function that takes high-level Ruby and translates it
    into a smaller core language.</li>
-<li>Growing the semantics out of lots of tokens and a differential testing.
-   harness that compares to actual CRuby, version 4.0.5.</li>
+<li>Growing the semantics out of lots of tokens and a differential testing
+   harness that compares against actual CRuby, version 4.0.5.</li>
 <li>The first attempt at building a verified type checking decision procedure in
    Lean with an accompanying safety proof.</li>
 <li>The second attempt, where instead of building a verified type checker, I
-   built a type validator, that takes a program and an untrusted, emitted
+   built a type validator that takes a program and an untrusted, emitted
    derivation of the types of the program.</li>
 <li>The <em>third</em> attempt, where I gave the agents a strict ratchet discipline to
    follow. <code>ruby-lean</code> is the culmination of this approach, partway along in its
@@ -477,8 +477,10 @@ outcome.</p>
 <p>LLM agents handily set up the Ruby toolchain, scaffolded out a desugarer, and
 walked me through important design decisions. In this phase, I established the
 <code>difftest</code> differential testing harness, with its first mode, <code>--sut desugar</code>.
-As shown in the above diagram, the desugarer is a part of the trusted computing
-base (TCB), so we need to convince ourselves that it does not change program
+As shown in the
+<a href="2026-09-26-ruby-lean.html#ruby-lean-and-its-type-validator">pipeline diagram</a>
+in the original post, the desugarer is a part of the trusted computing base
+(TCB), so we need to convince ourselves that it does not change program
 behavior. This is where I worked with the agents to establish a baseline
 conformance suite derived from the CRuby implementation's own suite of sanity
 checks: <a href="https://github.com/ruby/ruby/tree/master/bootstraptest">bootstraptest</a>.</p>
@@ -568,7 +570,7 @@ reduced to <code>:send</code> operations.</p>
 remainder not passing because some programs are out of the desugarer's supported
 fragment. For instance, the desugarer does not handle <code>eval</code>, as exhibited by
 this bootstraptest program:</p>
-<pre><code>puts &quot;before&quot;
+<pre><code class="language-ruby">puts &quot;before&quot;
 eval &quot;while true; return; end rescue p $!&quot;
 puts &quot;after (never reached)&quot;
 </code></pre>
@@ -585,8 +587,8 @@ ratchet discipline against which to grow the semantics.</p>
 <p>As of the time of this writing, the semantics passes 995 / 1,309 <code>bootstraptest</code>
 cases. The gap between the 995 and 1,309 total is explained partially by the
 same 71-case gap in the desugarer's domain. The remainder are features that the
-semantics do not yet model. I have no reason to believe these features can't be
-modeled; the strong ratchet discipline developed for the semantics makes me
+semantics does not yet model. I have no reason to believe these features can't
+be modeled; the strong ratchet discipline developed for the semantics makes me
 confident that this is tractable. Expanding the fragment just requires more time
 and more tokens.</p>
 <p>To validate the conformance of the semantics beyond the <code>bootstraptest</code> suite, I
@@ -600,21 +602,21 @@ this has not yet been implemented. Tier 3 contains AI-generated complex Ruby
 programs. This test suite has led to the discovery of several discrepancies over
 the growth of the semantics, including one found very recently that has not yet
 been patched, discussed in
-<a href="2026-09-20-ruby-lean.html#why-should-i-trust-this">"Why should I trust this?"</a>.</p>
-<h3 id="phase-3-5-type-system-and-soundness-proof">Phase 3-5: type system and soundness proof</h3>
-<p>This phase was where both I and the agents met difficulty. As noted above, I
+<a href="2026-09-26-ruby-lean.html#why-should-i-trust-this">"Why should I trust this?"</a>.</p>
+<h3 id="phases-35-type-system-and-soundness-proof">Phases 3–5: type system and soundness proof</h3>
+<p>This phase was where both the agents and I met difficulty. As noted above, I
 went through three phases when trying to build a type system and prove soundness
 (recall: soundness is "a well-typed program cannot go wrong"). For the sake of
 brevity, I'll comment only on the third attempt that produced the results in
 this writeup and briefly touch on learnings from previous modeling attempts as
 they arise.</p>
-<p>First and foremost, the learnings from the first two attempts culminated in
+<p>First and foremost, the learnings from the first two attempts culminated in a
 clarification of the task definition. The current working definition of what the
 type system and type validator are supposed to do is:</p>
 <blockquote>
 <p>Given a fully typed program <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math>, and a derivation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>, generated by
 an untrusted emitter <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>E</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x0002C;</mo><mi>S</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is the Sorbet type checker's
-emission of symbol and type information, grow a function <code>validate P D</code> such
+emission of symbol and type information, grow a function <code>validate p d</code> such
 that when <code>validate sig_strip(p) d = true</code>, running <code>sig_strip(p)</code> will not
 result in a <strong>type-stuck state</strong>.</p>
 </blockquote>
@@ -630,15 +632,15 @@ def typeStuck : Interp.RunResult → Bool
   | .uncaught exc m =&gt; isTypeError m.heap exc
   | _ =&gt; false
 </code></pre>
-<p>The biggest boon to the agent grind was the adoption a strict ratchet discipline
-in this setting as well. I could not, however, use the existing <code>bootstraptest</code>
-ladder, because the input to the type validation pipeline is fully-typed
-programs. The <code>bootstraptest</code> suite has none. So, I instead used agents to spin
-up a 232-program
+<p>The biggest boon to the agent grind was the adoption of a strict ratchet
+discipline in this setting as well. I could not, however, use the existing
+<code>bootstraptest</code> ladder, because the input to the type validation pipeline is
+fully-typed programs. The <code>bootstraptest</code> suite has none. So, I instead used
+agents to spin up a 232-program
 <a href="https://github.com/sam-xif/ruby-lean/tree/main/ruby-lean/corpus">corpus</a> of
 <em>typed</em> programs. This is the corpus given on the <code>ruby-lean</code>
 <a href="/ruby-lean">playground</a>. More design notes can be found in the
-<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
+<a href="#design-notes">Design notes</a> section below.</p>
 <p>With this in place, the agent grind of "throwing tokens at the problem" could
 begin. The grind process was roughly as follows, in a loop:</p>
 <ol>
@@ -654,18 +656,18 @@ begin. The grind process was roughly as follows, in a loop:</p>
 </ol>
 <p>At each step, the agent was instructed that it cannot call a rung on the ladder
 climbed until 1) the validator responds correctly for the new corpus element, 2)
-each new type judgment has a corresponding discharged proof obligation and 3)
+each new type judgment has a corresponding discharged proof obligation, and 3)
 the proof for the end-to-end soundness theorem checks. More details about this
-theorem and its helper theorems and lemmas are given in the
-<a href="2026-09-20-ruby-lean-technical-appendix.html">Technical Appendix</a>.</p>
+theorem and its helper theorems and lemmas are given in
+<a href="#the-soundness-theorem">The soundness theorem</a> and <a href="#lemmata">Lemmata</a> below.</p>
 <h2 id="design-notes">Design notes</h2>
 <p>Two key design decisions also set up the type system growth and soundness proof
-in Phase 3-5 for success. First, <em>I drew inspiration from
+in Phases 3–5 for success. First, <em>I drew inspiration from
 <a href="https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf">RustBelt</a></em>. I introduced a
-clear delination between the syntactic set of judgments, which <em>define</em>
+clear delineation between the syntactic set of judgments, which <em>define</em>
 type-correctness, and a semantic definition of what a judgment <em>means</em>, by which
 the syntactic judgments must be proven correct with respect to the semantics.
-This ensures the set of type judgments stay sound as they grow, and it allows
+This ensures the set of type judgments stays sound as they grow, and it allows
 for <em>extensionality</em>. A new judgment rule can be proposed in the semantic
 domain, and it is valid as long as it can be proven correct with respect to the
 semantics. RustBelt used this pattern to prove safety of <code>unsafe</code> Rust
@@ -675,7 +677,7 @@ completeness to an untrusted emitter that proposes a derivation. The trusted
 validator's proof only asserts soundness. This means that the proof of the
 validator's soundness does not have to account for the soundness/completeness of
 any type inference decision procedure. This is exactly one of the flaws that led
-to me scrap the first attempt at modeling a type system for Ruby and proving it
+me to scrap the first attempt at modeling a type system for Ruby and proving it
 sound. I had agent-grinded a type checker that inferred types rather than just
 checking them, and a successful check was a successful inference. This led to
 complex machinery where the inductive safety invariant had to be specified in
@@ -689,12 +691,12 @@ everything green again." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></
 complex program constructs like functions and loops is much more difficult than
 checking postulated types.</p>
 <h2 id="a-stroll-through-the-semantics">A stroll through the semantics</h2>
-<p>Here I'll introduce the semantics very briefly. Also, reminder that you can view
-the Lean code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>!</p>
-<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis" href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> By
-virtue of Lean's dual capability as a fully feature programming language and a
-proof assistant, actual Ruby code can be executed within the <code>ruby-lean</code>. See it
-in action on the <a href="/ruby-lean">playground</a>.</p>
+<p>Here I'll introduce the semantics very briefly. Also, a reminder that you can
+view the Lean code on <a href="https://github.com/sam-xif/ruby-lean">GitHub</a>!</p>
+<p>We built the Ruby semantics in Lean as an abstract CESK machine.<a class="tooltip" data-tip="The CESK machine was originally introduced by Felleisen in his doctoral thesis." href="#tooltip-def-3" id="tooltip-ref-3"><sup>3</sup></a> By
+virtue of Lean's dual capability as a fully featured programming language and a
+proof assistant, actual Ruby code can be executed within <code>ruby-lean</code>. See it in
+action on the <a href="/ruby-lean">playground</a>.</p>
 <p>CESK stands for <em>control</em>, <em>environment</em>, <em>store</em>, and <em>c(k)ontinuation</em>. These
 all live in <code>ruby-lean</code>'s <code>Machine</code> structure.</p>
 <pre><code class="language-lean">structure Machine where
@@ -726,23 +728,23 @@ unallocated is as simple as getting the size of the current heap: <math display=
 the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo lspace="0.2778em" rspace="0.2778em">::</mo></mrow></math> syntax denote concatenation of arrays (in this case, of objects). A
 heap may be written in its destructured array form when appropriate: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">[</mo><msub><mi>o</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>o</mi><mn>2</mn></msub><mo>&#x0002C;</mo><mo>&#x022EF;</mo><mo stretchy="false">]</mo></mrow></math>.</p>
 <p>And finally, the <em>continuation</em> is represented as <code>kont</code>, a stack of
-continuations.<a class="tooltip" data-tip="for the reader who may be unfamiliar, a continuation 
+continuations.<a class="tooltip" data-tip="For the reader who may be unfamiliar, a continuation 
 is a representation of what comes next in a program." href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a></p>
-<p>We write configurations in this abstract machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x027E8;</mi><mi>c</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>S</mi><mo>&#x02223;</mo><mi>F</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi></mrow></math> for the <code>ctl</code>,
-<code>kont</code>, <code>stack</code>, <code>frames</code> and <code>heap</code> fields. In the following are reduction
-rules for this semantics. Above of the line are written the antecedents, or
-premises, and below each line is the consequent.</p>
+<p>We write configurations of this abstract machine as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x027E8;</mi><mi>c</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>S</mi><mo>&#x02223;</mo><mi>F</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi></mrow></math> for the <code>ctl</code>,
+<code>kont</code>, <code>stack</code>, <code>frames</code> and <code>heap</code> fields. What follows are reduction rules
+for this semantics. Above each line are the antecedents, or premises, and below
+each line is the consequent.</p>
 <p>The following are three simple reduction rules. The first, E-Int, states that
-for an integer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math>, we evaluate an integer value. E-Var is the rule for
+for an integer <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>n</mi></mrow></math>, we evaluate to an integer value. E-Var is the rule for
 evaluating an expression of a single variable by looking it up in the
 environment. E-Str represents the allocation of a string literal onto the heap.
 It reads "given a fresh object ID <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>o</mi></mrow></math>, and the new heap after allocating
-this object of class <code>String</code> with the value <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>str</mtext><mi>s</mi></mrow></math> as its data, we evaluate
+this object of class <code>String</code> with the value <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>str</mtext><mtext>&#x000A0;</mtext><mi>s</mi></mrow></math> as its data, we evaluate
 the expression <code>"s"</code> to be the reference to the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>o</mi></mrow></math>th heap slot."</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow></mrow><mrow><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mi>n</mi><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>value</mtext><mtext>&#x000A0;</mtext><mo stretchy="false">&#x00028;</mo><mtext>int</mtext><mtext>&#x000A0;</mtext><mi>n</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(E-Int)</mtext></mrow></math>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><mtext>getLocal</mtext><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002C;</mo><mi>F</mi><mo>&#x0002C;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>v</mi></mrow><mrow><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mi>x</mi><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>value</mtext><mtext>&#x000A0;</mtext><mi>v</mi><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(E-Var)</mtext></mrow></math>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><mi>o</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x0007C;</mo><mi>h</mi><mo stretchy="false">&#x0007C;</mo><mspace width="1em"></mspace><msup><mi>h</mi><mi>&#x02032;</mi></msup><mo>&#x0003D;</mo><mi>h</mi><mo lspace="0.2778em" rspace="0.2778em">::</mo><mo stretchy="false">[</mo><mi>&#x0007B;</mi><mtext>class</mtext><mo>&#x0003D;</mo><mtext>String</mtext><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mtext>payload</mtext><mo>&#x0003D;</mo><mtext>str</mtext><mtext>&#x000A0;</mtext><mi>s</mi><mi>&#x0007D;</mi><mo stretchy="false">]</mo></mrow><mrow><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mtext mathvariant="monospace">"</mtext><mi>s</mi><mtext mathvariant="monospace">"</mtext><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><mi>h</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>value</mtext><mtext>&#x000A0;</mtext><mo stretchy="false">&#x00028;</mo><mtext>ref</mtext><mtext>&#x000A0;</mtext><mi>o</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><msup><mi>h</mi><mi>&#x02032;</mi></msup><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(E-Str)</mtext></mrow></math>
-<p>Now, let's look at an example of a more complex expression, assignments to
+<p>Now, let's look at an example of a more complex expression: assignment to
 variables. E-Asgn and K-Asgn represent the two "steps" in assigning to a
 variable in this machine. First, E-Asgn pushes an assignment (<code>asgnK</code>)
 continuation onto the kont stack, and leaves behind an instruction to evaluate
@@ -751,15 +753,15 @@ Finally, K-Asgn pops the <code>asgnK</code> continuation, consumes the computed 
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>v</mi></mrow></math>, and sets the variable <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi></mrow></math> in the current frame.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow></mrow><mrow><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0003D;</mo><mi>e</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mi>e</mi><mo>&#x02223;</mo><mtext>asgnK</mtext><mtext>&#x000A0;</mtext><mi>x</mi><mo lspace="0.2778em" rspace="0.2778em">::</mo><mi>K</mi><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(E-Asgn)</mtext></mrow></math>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><msup><mi>F</mi><mi>&#x02032;</mi></msup><mo>&#x0003D;</mo><mtext>setLocal</mtext><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002C;</mo><mi>F</mi><mo>&#x0002C;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mi>&#x027E8;</mi><mtext>value</mtext><mtext>&#x000A0;</mtext><mi>v</mi><mo>&#x02223;</mo><mtext>asgnK</mtext><mtext>&#x000A0;</mtext><mi>x</mi><mo lspace="0.2778em" rspace="0.2778em">::</mo><mi>K</mi><mo>&#x02223;</mo><mi>F</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>value</mtext><mtext>&#x000A0;</mtext><mi>v</mi><mo>&#x02223;</mo><mi>K</mi><mo>&#x02223;</mo><msup><mi>F</mi><mi>&#x02032;</mi></msup><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(K-Asgn)</mtext></mrow></math>
-<p>Now, let's take a brief look at one of the most complex concerts of rules, those
-for calling a method. In Ruby, this is referred to as a <em>send</em>. Everything in
-Ruby is an object, and method invocations are modelled as messages that are sent
-between objects. Ruby even has a <code>responds_to?</code> builtin that tests whether an
+<p>Now, let's take a brief look at one of the most complex sets of rules, those for
+calling a method. In Ruby, this is referred to as a <em>send</em>. Everything in Ruby
+is an object, and method invocations are modeled as messages that are sent
+between objects. Ruby even has a <code>respond_to?</code> builtin that tests whether an
 object "responds to" a certain message (a method name). Even what appears to be
-an assignment to an instance variable, <code>a.x = 5</code>, gets written roughly as
+a plain attribute assignment, <code>a.x = 5</code>, gets written roughly as
 <code>(send a "x=" (intLit 5))</code> in the desugared intermediate syntax.</p>
 <p>A send is discharged by five rules that compose with each other. E-Send is the
-rule that reads the initial messages end expression and initiates the send by
+rule that reads the initial message-send expression and initiates the send by
 pushing a <code>recvK</code> continuation that captures the method/message name and the
 sequence of argument expressions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mover><mrow><mi>a</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover></mrow></math> onto the kont stack.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow></mrow><mrow><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mi>r</mi><mo lspace="0" rspace="0">.</mo><mi>m</mi><mo stretchy="false">&#x00028;</mo><mover><mrow><mi>a</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x02223;</mo><mi>K</mi><mi>&#x027E9;</mi><mo lspace="0.2778em" rspace="0.2778em">&#x027F6;</mo><mi>&#x027E8;</mi><mtext>eval</mtext><mtext>&#x000A0;</mtext><mi>r</mi><mo>&#x02223;</mo><mtext>recvK</mtext><mtext>&#x000A0;</mtext><mi>m</mi><mtext>&#x000A0;</mtext><mover><mrow><mi>a</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0.2778em" rspace="0.2778em">::</mo><mi>K</mi><mi>&#x027E9;</mi></mrow></mfrac></mstyle><mtext>&#x000A0;</mtext><mtext>(E-Send)</mtext></mrow></math>
@@ -794,7 +796,7 @@ notions of class typing.</p>
 <p>Semantically, this becomes tricky, because both languages support
 metaprogramming that can change the bodies of classes and their instances after
 their definition. For more details on how this is handled, I encourage you to
-the <a href="https://github.com/sam-xif/ruby-lean">source code</a>.</p>
+consult the <a href="https://github.com/sam-xif/ruby-lean">source code</a>.</p>
 <!--TODO: see if we adequately answer this in this post? -->
 
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtable><mtr><mtd columnalign="right"><mi>&#x003C4;</mi></mtd><mtd columnalign="center"><mo lspace="0.2778em" rspace="0.2778em">::=</mo></mtd><mtd columnalign="left"><mtext>int</mtext></mtd><mtd columnalign="left"><mtext>immediates</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>bool</mtext></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>nil</mtext></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>sym</mtext></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>float</mtext></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>cls</mtext><mspace width="0.167em"></mspace><mi>n</mi></mtd><mtd columnalign="left"><mtext>an&#x000A0;instance&#x000A0;of&#x000A0;class&#x000A0;</mtext><mi>n</mi></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>clsOf</mtext><mspace width="0.167em"></mspace><mi>n</mi></mtd><mtd columnalign="left"><mtext>the&#x000A0;class&#x000A0;object&#x000A0;</mtext><mi>n</mi></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>any</mtext></mtd><mtd columnalign="left"><mtext>top&#x000A0;(never&#x000A0;inferred)</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>never</mtext></mtd><mtd columnalign="left"><mtext>bottom</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>nilable</mtext><mspace width="0.167em"></mspace><mi>&#x003C4;</mi></mtd><mtd columnalign="left"><mi>&#x003C4;</mi><mtext>&#x000A0;or&#x000A0;nil</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mi>&#x003C3;</mi><mo>&#x0222A;</mo><mi>&#x003C4;</mi></mtd><mtd columnalign="left"><mtext>union</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>arrayOf</mtext><mspace width="0.167em"></mspace><mi>&#x003C4;</mi></mtd><mtd columnalign="left"><mtext>invariant&#x000A0;collections</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>hashOf</mtext><mspace width="0.167em"></mspace><mi>&#x003C3;</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>inst</mtext><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><mi>I</mi></mtd><mtd columnalign="left"><mtext>an&#x000A0;instance&#x000A0;of&#x000A0;user&#x000A0;class&#x000A0;</mtext><mi>n</mi><mtext>&#x000A0;with&#x000A0;ivar&#x000A0;spine&#x000A0;</mtext><mi>I</mi></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><msub><mi>&#x003B9;</mi><mn>0</mn></msub></mtd><mtd columnalign="left"><mtext>binding&#x000A0;spines</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mi>&#x003B9;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mrow><mi>:</mi></mrow><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>I</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><msub><mtext>arrow</mtext><mn>0</mn></msub><mspace width="0.167em"></mspace><mi>&#x003C4;</mi></mtd><mtd columnalign="left"><mtext>callable&#x000A0;spine</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>arrow</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C3;</mi><mo>&#x0002C;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>clos</mtext><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo>&#x0002C;</mo><mi>C</mi><mo>&#x0002C;</mo><mi>S</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"><mtext>a&#x000A0;block&#x000A0;value</mtext></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"><mo>&#x02223;</mo></mtd><mtd columnalign="left"><mtext>sameAs</mtext><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="left"><mtext>an&#x000A0;alias&#x000A0;fact</mtext></mtd></mtr></mtable></mrow></math>
@@ -803,10 +805,10 @@ spines" <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow>
 overloads the typing definition with an additional piece of state about what's
 true of the current <code>self</code>. In the future, I may consider separating this out.
 Also defined are arrow types, which represent callables, and a closure type,
-which are defined by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi></mrow></math>, the index into the global list of closures,
+which is defined by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>i</mi></mrow></math>, the index into the global list of closures,
 stored in the machine state, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>C</mi></mrow></math>, the captured binding spine (an instance
-of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003B9;</mi></mrow></math> just described), and S, the type of <code>self</code> in the captured
-environment.</p>
+of the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003B9;</mi></mrow></math> just described), and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>S</mi></mrow></math>, the type of <code>self</code> in the
+captured environment.</p>
 <!-- 
 #### Subtyping
 
@@ -832,8 +834,8 @@ system has the form</p>
 <li>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi></mrow></math>: the local environment (a list of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>x</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi></mrow></math>).</li>
 </ul>
-<p>Where a rule threads a component unchanged, it is elided: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi><mo>&#x022A2;</mo><mi>e</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> implies that
-the rule preserved <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003BA;</mi></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> unchanged.</p>
+<p>Where a rule threads a component unchanged, it is elided: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi><mo>&#x022A2;</mo><mi>e</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math> indicates
+that the rule leaves <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003BA;</mi></mrow></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math> unchanged.</p>
 <p>We also have a set of "companion" judgments (AI's term, not mine), overloading
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>&#x022A2;</mo></mrow></math> on the shape of the subject syntax term:</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtable><mtr><mtd columnalign="left"><mi mathvariant="normal">&#x00393;</mi><mo>&#x022A2;</mo><mover><mrow><mi>e</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0.2778em" rspace="0.2778em">:</mo><mover><mrow><mi>&#x003C4;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd><mtd columnalign="left"><mtext>argument&#x000A0;lists&#x000A0;and&#x000A0;array&#x000A0;elements</mtext></mtd></mtr><mtr><mtd columnalign="left"><mi mathvariant="normal">&#x00393;</mi><msub><mo>&#x022A2;</mo><mrow><mtext>seq</mtext></mrow></msub><mover><mrow><mi>e</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd><mtd columnalign="left"><mtext>statement&#x000A0;sequences</mtext></mtd></mtr><mtr><mtd columnalign="left"><mi mathvariant="normal">&#x00393;</mi><msub><mo>&#x022A2;</mo><mi>s</mi></msub><mi>e</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd><mtd columnalign="left"><mtext>relative&#x000A0;to&#x000A0;a&#x000A0;recursion&#x000A0;scope&#x000A0;</mtext><mi>s</mi></mtd></mtr><mtr><mtd columnalign="left"><mi>&#x003BA;</mi><mi>;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mi>;</mi><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><msub><mo>&#x022A2;</mo><mrow><mtext>init</mtext></mrow></msub><mi>e</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mi>&#x003C4;</mi><mo>&#x022A3;</mo><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd><mtd columnalign="left"><mtext>class&#x000A0;initializer&#x000A0;bodies</mtext></mtd></mtr></mtable></mrow></math>
@@ -853,7 +855,7 @@ covered in the next section.</p>
 system of judgments--these grew from the learnings of previous agents' attempts
 at formalizing even larger portions of the type system. However, they still
 serve as useful ways of taming the unsoundness of Ruby. <code>capStale</code>, for
-instance, sprung out of an agent's attempt to prove safety of the family of
+instance, sprang out of an agent's attempt to prove safety of the family of
 programs like</p>
 <pre><code class="language-ruby">x = 1
 x = lambda { x } 
@@ -861,19 +863,19 @@ x.call + 1  # NoMethodError, on CRuby and ruby-lean
 </code></pre>
 <p><code>capStale</code> returns true for <code>x</code> on the second line because <code>x</code> is captured in
 the lambda body, but Ruby captures <em>by reference</em>. So, when the body of the
-lambda is evaluated on line three, x evaluates to <code>lambda { x }</code>. Trying to add
-this to 1 results in a error due to the type mismatch.</p>
-<p>So, <code>capStale</code> (and related <code>capStaleCtx</code>) can therefore be thought of as
-predicates about whether x is safe to assign to this new type <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>.
-<code>isAlias</code> is similar, but its existence has to do purely with the the way we
-desugar surface Ruby programs into a smaller core.</p>
+lambda is evaluated on line three, <code>x</code> evaluates to <code>lambda { x }</code>. Trying to
+add this to 1 results in an error due to the type mismatch.</p>
+<p><code>capStale</code> (and the related <code>capStaleCtx</code>) can therefore be thought of as
+predicates about whether <code>x</code> is safe to assign to this new type <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>.
+<code>isAlias</code> is similar, but its existence has to do purely with the way we desugar
+surface Ruby programs into a smaller core.</p>
 <p>Sorbet implements an even stricter notion of whether an assignment is valid:
 assignments can only walk along the subtyping relation in Ruby. The above
 program would fail Sorbet because <code>lambda { x } &lt;: int</code> is false. Ruby itself,
 however, imposes no restriction on the reassignment of a variable to a
 differently typed value, so our type system strikes a middle ground; instead of
 fixing each variable's type, the judgments reason about how reassignment to
-variables affect stored references to those variables. As a consequence, <strong>our
+variables affects stored references to those variables. As a consequence, <strong>our
 type system is <em>more complete</em> than Sorbet while still maintaining provable
 soundness.</strong></p>
 <p>The If rule, given below, is much simpler. We type an if expression as the union
@@ -884,14 +886,14 @@ that axiomatizes the signatures of various builtin methods. The semantics source
 code defines ~300 builtin methods, but the type system currently only covers a
 subset. Notice the side condition, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C3;</mi><mo>&#x0003D;</mo><mtext>cls</mtext><mspace width="0.167em"></mspace><mtext mathvariant="monospace">String</mtext><mo>&#x021D2;</mo><mtext>isANoOk</mtext><mo stretchy="false">&#x00028;</mo><mo>&#x02026;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. This is needed because Ruby
 supports <em>class reopening</em>. String is a builtin class, but the following is a
-valid program that executes in both CRuby and the <code>ruby-lean</code>:</p>
+valid program that executes in both CRuby and <code>ruby-lean</code>:</p>
 <pre><code class="language-ruby">class String
   def speak()
     &quot;hello world!&quot;
   end
 end
 
-&quot;s&quot;.speak  # evals to &quot;hello world&quot; on CRuby and Ruby-Lean
+&quot;s&quot;.speak  # evaluates to &quot;hello world!&quot; on CRuby and ruby-lean
 </code></pre>
 <p>This may feel somewhat strange if you're coming from a Python background, like I
 was. As the type system grows, more side conditions will likely be needed to
@@ -916,8 +918,9 @@ end
 x
 </code></pre>
 <p>would be reasonable. It turns out that <em>this is a type error</em>. Ruby attempts to
-call y on the current <code>self</code>, which is the top-level object in which the program
-is running, and <code>y</code> is not a method on <code>self</code>! Contrast this with Python, where</p>
+call <code>y</code> on the current <code>self</code>, which is the top-level object in which the
+program is running, and <code>y</code> is not a method on <code>self</code>! Contrast this with
+Python, where</p>
 <pre><code class="language-python">y = 5
 def x():
   return y
@@ -931,19 +934,10 @@ threads together into a soundness theorem.</p>
 <p>Type soundness basically means "typed programs can't go wrong." This requires a
 definition of "wrong."</p>
 <p>In <code>ruby-lean</code> so far, we define "wrong" as the type error family that accepted
-programs are provably free of, as shown below.</p>
-<pre><code class="language-lean">def typeErrorFamily : List ObjId :=
-  [Boot.noMethodErrorId, Boot.argumentErrorId, Boot.typeErrorId]
-
-def isTypeError (h : Heap) (exc : Value) : Bool :=
-  typeErrorFamily.any (isA h exc)
-
-def typeStuck : Interp.RunResult → Bool
-  | .uncaught exc m =&gt; isTypeError m.heap exc
-  | _ =&gt; false
-</code></pre>
+programs are provably free of: the <code>typeStuck</code> predicate over <code>typeErrorFamily</code>,
+defined earlier in the experience report.</p>
 <p>This set can and should be expanded in the future. I find this construction
-elegant because this demonstrates how the safety property proven about a program
+elegant because it demonstrates how the safety property proven about a program
 can be customized.</p>
 <p>Let's now build up the metatheory needed to reason about program safety under
 these semantics.</p>
@@ -960,10 +954,10 @@ given below.</p>
 <p>With <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>h</mi><mo>&#x0003D;</mo><mi>m</mi><mo lspace="0" rspace="0">.</mo><mrow><mi mathvariant="italic">h</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">a</mi><mi mathvariant="italic">p</mi></mrow></mrow></math>,</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtable><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>int</mtext><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>isInt</mtext><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>cls</mtext><mspace width="0.167em"></mspace><mi>n</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>isAName</mtext><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo>&#x0002C;</mo><mi>v</mi><mo>&#x0002C;</mo><mi>n</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>arrayOf</mtext><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mo>&#x02203;</mo><mover><mrow><mi>x</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>arrElems</mtext><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mover><mrow><mi>x</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo>&#x02227;</mo><mo>&#x02200;</mo><mi>x</mi><mo>&#x02208;</mo><mover><mrow><mi>x</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>inst</mtext><mspace width="0.167em"></mspace><mi>n</mi><mspace width="0.167em"></mspace><mi>I</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>isExactInst</mtext><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo>&#x0002C;</mo><mi>v</mi><mo>&#x0002C;</mo><mi>n</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02227;</mo><mtext>denSpine</mtext><mo stretchy="false">&#x00028;</mo><mi>I</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mtext>ivarOf</mtext><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>never</mtext><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>False</mtext></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mtext>any</mtext><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>True</mtext></mtd></mtr><mtr><mtd columnalign="right"><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><msub><mtext>arrow</mtext><mn>0</mn></msub><mspace width="0.167em"></mspace><mi>&#x003C1;</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>isProc</mtext><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo>&#x0002C;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02227;</mo><mo>&#x02200;</mo><msub><mi>m</mi><mn>2</mn></msub><mo>&#x02292;</mo><mi>m</mi><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mi>v</mi><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><msup><mi>m</mi><mi>&#x02032;</mi></msup><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>Returns</mtext><mo stretchy="false">&#x00028;</mo><msub><mi>m</mi><mn>2</mn></msub><mo>&#x0002C;</mo><mi>f</mi><mo>&#x0002C;</mo><mo stretchy="false">[</mo><mspace width="0.167em"></mspace><mo stretchy="false">]</mo><mo>&#x0002C;</mo><mi>v</mi><mo>&#x0002C;</mo><msup><mi>m</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x021D2;</mo><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C1;</mi><mo>&#x0002C;</mo><msup><mi>m</mi><mi>&#x02032;</mi></msup><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr></mtable></mrow></math>
 <p><strong>Conformance</strong> between a machine state and a typing context is defined by
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>StateOk</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><mi>m</mi></mrow></math>, which is a structure with 41 fields, too large to include here. Even
-I frankly have not grokked this yet. It asserts facts like "this class is
-actually defined in the heap" and "no other methods except the ones specified in
-the context are defined on this class."</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>StateOk</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><mi>m</mi></mrow></math>, which is a structure with 41 fields, too large to include here.
+Frankly, even I have not fully grokked this yet. It asserts facts like "this
+class is actually defined in the heap" and "no other methods except the ones
+specified in the context are defined on this class."</p>
 <p><strong>Answers</strong> represent a notion of how an execution can respond, similar in
 spirit to a result type in Rust. An execution can either deliver a value or some
 exceptional state.</p>
@@ -981,7 +975,7 @@ def AnsOk (τ : Ty) (m₀ : Machine) : Answer → Prop
 </code></pre>
 <p><code>AnsOk</code> reads "if the answer is a value, then it is typed according to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>
 in machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mi>m</mi><mn>0</mn></msub></mrow></math>, or if it is an escape, then it is not a raise of an error
-in the <code>typeStuck</code> set." This is important for definitions below.</p>
+in the <code>typeStuck</code> set." This is important for the definitions below.</p>
 <!-- **Extension.** $\text{Ext}\ m\ m'$ holds when the frame array and frame stack are
 unchanged, the heap only grows, every old object id reads back identically,
 nothing became or stopped being a class, and the ancestor walk is unmoved.
@@ -1009,25 +1003,25 @@ slice of computation is a safe answer, and if that answer is a value, then state
 conformance is preserved.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtable><mtr><mtd columnalign="right"><mtext>SafeA</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mo>&#x02200;</mo><mrow><mi mathvariant="italic">f</mi><mi mathvariant="italic">u</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">l</mi></mrow><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>typeStuck</mtext><mo stretchy="false">&#x00028;</mo><mtext>run</mtext><mtext>&#x000A0;</mtext><mrow><mi mathvariant="italic">f</mi><mi mathvariant="italic">u</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">l</mi></mrow><mtext>&#x000A0;</mtext><mi>m</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mtext>false</mtext></mtd></mtr><mtr><mtd columnalign="right"><mtext>ResultOk</mtext><mo stretchy="false">&#x00028;</mo><msub><mi>m</mi><mrow><mtext>orig</mtext></mrow></msub><mo>&#x0002C;</mo><mi mathvariant="normal">&#x00393;</mi><mo>&#x0002C;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>&#x003BA;</mi><mo>&#x0002C;</mo><mi>I</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mtext>Framed</mtext><mo stretchy="false">&#x00028;</mo><msub><mi>m</mi><mrow><mtext>orig</mtext></mrow></msub><mo>&#x0002C;</mo><mi>m</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"></mtd><mtd columnalign="left"><mo>&#x02227;</mo><mtext>AnsOk</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>a</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd columnalign="right"></mtd><mtd columnalign="center"></mtd><mtd columnalign="left"><mrow></mrow><mo>&#x02227;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02200;</mo><mi>v</mi><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mi>a</mi><mo>&#x0003D;</mo><mtext>val</mtext><mspace width="0.167em"></mspace><mi>v</mi><mo>&#x021D2;</mo><mtext>StateOk</mtext><mspace width="0.167em"></mspace><mi>&#x003BA;</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><mi>m</mi><mo stretchy="false">&#x00029;</mo></mtd></mtr></mtable></mrow></math>
 <p><code>Framed</code> is a complex predicate that asserts the stability of certain facts in
-the machine. For example, one of the properties on <code>Framed</code> is this property
-about the stability of inhabitants of certain "first order" types. The first
-order set of types excludes closure types, for instance, which have captured
+the machine. For example, one of the properties of <code>Framed</code> is this property
+about the stability of inhabitants of certain "first order" types. The set of
+first-order types excludes closure types, for instance, which have captured
 frames; a closure type's inhabitants can therefore be changed nonlocally.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>&#x02200;</mo><mi>&#x003C4;</mi><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>FirstOrder</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x021D2;</mo><mo>&#x02200;</mo><mi>v</mi><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo>&#x021D2;</mo><mtext>denM</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><msup><mi>m</mi><mi>&#x02032;</mi></msup><mo>&#x0002C;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo></mrow></math>
 <p>Now that we have the run spec, we can define the full semantic judgment,
 <code>SemSafeCtxA</code>. Notice that it has the same signature as the syntactic judgment:
-it takes a context <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003BA;</mi></mrow></math>, an ivar spine, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math>, and a type context
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi></mrow></math>, an expression <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math>, the type of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>, and leaves
-behind <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math>. This can be read, "<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math> types as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math> if this run
-produces an inhabitant of the semantic denotation of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>, or produces an
-otherwise safe answer."</p>
+it takes a context <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003BA;</mi></mrow></math>, an ivar spine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>I</mi></mrow></math>, a type context <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi mathvariant="normal">&#x00393;</mi></mrow></math>,
+an expression <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math>, and the type of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>, and leaves behind
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mi>;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mrow></math>. This can be read, "<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>e</mi></mrow></math> types as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math> if this run produces
+an inhabitant of the semantic denotation of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x003C4;</mi></mrow></math>, or produces an otherwise
+safe answer."</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>SemSafeCtxA</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><mi>e</mi><mtext>&#x000A0;</mtext><mi>&#x003C4;</mi><mtext>&#x000A0;</mtext><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo>&#x0003D;</mo><mo>&#x02200;</mo><mi>m</mi><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>StateOk</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><mi>m</mi><mo>&#x021D2;</mo><mtext>RunSpec</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo>&#x0002C;</mo><mtext>evalFrom</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mo>&#x0002C;</mo><mi>&#x003C4;</mi><mo>&#x0002C;</mo><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mo>&#x0002C;</mo><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo></mrow></math>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>evalFrom</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>m</mi><mtext>&#x000A0;with&#x000A0;</mtext><mrow><mi mathvariant="italic">c</mi><mi mathvariant="italic">t</mi><mi mathvariant="italic">l</mi></mrow><mo>&#x02254;</mo><mtext>eval</mtext><mspace width="0.167em"></mspace><mi>e</mi><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mrow><mi mathvariant="italic">k</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">n</mi><mi mathvariant="italic">t</mi></mrow><mo>&#x02254;</mo><mo stretchy="false">[</mo><mspace width="0.167em"></mspace><mo stretchy="false">]</mo></mrow></math>
 <h3 id="the-judgment-registry">The judgment registry</h3>
 <p>Throughout the course of this project, I found that giving the agents a lot to
 do up front caused them to struggle. Instead, giving agents very accessible
 goalposts that are not far from each other is an effective way to steer them. I
-devised a corpus of ruby programs, visible in the <code>ruby-lean</code> playground, that
+devised a corpus of Ruby programs, visible in the <code>ruby-lean</code> playground, that
 ranges from dead simple to very complex, and the agent's task is to drive a
 ratchet to its next "clink" by successfully modeling and typing each successive
 program. <code>ruby-lean</code> models these clinks explicitly as a <code>Clink</code> structure.</p>
@@ -1066,7 +1060,7 @@ defines.</p>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo>&#x022A2;</mo></mrow></math>, discussed in the last section, to concrete definitions. In this
 codebase, there are two <code>DFam</code> instances: the syntactic family and the semantic
 family. The syntactic judgments are given by the <code>DJudge</code> relation, while the
-semantic judgements are given as proof obligations that correspond to the cases
+semantic judgments are given as proof obligations that correspond to the cases
 of the <code>DJudge</code> relation, where the syntactic judgment operators are replaced by
 the ones from the semantic <code>DFam</code>. Refer to the source code for exact
 definitions; they are too long to include here and are subject to change soon
@@ -1075,23 +1069,23 @@ after this writing.</p>
 needs to be discharged.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtable><mtr><mtd columnalign="right"><mtext>Closed</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x0211B;</mi><mo>&#x0002C;</mo><mi>G</mi><mo stretchy="false">&#x00029;</mo></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mo>&#x02200;</mo><mi>c</mi><mo>&#x02208;</mo><mi>&#x0211B;</mi><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mi>c</mi><mo lspace="0" rspace="0">.</mo><mtext>form</mtext><mspace width="0.167em"></mspace><mi>G</mi></mtd></mtr><mtr><mtd columnalign="right"><mo stretchy="false">&#x00028;</mo><mtext>DJudgeC</mtext><mtext>&#x000A0;</mtext><mi>&#x0211B;</mi><mo stretchy="false">&#x00029;</mo><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd><mtd columnalign="center"><mo>&#x0003D;</mo></mtd><mtd columnalign="left"><mo>&#x02200;</mo><mi>F</mi><mo lspace="0.2778em" rspace="0.2778em">:</mo><mtext>DFam</mtext><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>Closed</mtext><mo stretchy="false">&#x00028;</mo><mi>&#x0211B;</mi><mo>&#x0002C;</mo><mi>F</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02192;</mo><mi>F</mi><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup></mtd></mtr></mtable></mrow></math>
 <p>In the case where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x0211B;</mi></mrow></math> is a set of <code>Clink</code>s, this is discharged trivially
-for both the syntactic and the semantic families by definition of the Clink
+for both the syntactic and the semantic families by definition of the <code>Clink</code>
 structure. <em>Proof:</em> each <code>Clink</code> contains a proof for the source (syntactic)
 family in its <code>syn</code> field, and one for the target (semantic) family in its <code>sem</code>
 field. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>&#x025FB;</mi></mrow></math>
 </p>
 <h3 id="soundness">Soundness</h3>
-<p>First, we must define what soundness is about, stuck-freedom:</p>
+<p>First, we must define what soundness is about: stuck-freedom.</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>StuckFree</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02200;</mo><mrow><mi mathvariant="italic">f</mi><mi mathvariant="italic">u</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">l</mi></mrow><mo lspace="0" rspace="0">.</mo><mtext>&#x000A0;</mtext><mtext>typeStuck</mtext><mo stretchy="false">&#x00028;</mo><mtext>run</mtext><mtext>&#x000A0;</mtext><mrow><mi mathvariant="italic">f</mi><mi mathvariant="italic">u</mi><mi mathvariant="italic">e</mi><mi mathvariant="italic">l</mi></mrow><mtext>&#x000A0;</mtext><mo stretchy="false">&#x00028;</mo><mtext>evalFrom</mtext><mo stretchy="false">&#x00028;</mo><mi>m</mi><mo>&#x0002C;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mtext>false</mtext></mrow></math>
 <p>A program is stuck-free if for all fuel values, running the program <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math>
 from the given machine <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>m</mi></mrow></math> does not result in a type-stuck outcome.</p>
 <p><strong>Theorem (Registry Soundness).</strong></p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mo stretchy="false">&#x00028;</mo><mtext>DJudgeC</mtext><mtext>&#x000A0;</mtext><mi>&#x0211B;</mi><mo stretchy="false">&#x00029;</mo><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo>&#x021D2;</mo><mtext>SemSafeCtxA</mtext><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mspace width="0.167em"></mspace><mi mathvariant="normal">&#x00393;</mi><mspace width="0.167em"></mspace><mi>I</mi><mspace width="0.167em"></mspace><mi>e</mi><mspace width="0.167em"></mspace><mi>&#x003C4;</mi><mspace width="0.167em"></mspace><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mspace width="0.167em"></mspace><msup><mi>I</mi><mi>&#x02032;</mi></msup></mrow></math>
-<p><em>Proof sketch.</em> Instantiate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>&#x02254;</mo><mtext>dsemFam</mtext></mrow></math> (the semantic judgement family) and
+<p><em>Proof sketch.</em> Instantiate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>F</mi><mo>&#x02254;</mo><mtext>dsemFam</mtext></mrow></math> (the semantic judgment family) and
 discharge <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>Closed</mtext></mrow></math> from the clinks' own <code>sem</code> fields. In Lean this is one
 line. It is unconditional: it held when the registry had one rule in it and
 cannot stop holding as the registry grows. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>SemSafeCtxA</mtext></mrow></math> is the conclusion of the
-semantic judgement, by definition.</p>
+semantic judgment, by definition.</p>
 <p><strong>Theorem (Syntactic Judgments Certified).</strong></p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>DJudge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>e</mi><mtext>&#x000A0;</mtext><mi>&#x003C4;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup><mo>&#x021D2;</mo><mo stretchy="false">&#x00028;</mo><mtext>DJudgeC</mtext><mtext>&#x000A0;</mtext><mtext>dclinks</mtext><mo stretchy="false">&#x00029;</mo><mo lspace="0" rspace="0">.</mo><mtext>judge</mtext><mtext>&#x000A0;</mtext><mi mathvariant="normal">&#x00393;</mi><mtext>&#x000A0;</mtext><mi>e</mi><mtext>&#x000A0;</mtext><mi>&#x003C4;</mi><mtext>&#x000A0;</mtext><msup><mi mathvariant="normal">&#x00393;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><mi>&#x003BA;</mi><mtext>&#x000A0;</mtext><mi>I</mi><mtext>&#x000A0;</mtext><msup><mi>&#x003BA;</mi><mi>&#x02032;</mi></msup><mtext>&#x000A0;</mtext><msup><mi>I</mi><mi>&#x02032;</mi></msup></mrow></math>
 <p><em>Proof sketch.</em> Six-family mutual induction on the derivation, replacing each
@@ -1321,8 +1315,8 @@ compromising proof maintainability. I recall seeing several instances of a
 pattern in the agent rollout where an agent would fold a new type judgment into
 <code>infer</code>, and then would proceed to update proof tactics in 10-20 files to get
 everything green again. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
-        <li id="tooltip-def-3">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a> <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
-        <li id="tooltip-def-4">for the reader who may be unfamiliar, a <i>continuation</i> 
+        <li id="tooltip-def-3">The CESK machine was originally introduced by Felleisen in his <a href="https://www2.ccs.neu.edu/racket/pubs/dissertation-felleisen.pdf">doctoral thesis</a>. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
+        <li id="tooltip-def-4">For the reader who may be unfamiliar, a <i>continuation</i> 
 is a representation of what comes next in a program. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
         <li id="tooltip-def-5">I wrote this sentence because <i>I</i> was wondering...lol <a class="tooltip-back" href="#tooltip-ref-5">↩</a></li>
     </ol>
