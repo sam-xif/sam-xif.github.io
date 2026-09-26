@@ -92,15 +92,14 @@ When the semantics is loaded into a proof assistant like
 their correctness!</p>
 <p>Armed with a definition of correctness and a semantics, consider a program like
 <code>"2" + x</code>, where <code>x</code> is some input variable. In JavaScript, this program is
-correct for any <code>x</code> that evaluates to a value (in other words, evaluating <code>x</code>
-cannot result in an exception or non-termination). In Ruby, this program is
-correct for any <code>x</code> that can be coerced into a string (i.e., <code>x</code> has a <code>to_str</code>
-method). To make the Ruby program correct for all inputs, we can make the
-<code>to_str</code> check explicit:</p>
+correct for any <code>x</code> except for specific cases like <code>x = Symbol()</code>. In Ruby, this
+program is correct for any <code>x</code> that can be coerced into a string (i.e., <code>x</code> has
+a <code>to_str</code> method). To make the Ruby program correct for all inputs, we can make
+the <code>to_str</code> check explicit:</p>
 <pre><code class="language-ruby">&quot;2&quot; + x if x.respond_to?(:to_str)
 </code></pre>
-<p>The astute reader might notice that even this is not correct! Evaluating <code>x</code>
-could still raise an exception or not terminate.</p>
+<p>The astute reader might notice that even this is not correct! Evaluating
+<code>x.to_str</code> could still raise an exception or not terminate.</p>
 <!-- Such a proof is hard to author and check by hand, so ideally,
 the semantics is an artifact that is defined in a proof assistant like
 [Lean](https://lean-lang.org/). With a semantics in a proof assistant, we can
@@ -114,12 +113,16 @@ programming languages has historically taken multiple PhD-years of effort.
 of the belief that advanced AI should be able to greatly accelerate the
 construction of useful semantics. I say "useful" because results about semantics
 make it to academic conferences but don't find broad use in industry.</p>
-<p>Why? It's not that semantics lack inherent utility. Quite the opposite: they
-have high potential utility because we can vary our definition of correctness to
-suit the task at hand. They can be used, for instance, to prove type safety,
-which has immediate business value by eliminating certain uncaught exceptions in
-production code, and they can be used to prove robustness against malicious
-inputs so that software can be relied on in security-critical contexts.</p>
+<p>Why? It's not that semantics are inherently useless. Quite the opposite: they
+are <em>generally</em> useful because we can vary our definition of correctness to suit
+the task at hand. They can be used, for instance, to prove <em>soundness of type
+checking</em>, which states that if a type checker—like
+<a href="https://sorbet.org/">Sorbet</a>, a widely used type checker for Ruby—accepts a
+program, then the typed parts of the program are truly free of type errors. This
+has immediate business value by provably ruling out certain uncaught exceptions
+in production code. Semantics can additionally be used to prove robustness
+against malicious inputs so that software can be relied on in security-critical
+contexts.</p>
 <p>Rather, semantics are not adopted because:</p>
 <ol>
 <li>they often have severe limitations, such as not being able to model the
@@ -209,12 +212,13 @@ fellowship. As an outcome, I am pleased to announce <code>ruby-lean</code>, my s
 Ruby in Lean 4. <code>ruby-lean</code> is an executable semantics, meaning that it can
 execute real Ruby code. It is modeled as a
 <a href="https://en.wikipedia.org/wiki/CEK_Machine#CESK_machine">CESK machine</a>. To
-demonstrate that this semantics is <em>useful</em>, I have also developed a system of
-type judgments based on Sorbet and proven it sound. <em>Soundness</em> means: if a
-program passes the <code>ruby-lean</code> type validator, then it is completely free of a
-certain family of type-related exceptions. <strong>Both of the aforementioned
-impediments to widespread use of this semantics are effectively addressed:</strong> the
-semantics models complex features of Ruby like
+demonstrate that this semantics is indeed <em>useful</em>, I have also developed a
+system of type judgments based on Sorbet and proven it sound. I defined
+soundness above, but to reiterate what this concretely means here: if a program
+passes the <code>ruby-lean</code> type validator, then it is completely free of a certain
+family of type-related exceptions. <strong>Both of the aforementioned impediments to
+widespread use of this semantics are effectively addressed:</strong> the semantics
+models complex features of Ruby like
 <a href="https://noelrappin.com/2023/10/better-know-a-ruby-thing-10-method_missing/"><code>method_missing</code></a>
 and
 <a href="https://suchdevblog.com/lessons/ExplainingRubySingletonClass.html">eigenclass reopening</a>,
@@ -353,10 +357,11 @@ where you can run Ruby code in original Ruby alongside the Lean semantics, via
 compiled artifacts in WebAssembly. The
 <a href="https://github.com/sam-xif/ruby-lean">code</a> is open-source as well.</p>
 <p>I am not pretending that the semantics is perfect. In fact, I recently
-discovered an instance of non-conformance via a differential testing campaign. I
-have not yet patched this, so while it is unpatched, you can run this program to
-convince yourself that CRuby and <code>ruby-lean</code> are two distinct models of the
-language:</p>
+discovered an instance of non-conformance via a differential testing campaign
+related to the example Ruby program given in the
+<a href="#introduction-semantics-done-quick">intro</a>. I have not yet patched this, so
+while it is unpatched, you can run this program to convince yourself that CRuby
+and <code>ruby-lean</code> are two distinct models of the language:</p>
 <pre><code class="language-ruby">class WithToStr
   def to_str = &quot;ok&quot;
 end
