@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 19:24:03 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 19:26:07 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
@@ -64,11 +64,6 @@ the <code>to_str</code> check explicit:</p>
 </code></pre>
 <p>The astute reader might notice that even this is not correct! Evaluating
 <code>x.to_str</code> could still raise an exception or not terminate.</p>
-<!-- Such a proof is hard to author and check by hand, so ideally,
-the semantics is an artifact that is defined in a proof assistant like
-[Lean](https://lean-lang.org/). With a semantics in a proof assistant, we can
-reason about programs mechanically! -->
-
 <p>These example programs are dead simple, and yet they still have many edge cases
 that are hard to reason about. This is why modeling the semantics of entire
 programming languages has historically taken multiple PhD-years of effort.
@@ -95,80 +90,6 @@ contexts.</p>
    and in the specific nature of the semantics.</li>
 </ol>
 <p>Advanced AI shows promise in addressing both of these impediments.</p>
-<!-- Termination is
-[undecidable](https://en.wikipedia.org/wiki/Halting_problem) in general, but
-reasoning about *type safety* can help with the possibility of exceptions. -->
-
-<!-- 
-Type checkers, like [Sorbet](https://sorbet.org/) for Ruby, claims *if your
-program passes, then the typed portions of the code never throw a type error.* A
-type checker is *sound* if a successful type check implies that the program
-truly is free of type errors. Unsoundness means the type checker can't be
-trusted; it could accept a program that has type errors. This has real-world
-implications; type checkers have seen great adoption in industry because
-uncaught exceptions have real negative business impact. Soundness is therefore a
-type checker's definition of correctness, and the semantics are useful because
-they let us prove it. -->
-
-<!-- 
-It's much in the same way you might mount an argument that $"2 + 2 = 4"$ is a true
-statement. This statement seems obviously true, but let's say I have some mental
-block where I interpret all 4's as 5's. Now, "$2 + 2 = 4$" is nonsense to me,
-because my *semantic* interpretation of this is $2 + 2 = 5$ (note the lack of
-quotes). If you can convince me to fix my mental block so that $"4" \rightarrow 4$ again,
-then I can be convinced that $"2 + 2 = 4" \rightarrow 2 + 2 = 4$, and then you can argue by basic
-arithmetic that $"2 + 2 = 4"$ is correct. -->
-
-<!-- 
-To do this for programs in a programming language, we need to define what this
-$\rightarrow$ operator does for sentences in the language. This *is* its
-[semantics](<https://en.wikipedia.org/wiki/Semantics_(programming_languages)>).
-When the semantics ($\rightarrow$) is loaded into a proof assistant like
-[Lean](https://lean-lang.org/), we can now mechanically reason about programs
-and their correctness! -->
-
-<!-- 
-Typically, these semantics are formulated deep in research labs with multiple
-PhD-years of effort. The results make it to academic conferences but don't find
-broad use in industry because 1) they often have severe limitations, such as not
-being able to model the most complex parts of a given language, and 2) authoring
-proofs against the semantics requires technical expertise in formal methods and
-in the specific nature of the given semantics. Advanced AI shows promise in
-addressing both of these impediments to widespread utility of semantics. -->
-
-<!-- #,
-where I, accelerated by AI, generated $\rightarrow$ for
-[Ruby](https://www.ruby-lang.org/en/). -->
-
-<!-- 
-The *semantics* of a natural language like English is the meaning assigned to
-each grammatically correct sentence; it is no different in
-[programming languages](<https://en.wikipedia.org/wiki/Semantics_(programming_languages)>).
-The meaning of code is what computation it intends to perform.
-
-In other words, a semantics is essentially a compiler that lives in a proof
-assistant so that proofs can be written against it and machine-checked. -->
-
-<!-- 
-The thesis of this project is simple: advanced AI should be able to greatly
-accelerate the construction of useful semantics of programming languages and
-systems. Typically, these semantics are formulated deep in research labs with
-multiple PhD-years of effort. The results make it to academic conferences but
-don't find broad use in industry because 1) they often have severe limitations,
-such as not being able to model the most complex parts of a given language, and
-2\) authoring proofs against the semantics requires technical expertise in formal
-methods and in the specific nature of the given semantics. Advanced AI shows
-promise in addressing both of these impediments to widespread utility of
-semantics. -->
-
-<!-- 
-You may now be wondering what a "semantics" is in the first place. Semantics in
-a human language like English is the meaning assigned to each grammatically
-correct sentence; it is no different in programming languages. The meaning of
-code is what computation it intends to perform. In other words, a semantics is
-essentially a compiler that lives in a proof assistant so that proofs can be
-written against it and machine-checked. -->
-
 <p>This summer, I worked on this project as a fellow in the
 <a href="https://apartresearch.com/research">Apart Research</a>
 <a href="https://www.lesswrong.com/posts/8wtrLoDPyCfMLuHkt/how-to-solve-secure-program-synthesis">Secure Program Synthesis</a>
@@ -267,50 +188,6 @@ example Ruby programs. Play around with it!</p>
     style untrusted stroke-dasharray: 6 4
     style tcb stroke-width: 3px
 </code></pre>
-<!-- 
-## Why this matters
-
-I have been in the software engineering industry for several years, and I have
-always had a background voice in my head wondering "will my code break when it
-hits production?" We engineers try to placate our worries by poring over lines
-of code and by writing unit tests. Unit tests assert positive facts like
-"program X does this desirable thing on this input." Negative facts, on the
-other hand, like "no input causes program X to do Y," are impossible to assert
-with unit tests. [Fuzzing](https://en.wikipedia.org/wiki/Fuzzing) can help, but
-there is no guarantee that all interesting parts of the state space of the
-program were explored in a fuzzing campaign, even under full code coverage.
-
-Type safety is one such negative fact that most programmers should be familiar
-with. A typical type checker, like Sorbet for Ruby, claims *if your program
-passes, then the typed portions of the code never throw a type error.* The type
-checker is *sound* if a successful type check implies that the program truly is
-free of type errors. Unsoundness means the type checker can't be trusted; it
-could accept a program that has type errors.
-
-Verifying soundness for all programs and all possible behaviors of each program
-is intractable with fuzzing. So, we need a *proof* that shows this claim holds
-for *all* programs and *all* possible inputs to those programs. In order to
-prove this claim, we need an artifact that encodes what programs and their types
-*mean*: the semantics. This artifact ideally should live in a proof assistant
-tool so that we can reason about it automatically.
-
-Here, I'm announcing exactly this for Ruby, with a proof the type checking claim
-for a subset of types. My results here illustrate that
-
-1. Semantics *can* be built quickly (~2.5 months of part-time human labor +
-   agents).
-1. Semantics provide a foundation to scale claims up to all possible programs in
-   ways that fuzzing or other empirical methods will never be able to. -->
-
-<!-- I have not found any unsoundness in Sorbet yet, but I plan on driving hard
-towards this soon. Any unsoundness in Sorbet would be immediately relevant to
-all Sorbet users, and this approach has the potential to find it. -->
-
-<!-- 
-These semantics are generally useful for making *strong, provable claims* about
-software. Given today's threats posed by advanced AI, applications of these
-semantics include agent containment and defense-in-depth of software at large. -->
-
 <h2 id="why-should-i-trust-this">"Why should I trust this?"</h2>
 <p>My semantics is validated against Ruby by differential testing. I have
 implemented a multi-pronged conformance suite, where each prong generates test
@@ -441,51 +318,6 @@ semantics and steering agents to complete long-horizon proof tasks within them.<
    disprove them.</li>
 </ol>
 <p>If you are interested in working on this or in funding it, let me know.</p>
-<!-- 
-In `ruby-lean` itself,
-
-1. The semantics does not model the long tail of all esoteric Ruby features, and
-   there are still lingering conformance issues where the semantics produces
-   results that differ from actual CRuby. I do not see this as a major threat to
-   validity of the small result I present here, since the proof checks in Lean
-   and the semantics is faithful enough to run large programs, such as a
-   thousand-line multi-file slice of Homebrew that I was using as a spot check.
-1. The semantics does not model the behavior of Ruby programs that interact with
-   the surrounding operating system, the internet, the file system, or other
-   libraries. Ruby's `RubyGems` packaging system, however, is written in Ruby,
-   which means that we may get this for free by running the Ruby code in our
-   semantics once coverage of the Ruby language is expanded enough to cover all
-   of the source code for `RubyGems` and other libraries.
-1. The fragment of the type system is still small. It doesn't cover blocks, for
-   instance, which I have already seen that agents struggle to type in my
-   experimentation that led to this result. I will mount another attempt at this
-   soon, since blocks are a pretty essential part of idiomatic Ruby.
-
-I also think there are several interesting open research questions in the
-science of growing these semantics and steering agents to complete long-horizon
-proof tasks. -->
-
-<!-- The grindy nature and "out-of-distribution"-ness of this project
-lends itself nicely to benchmarking and RL hillclimbing on this type of task. -->
-
-<!-- 
-Specifically,
-
-1. I have not developed a theory of how best to prompt LLMs to obtain useful
-   semantics. This will require time and funding to run more controlled
-   experiments and benchmarks. If you are interested in funding this, please let
-   me know.
-1. I did not run any comparison between different LLMs/harnesses for the tasks
-   here, except for a brief stint playing around with GLM 5.2 and GLM 5.3,to no
-   avail. I would be excited to work on benchmarking how agents perform at these
-   long-horizon proof tasks under variable reasoning effort, harnesses, and
-   prompting strategies. If you are interested in working on this or in funding
-   it, let me know.
-1. The definition of type-stuckness is somewhat arbitrary, and probably could've
-   included more types of exceptions that are downstream of type-related issues
-   in programs. Expanding the set of exceptions may superlinearly expand the
-   verification burden. More experimentation is needed here to understand this. -->
-
 <h2 id="future-work">Future work</h2>
 <p>My immediate next steps are:</p>
 <ol>
@@ -538,17 +370,6 @@ technique is useful anywhere you may want to abstract away the messy details of
 the implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> You
 just need to build confidence that the model is faithful by developing a really
 strong test suite.</p>
-<!-- I am less certain, however, of how well this process would have gone if an agent
-didn't have a reference for how the resultant semantics should look. In the case
-of `ruby-lean`, the agent was familiar with the literature enough to be able to
-select from a menu of semantics shapes. It selected the CEKS model, which
-happened to work out well. But even CEKS may not be the best choice in the long
-run. Much of the proof machinery has to do with translating the "syntax" world
-into the "machine" world, but there are other approaches, like
-[Functional big-step interpreters](https://cakeml.org/esop16.pdf), that
-implement the semantics as structural recursion over the language syntax. With
-this alternative model, type-related proofs could become a lot easier. -->
-
 <p>Finally, I have simply been blown away by how good LLMs are at most engineering
 tasks, but they are only as good as the task definition you give them. Sadly,
 this makes me more afraid than I used to be about the deployment of AI agents at
