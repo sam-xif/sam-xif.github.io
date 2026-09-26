@@ -536,8 +536,8 @@ Specifically,
 <p>Beyond these, something I would like to explore more is leveraging the semantics
 for adversarial synthesis of
 <a href="https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain">deserialization attack chains</a>.
-This is a recurring bug class in Ruby, and frankly in general; deserialization
-of an uncontrolled input is a huge attack surface.</p>
+This is a recurring bug class in Ruby and probably in other languages;
+deserialization of uncontrolled input is a huge attack surface.</p>
 <h2 id="learnings-and-final-thoughts">Learnings and final thoughts<a class="heading-anchor" href="#learnings-and-final-thoughts" title="Link to this section">#</a></h2>
 <p>Want to build something similar? Take away these learnings so that hopefully you
 don't have to tear down your work multiple times like I did :).</p>
@@ -567,13 +567,13 @@ don't have to tear down your work multiple times like I did :).</p>
 <p>This post is less of an announcement of a finalized piece of work than a
 check-in on one that is very much in progress, so I'm sure I'll have more
 learnings to report soon.</p>
-<p>Ultimately, I think you should take away this pattern of using an agent to
-formalize something with respect to some black-box oracle. It works quite well,
-and it can even be applied to specific software systems or libraries (e.g. the
-Ruby on Rails framework) instead of plain programming languages. This technique
-is useful anywhere you may want to abstract away the messy details of the
-implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> You just
-need to build confidence that the model is faithful by developing a really
+<p>Ultimately, I think you should take away the elegance of this pattern of using
+an agent to formalize something with respect to some black-box oracle. It works
+quite well, and it can even be applied to specific software systems or libraries
+(e.g. the Ruby on Rails framework) instead of plain programming languages. This
+technique is useful anywhere you may want to abstract away the messy details of
+the implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> You
+just need to build confidence that the model is faithful by developing a really
 strong test suite.</p>
 <!-- I am less certain, however, of how well this process would have gone if an agent
 didn't have a reference for how the resultant semantics should look. In the case
