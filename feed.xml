@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 19:19:39 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 26 Sep 2026 19:24:03 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
@@ -18,7 +18,7 @@
       <content:encoded><![CDATA[<p><strong>Bottom line up front:</strong> <em>I, with heavy augmentation from LLMs, have built an
 executable model of Ruby's semantics in Lean, together with a proof of type
 soundness for a small fragment of Sorbet's type system built on the semantics.
-The semantics is validated by differential testing against Ruby, and passes a
+The semantics is validated by differential testing against Ruby and passes a
 large swath of conformance tests. Through this project, I learned firstly that
 agents do great at long-horizon tasks if the task definition is clear; if it is
 not clear, they mess up in unpredictable ways. Secondly, I learned that advanced
@@ -56,7 +56,7 @@ When the semantics is loaded into a proof assistant like
 their correctness!</p>
 <p>Armed with a definition of correctness and a semantics, consider a program like
 <code>"2" + x</code>, where <code>x</code> is some input variable. In JavaScript, this program is
-correct for any <code>x</code> except for specific cases like <code>x = Symbol()</code>. In Ruby, this
+correct for any <code>x</code> except specific cases like <code>x = Symbol()</code>. In Ruby, this
 program is correct for any <code>x</code> that can be coerced into a string (i.e., <code>x</code> has
 a <code>to_str</code> method). To make the Ruby program correct for all inputs, we can make
 the <code>to_str</code> check explicit:</p>
@@ -81,11 +81,11 @@ make it to academic conferences but don't find broad use in industry.</p>
 are <em>generally</em> useful because we can vary our definition of correctness to suit
 the task at hand. They can be used, for instance, to prove <em>soundness of type
 checking</em>, which states that if a type checker—like
-<a href="https://sorbet.org/">Sorbet</a>, a widely used type checker for Ruby—accepts a
-program, then the typed parts of the program are truly free of type errors. This
-has immediate business value by provably ruling out certain uncaught exceptions
-in production code. Semantics can additionally be used to prove robustness
-against malicious inputs so that software can be relied on in security-critical
+<a href="https://sorbet.org/">Sorbet</a>, which is widely used for Ruby—accepts a program,
+then the typed parts of the program are truly free of type errors. This has
+immediate business value: it provably rules out certain uncaught exceptions in
+production code. Semantics can additionally be used to prove robustness against
+malicious inputs so that software can be relied on in security-critical
 contexts.</p>
 <p>Rather, semantics are not adopted because:</p>
 <ol>
@@ -314,18 +314,18 @@ semantics include agent containment and defense-in-depth of software at large. -
 <h2 id="why-should-i-trust-this">"Why should I trust this?"</h2>
 <p>My semantics is validated against Ruby by differential testing. I have
 implemented a multi-pronged conformance suite, where each prong generates test
-cases via a different methodology. This is explained in more detail in the
+cases with a different methodology. This is explained in more detail in the
 <a href="2026-09-26-ruby-lean-technical-appendix.html#phase-2-the-semantics">Technical Appendix</a>.</p>
 <p>If you have doubts, see for yourself: I have released a <a href="/ruby-lean">playground</a>
 where you can run Ruby code in original Ruby alongside the Lean semantics, via
 compiled artifacts in WebAssembly. The
 <a href="https://github.com/sam-xif/ruby-lean">code</a> is open-source as well.</p>
 <p>I am not pretending that the semantics is perfect. In fact, I recently
-discovered an instance of non-conformance via a differential testing campaign
-related to the example Ruby program given in the
-<a href="#introduction-semantics-done-quick">intro</a>. I have not yet patched this, so
-while it is unpatched, you can run this program to convince yourself that CRuby
-and <code>ruby-lean</code> are two distinct models of the language:</p>
+discovered, during a differential testing campaign, an instance of
+non-conformance related to the example Ruby program given in the
+<a href="#introduction-semantics-done-quick">intro</a>. I have not yet patched this, so you
+can run this program to convince yourself that CRuby and <code>ruby-lean</code> are two
+distinct models of the language:</p>
 <pre><code class="language-ruby">class WithToStr
   def to_str = &quot;ok&quot;
 end
@@ -347,8 +347,8 @@ the
 is an easy-to-interpret statement that directly relates the validator to the
 stuck-freedom property.</p>
 <p>The Lean kernel still has to be trusted, and soundness bugs in it have been
-found in the past, but I don't have reason to believe that agents exploited any
-of them. I took great care to make sure that the tasks the AIs were given were
+found in the past, but I have no reason to believe that agents exploited any of
+them. I took great care to make sure that the tasks the AIs were given were
 achievable. I did not give them impossible goal statements and gave them
 emergency exits from goal pursuit that they could use if needed (a suggestion
 borrowed from
@@ -377,13 +377,13 @@ borrowed from
    infrastructure. Beyond Stripe, <a href="https://brew.sh/">Homebrew</a> is written in
    Ruby. <a href="https://rubyonrails.org/">Ruby on Rails</a> is a mainstay in web
    development. Shopify is a prominent user of Ruby on Rails, and was funding
-   <a href="https://shopify.engineering/shopify-ruby-at-scale-research-investment">academic research for Ruby</a>
+   <a href="https://shopify.engineering/shopify-ruby-at-scale-research-investment">academic research on Ruby</a>
    as of several years ago.</li>
-<li><strong>It's complicated.</strong> Ruby has features that Python does not have that
-   complicate static analysis. The example that immediately comes to mind is
-   that of <a href="https://tech.stonecharioteer.com/posts/2025/ruby-blocks/"><em>blocks</em></a>.
-   In Ruby, it's possible to pass a block to a function. A block is sort of like
-   a lambda, except it has different scoping rules and multiple ways that it can
+<li><strong>It's complicated.</strong> Ruby has features, absent in Python, that complicate
+   static analysis. The example that immediately comes to mind is that of
+   <a href="https://tech.stonecharioteer.com/posts/2025/ruby-blocks/"><em>blocks</em></a>. In
+   Ruby, it's possible to pass a block to a function. A block is sort of like a
+   lambda, except it has different scoping rules and multiple ways that it can
    return. I believe there's a solid chance that Ruby is "semantics-complete."
    That is, if we can solve Ruby, we can solve semantics for every other
    language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than I do in the field of programming languages to confirm or deny." href="#tooltip-def-5" id="tooltip-ref-5"><sup>5</sup></a></li>
@@ -404,12 +404,11 @@ Research.</p>
 <p>The model used to author most of the code was Claude Opus 5. I occasionally used
 Claude Fable 5 as a consultant, but I shied away from using it for grindy
 sessions because I found that it burned through tokens far faster than I
-intended, without much of a speedup of the ladder-climb. The final push towards
+intended, without much of a speedup in the ladder climb. The final push towards
 the soundness proof over a nontrivial fragment of Ruby that is presented here
 was grinded with the new GPT 6 Astra model, which I found did a very good job at
-a more reasonable cost profile, but this may also be due to the more rigorous
-ratchet discipline I imposed in my most recent attempt at growing a sound type
-system.</p>
+a more reasonable cost, but this may also be due to the more rigorous ratchet
+discipline I imposed in my most recent attempt at growing a sound type system.</p>
 <h2 id="limitations">Limitations</h2>
 <p>This work is limited by the fragments of Ruby semantics and Ruby types that are
 covered. The semantics has a ways to go before it models the long tail of
@@ -526,7 +525,7 @@ don't have to tear down your work multiple times like I did :).</p>
    expediting several proofs.<a class="tooltip" data-tip="The lemma is run_pushK in the Technical Appendix, and it reads: running the current machine state under continuation stack K is the same as running the machine state under an empty continuation stack until it produces an answer, then delivering that answer to continuation stack K and continuing the run." href="#tooltip-def-6" id="tooltip-ref-6"><sup>6</sup></a></li>
 <li>Commit regularly and save agent transcripts with <code>/export</code> to a journal
    folder for posterity. I have had agents search them to find context from past
-   discussions and this has been helpful at times.</li>
+   discussions, and this has been helpful at times.</li>
 </ol>
 <p>This post is less of an announcement of a finalized piece of work than a
 check-in on one that is very much in progress, so I'm sure I'll have more
@@ -534,7 +533,7 @@ learnings to report soon.</p>
 <p>Ultimately, I think you should take away the elegance of this pattern of using
 an agent to formalize something with respect to some black-box oracle. It works
 quite well, and it can even be applied to specific software systems or libraries
-(e.g. the Ruby on Rails framework) instead of plain programming languages. This
+(e.g., the Ruby on Rails framework) instead of plain programming languages. This
 technique is useful anywhere you may want to abstract away the messy details of
 the implementation and reason about the higher-level behavior.<a class="tooltip" data-tip="The other concern, proving conformance of the implementation to the semantics, can be handled separately, with a clean interface between them." href="#tooltip-def-7" id="tooltip-ref-7"><sup>7</sup></a> You
 just need to build confidence that the model is faithful by developing a really
