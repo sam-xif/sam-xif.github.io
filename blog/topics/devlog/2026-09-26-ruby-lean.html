@@ -111,14 +111,14 @@ with some learnings about how to best steer AI on complex tasks like these.</p>
 <h2 id="ruby-lean-and-its-type-validator"><code>ruby-lean</code> and its type validator<a class="heading-anchor" href="#ruby-lean-and-its-type-validator" title="Link to this section">#</a></h2>
 <p>A live demo <a href="/ruby-lean">playground</a> is available. It is seeded with many
 example Ruby programs. Play around with it!</p>
-<p><img src="/blog_assets/type_pipeline.png" /></p>
+<p><img src="/blog_assets/type_pipeline.png" alt="The five pipeline stages: 0, read the annotations (what types the program declares); 1, remove the annotations; 2, desugar Ruby into the small core the model runs; 3, propose a proof (untrusted); 4, check the proof (the trusted step)." /></p>
 <p>Here are the five stages of the program analysis pipeline:</p>
 <ol>
 <li>Run Sorbet on a program with specific flags, so that Sorbet emits annotation
    information.</li>
 <li>Strip the program's annotations, since Sorbet annotations are real syntax
    that's outside of what the Lean model supports today.</li>
-<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. The notion of &quot;desugaring&quot; was introduced by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
+<li>Desugar<a class="tooltip" data-tip="In the &quot;syntactic sugar&quot; sense. Most programming languages can be projected to simpler subsets of themselves. The notion of &quot;desugaring&quot; was advocated by Krishnamurthi, Lerner, and Elberty in The Next 700 Semantics: A Research Challenge." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a> the program, producing an s-expression that builds programs
    from a core set of Ruby primitives.</li>
 <li>Run an <em>untrusted</em> certificate emitter (a companion program written in Ruby)
    that proposes a type <em>derivation</em> for the program. A derivation is like a
@@ -184,12 +184,12 @@ with unit tests. <a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> can
 there is no guarantee that all interesting parts of the state space of the
 program were explored in a fuzzing campaign, even under full code
 coverage.<a class="tooltip" data-tip="&quot;Program testing can be used to show the presence of bugs, but never to show their absence!&quot; —Edsger Dijkstra" href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a></p>
-<p>Type checking is one such negative fact that most programmers should be familiar
-with. Type checking claims <em>if your program passes the type checker, then the
-typed portions of the code never throw a type error.</em> The type checker is
-<em>sound</em> if a successful type check implies that the program truly is free of
-type errors. Unsoundness means the type checker can't be trusted; it could
-accept a program that has type errors.</p>
+<p>Type safety is one such negative fact that most programmers should be familiar
+with. A typical type checker claims <em>if your program passes, then the typed
+portions of the code never throw a type error.</em> The type checker is <em>sound</em> if a
+successful type check implies that the program truly is free of type errors.
+Unsoundness means the type checker can't be trusted; it could accept a program
+that has type errors.</p>
 <p>Verifying soundness for all programs and all possible behaviors of each program
 is intractable with fuzzing. So, we need a <em>proof</em> that shows this claim holds
 for <em>all</em> programs and <em>all</em> possible inputs to those programs. In order to
@@ -290,7 +290,7 @@ borrowed from
    language.<a class="tooltip" data-tip="I could be completely wrong here. I invite those who know much more than I do in the field of programming languages to confirm or deny." href="#tooltip-def-4" id="tooltip-ref-4"><sup>4</sup></a></li>
 <li><strong>It has a <em>de facto</em> type checker.</strong> Sorbet was created at Stripe, and it is
    used at Stripe and beyond. Sorbet is unsound by construction, allowing
-   <code>T.untyped(...)</code> as an escape hatch. However, we are particularly interested
+   <code>T.unsafe(...)</code> as an escape hatch. However, we are particularly interested
    in the maximal <em>sound fragment</em> of Sorbet that we can model. Any soundness
    bug in Sorbet, where it claims a typed program is safe when it is not, would
    be immediately relevant to Ruby/Sorbet users.</li>
@@ -466,7 +466,7 @@ you, Max von Hippel and Victor Arsenescu, for your helpful comments as well.</p>
 <section class="tooltip-footnotes">
     <hr class="tooltip-footnotes-rule">
     <ol>
-        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. The notion of "desugaring" was introduced by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a>. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-1">In the "syntactic sugar" sense. Most programming languages can be projected to simpler subsets of themselves. The notion of "desugaring" was advocated by Krishnamurthi, Lerner, and Elberty in <a href="https://par.nsf.gov/servlets/purl/10124984"><i>The Next 700 Semantics: A Research Challenge</i></a>. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
         <li id="tooltip-def-2">"Program testing can be used to show the presence of bugs, but never to show their absence!" —Edsger Dijkstra <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
         <li id="tooltip-def-3">I find this especially amusing because I, too, wished to do this for my master's thesis with Pete Manolios, but we eventually steered away from the idea on the premise that it would be too much of a lift without much practical value. We settled on <a href="https://samx.io/papers/thesis.pdf">finding bugs in Python programs with fuzzing informed by their type annotations instead</a>. <a class="tooltip-back" href="#tooltip-ref-3">↩</a></li>
         <li id="tooltip-def-4">I could be completely wrong here. I invite those who know much more than I do in the field of programming languages to confirm or deny. <a class="tooltip-back" href="#tooltip-ref-4">↩</a></li>
