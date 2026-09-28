@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 26 Sep 2026 19:32:27 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 01:38:28 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
@@ -2598,7 +2598,7 @@ That’s a research problem.</p>
 ChatGPT on March 22nd, 2026 (this isn't a very reproducible experiment, because
 OpenAI hides which model is being used on the free version). On the fourth try,
 ChatGPT repeated the same joke as the third try:</p>
-<p><img src="../blog_assets/tell_me_a_joke.png" style="width:100%" /></p>
+<p><img src="/blog_assets/tell_me_a_joke.png" style="width:100%" /></p>
 <p>The upshot here is that we as humans still have a lot to offer. Maybe inference
 doesn't have to decrease substantially in cost if we can collectively provide
 current models with more entropy per token.</p>
