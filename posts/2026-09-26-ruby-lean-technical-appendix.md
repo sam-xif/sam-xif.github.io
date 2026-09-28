@@ -606,7 +606,7 @@ $$
 The Prim rule is how builtin methods get typed. DPrim is an inductive relation
 that axiomatizes the signatures of various builtin methods. The semantics source
 code defines ~300 builtin methods, but the type system currently only covers a
-subset. Notice the side condition, $\sigma = \text{cls}\,\texttt{String} \Rightarrow \text{isANoOk}(\dots)$. This is needed because Ruby
+subset. Notice the side condition, $\sigma = \text{cls}\,\texttt{String} \Longrightarrow \text{isANoOk}(\dots)$. This is needed because Ruby
 supports *class reopening*. String is a builtin class, but the following is a
 valid program that executes in both CRuby and `ruby-lean`:
 
@@ -631,7 +631,7 @@ $$
 \Gamma_1 \vdash \bar{a} : \bar{\tau} \dashv \Gamma_2 \qquad
 \text{DPrim}\ \sigma\ m\ \bar\tau\ \tau \\
 \text{nameFree}(\kappa_2, m) \qquad
-\sigma = \text{cls}\,\texttt{String} \Rightarrow \text{isANoOk}(\dots)
+\sigma = \text{cls}\,\texttt{String} \Longrightarrow \text{isANoOk}(\dots)
 \end{array}
 }{\Gamma \vdash r.m(\bar a) : \tau \dashv \Gamma_2}\ \text{(Prim)}
 $$
@@ -708,7 +708,8 @@ these semantics.
 We have devised a system of syntactic judgments, but now we need to link them
 back to the semantics. This first requires a semantic denotation of types. In
 other words, an answer to the question "what does a type mean?" The denotation
-is given here (and in the code) by `denM`:
+is given here (and in the code) by `denM`. (From here on, $\triangleq$ reads "is
+defined as," reserving $=$ for equality.)
 
 $$
 \text{denM} : \text{Ty} \to \text{Machine} \to \text{Value} \to \text{Prop}
@@ -723,13 +724,13 @@ With $h = m.\mathit{heap}$,
 
 $$
 \begin{array}{rcl}
-\text{denM}(\text{int}, m, v) & = & \text{isInt}(v) \\
-\text{denM}(\text{cls}\,n, m, v) & = & \text{isAName}(h, v, n) \\
-\text{denM}(\text{arrayOf}\,\tau, m, v) & = & \exists \bar{x}.\ \text{arrElems}(h,v) = \bar{x} \wedge \forall x \in \bar{x}.\ \text{denM}(\tau,m,x) \\
-\text{denM}(\text{inst}\,n\,I, m, v) & = & \text{isExactInst}(h,v,n) \wedge \text{denSpine}(I, m, \text{ivarOf}(h,v)) \\
-\text{denM}(\text{never}, m, v) & = & \text{False} \\
-\text{denM}(\text{any}, m, v) & = & \text{True} \\
-\text{denM}(\text{arrow}_0\,\rho, m, f) & = & \text{isProc}(h,f) \wedge \forall m_2 \sqsupseteq m,\ v,\ m'.\ \text{Returns}(m_2,f,[\,],v,m') \Rightarrow \text{denM}(\rho,m',v)
+\text{denM}(\text{int}, m, v) & \triangleq & \text{isInt}(v) \\
+\text{denM}(\text{cls}\,n, m, v) & \triangleq & \text{isAName}(h, v, n) \\
+\text{denM}(\text{arrayOf}\,\tau, m, v) & \triangleq & \exists \bar{x}.\ \text{arrElems}(h,v) = \bar{x} \wedge \forall x \in \bar{x}.\ \text{denM}(\tau,m,x) \\
+\text{denM}(\text{inst}\,n\,I, m, v) & \triangleq & \text{isExactInst}(h,v,n) \wedge \text{denSpine}(I, m, \text{ivarOf}(h,v)) \\
+\text{denM}(\text{never}, m, v) & \triangleq & \text{False} \\
+\text{denM}(\text{any}, m, v) & \triangleq & \text{True} \\
+\text{denM}(\text{arrow}_0\,\rho, m, f) & \triangleq & \text{isProc}(h,f) \wedge \forall m_2 \sqsupseteq m,\ v,\ m'.\ \text{Returns}(m_2,f,[\,],v,m') \Longrightarrow \text{denM}(\rho,m',v)
 \end{array}
 $$
 
@@ -773,7 +774,7 @@ their field types ($\text{FieldsPres}$). -->
 
 <!-- 
 $$
-\forall \tau.\ \text{FirstOrder}(\tau) \Rightarrow \forall v.\ \text{denM}(\tau,m,v) \Rightarrow \text{denM}(\tau,m',v)
+\forall \tau.\ \text{FirstOrder}(\tau) \Longrightarrow \forall v.\ \text{denM}(\tau,m,v) \Longrightarrow \text{denM}(\tau,m',v)
 $$ -->
 
 ### Run spec
@@ -782,9 +783,9 @@ The *run spec* defines what a safe run of a program means.
 
 $$
 \begin{array}{rcl}
-\text{RunSpec}(m_{\text{orig}}, m_{\text{start}}, \Gamma, \tau, \kappa, I) & = & \text{SafeA}(m_{\text{start}}) \\
+\text{RunSpec}(m_{\text{orig}}, m_{\text{start}}, \Gamma, \tau, \kappa, I) & \triangleq & \text{SafeA}(m_{\text{start}}) \\
  & & {} \wedge \forall \mathit{fuel}\,a\,m\,\mathit{rest}.\ \text{runA}\ \mathit{fuel}\ m_{\text{start}} = \text{ans}\,a\,m\,\mathit{rest} \\
- & & \qquad \Rightarrow \text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I)
+ & & \qquad \Longrightarrow \text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I)
 \end{array}
 $$
 
@@ -798,9 +799,9 @@ conformance is preserved.
 
 $$
 \begin{array}{rcl}
-\text{SafeA}(m) & = & \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ m) = \text{false} \\
-\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & = & \text{Framed}(m_{\text{orig}}, m) \\ & & \wedge \text{AnsOk}(\tau, m, a) \\
- & & {} \wedge (\forall v.\ a = \text{val}\,v \Rightarrow \text{StateOk}\,\kappa\,\Gamma\,I\,m) \\
+\text{SafeA}(m) & \triangleq & \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ m) = \text{false} \\
+\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & \triangleq & \text{Framed}(m_{\text{orig}}, m) \\ & & \wedge \text{AnsOk}(\tau, m, a) \\
+ & & {} \wedge (\forall v.\ a = \text{val}\,v \Longrightarrow \text{StateOk}\,\kappa\,\Gamma\,I\,m) \\
 \end{array}
 $$
 
@@ -811,7 +812,7 @@ first-order types excludes closure types, for instance, which have captured
 frames; a closure type's inhabitants can therefore be changed nonlocally.
 
 $$
-\forall \tau.\ \text{FirstOrder}(\tau) \Rightarrow \forall v.\ \text{denM}(\tau,m,v) \Rightarrow \text{denM}(\tau,m',v)
+\forall \tau.\ \text{FirstOrder}(\tau) \Longrightarrow \forall v.\ \text{denM}(\tau,m,v) \Longrightarrow \text{denM}(\tau,m',v)
 $$
 
 Now that we have the run spec, we can define the full semantic judgment,
@@ -824,11 +825,11 @@ safe answer."
 
 $$
 \text{SemSafeCtxA}\ \kappa\ \Gamma\ I\ e\ \tau\ \kappa'\ \Gamma'\ I'
-= \forall m.\ \text{StateOk}\ \kappa\ \Gamma\ I\ m \Rightarrow \text{RunSpec}(m, \text{evalFrom}(m,e), \Gamma', \tau, \kappa', I')
+\triangleq \forall m.\ \text{StateOk}\ \kappa\ \Gamma\ I\ m \Longrightarrow \text{RunSpec}(m, \text{evalFrom}(m,e), \Gamma', \tau, \kappa', I')
 $$
 
 $$
-\text{evalFrom}(m,e) = m \text{ with } \mathit{ctl} \coloneqq \text{eval}\,e,\ \mathit{kont} \coloneqq [\,]
+\text{evalFrom}(m,e) \triangleq m \text{ with } \mathit{ctl} \coloneqq \text{eval}\,e,\ \mathit{kont} \coloneqq [\,]
 $$
 
 ### The judgment registry
@@ -891,8 +892,8 @@ needs to be discharged.
 
 $$
 \begin{array}{rcl}
-\text{Closed}(\mathcal{R}, G) & = & \forall c \in \mathcal{R}.\ c.\text{form}\,G \\
-(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma' & = & \forall F : \text{DFam}.\ \text{Closed}(\mathcal{R}, F) \to F.\text{judge}\ \Gamma\,e\,\tau\,\Gamma'
+\text{Closed}(\mathcal{R}, G) & \triangleq & \forall c \in \mathcal{R}.\ c.\text{form}\,G \\
+(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma' & \triangleq & \forall F : \text{DFam}.\ \text{Closed}(\mathcal{R}, F) \Longrightarrow F.\text{judge}\ \Gamma\,e\,\tau\,\Gamma'
 \end{array}
 $$
 
@@ -907,7 +908,7 @@ field. $\square$
 First, we must define what soundness is about: stuck-freedom.
 
 $$
-\text{StuckFree}(m,p) = \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ (\text{evalFrom}(m,p))) = \text{false}
+\text{StuckFree}(m,p) \triangleq \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ (\text{evalFrom}(m,p))) = \text{false}
 $$
 
 A program is stuck-free if for all fuel values, running the program $p$
@@ -916,7 +917,7 @@ from the given machine $m$ does not result in a type-stuck outcome.
 **Theorem (Registry Soundness).**
 
 $$
-(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma'\ \kappa\,I\,\kappa'\,I' \Rightarrow \text{SemSafeCtxA}\ \kappa\,\Gamma\,I\,e\,\tau\,\kappa'\,\Gamma'\,I'
+(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma'\ \kappa\,I\,\kappa'\,I' \Longrightarrow \text{SemSafeCtxA}\ \kappa\,\Gamma\,I\,e\,\tau\,\kappa'\,\Gamma'\,I'
 $$
 
 *Proof sketch.* Instantiate $F \coloneqq \text{dsemFam}$ (the semantic judgment family) and
@@ -928,7 +929,7 @@ semantic judgment, by definition.
 **Theorem (Syntactic Judgments Certified).**
 
 $$
-\text{DJudge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I' \Rightarrow (\text{DJudgeC}\ \text{dclinks}).\text{judge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I'
+\text{DJudge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I' \Longrightarrow (\text{DJudgeC}\ \text{dclinks}).\text{judge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I'
 $$
 
 *Proof sketch.* Six-family mutual induction on the derivation, replacing each
@@ -968,13 +969,13 @@ with $h = m.\mathit{heap}$:
 
 $$
 \begin{array}{rcl}
-\text{denM}(\text{int}, m, v) & = & \text{isInt}(v) \\
-\text{denM}(\text{cls}\,n, m, v) & = & \text{isAName}(h, v, n) \\
-\text{denM}(\text{arrayOf}\,\tau, m, v) & = & \exists \bar{x}.\ \text{arrElems}(h,v) = \bar{x} \wedge \forall x \in \bar{x}.\ \text{denM}(\tau,m,x) \\
-\text{denM}(\text{inst}\,n\,I, m, v) & = & \text{isExactInst}(h,v,n) \wedge \text{denSpine}(I, m, \text{ivarOf}(h,v)) \\
-\text{denM}(\text{never}, m, v) & = & \text{False} \\
-\text{denM}(\text{any}, m, v) & = & \text{True} \\
-\text{denM}(\text{arrow}_0\,\rho, m, f) & = & \text{isProc}(h,f) \wedge \forall m_2 \sqsupseteq m,\ v,\ m'.\ \text{Returns}(m_2,f,[\,],v,m') \Rightarrow \text{denM}(\rho,m',v)
+\text{denM}(\text{int}, m, v) & \triangleq & \text{isInt}(v) \\
+\text{denM}(\text{cls}\,n, m, v) & \triangleq & \text{isAName}(h, v, n) \\
+\text{denM}(\text{arrayOf}\,\tau, m, v) & \triangleq & \exists \bar{x}.\ \text{arrElems}(h,v) = \bar{x} \wedge \forall x \in \bar{x}.\ \text{denM}(\tau,m,x) \\
+\text{denM}(\text{inst}\,n\,I, m, v) & \triangleq & \text{isExactInst}(h,v,n) \wedge \text{denSpine}(I, m, \text{ivarOf}(h,v)) \\
+\text{denM}(\text{never}, m, v) & \triangleq & \text{False} \\
+\text{denM}(\text{any}, m, v) & \triangleq & \text{True} \\
+\text{denM}(\text{arrow}_0\,\rho, m, f) & \triangleq & \text{isProc}(h,f) \wedge \forall m_2 \sqsupseteq m,\ v,\ m'.\ \text{Returns}(m_2,f,[\,],v,m') \Longrightarrow \text{denM}(\rho,m',v)
 \end{array}
 $$
 
@@ -1022,34 +1023,34 @@ the activation has no captured parent ($\text{FramePres}$); and saved receivers 
 their field types ($\text{FieldsPres}$).
 
 $$
-\forall \tau.\ \text{FirstOrder}(\tau) \Rightarrow \forall v.\ \text{denM}(\tau,m,v) \Rightarrow \text{denM}(\tau,m',v)
+\forall \tau.\ \text{FirstOrder}(\tau) \Longrightarrow \forall v.\ \text{denM}(\tau,m,v) \Longrightarrow \text{denM}(\tau,m',v)
 $$
 
 **Run contract.**
 
 $$
 \begin{array}{rcl}
-\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & = & \text{Framed}(m_{\text{orig}}, m) \wedge \text{AnsOk}(\tau, m, a) \\
- & & {} \wedge (\forall v.\ a = \text{val}\,v \Rightarrow \text{StateOk}\,\kappa\,\Gamma\,I\,m) \\
-\text{RunSpec}(m_{\text{orig}}, m_{\text{start}}, \Gamma, \tau, \kappa, I) & = & \text{SafeA}(m_{\text{start}}) \\
+\text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I) & \triangleq & \text{Framed}(m_{\text{orig}}, m) \wedge \text{AnsOk}(\tau, m, a) \\
+ & & {} \wedge (\forall v.\ a = \text{val}\,v \Longrightarrow \text{StateOk}\,\kappa\,\Gamma\,I\,m) \\
+\text{RunSpec}(m_{\text{orig}}, m_{\text{start}}, \Gamma, \tau, \kappa, I) & \triangleq & \text{SafeA}(m_{\text{start}}) \\
  & & {} \wedge \forall \mathit{fuel}\,a\,m\,\mathit{rest}.\ \text{runA}\ \mathit{fuel}\ m_{\text{start}} = \text{ans}\,a\,m\,\mathit{rest} \\
- & & \qquad \Rightarrow \text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I)
+ & & \qquad \Longrightarrow \text{ResultOk}(m_{\text{orig}}, \Gamma, \tau, a, m, \kappa, I)
 \end{array}
 $$
 
 $$
-\text{SafeA}(m) = \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ m) = \text{false}
+\text{SafeA}(m) \triangleq \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ m) = \text{false}
 $$
 
 **Semantic judgment.**
 
 $$
 \text{SemSafeCtxA}\ \kappa\ \Gamma\ I\ e\ \tau\ \kappa'\ \Gamma'\ I'
-= \forall m.\ \text{StateOk}\ \kappa\ \Gamma\ I\ m \Rightarrow \text{RunSpec}(m, \text{evalFrom}(m,e), \Gamma', \tau, \kappa', I')
+\triangleq \forall m.\ \text{StateOk}\ \kappa\ \Gamma\ I\ m \Longrightarrow \text{RunSpec}(m, \text{evalFrom}(m,e), \Gamma', \tau, \kappa', I')
 $$
 
 $$
-\text{evalFrom}(m,e) = m \text{ with } \mathit{ctl} := \text{eval}\,e,\ \mathit{kont} := [\,]
+\text{evalFrom}(m,e) \triangleq m \text{ with } \mathit{ctl} := \text{eval}\,e,\ \mathit{kont} := [\,]
 $$
 
 **Rules as clinks.**
@@ -1064,13 +1065,13 @@ structure Clink {F : Type} (S T : F) where
 
 $$
 \begin{array}{rcl}
-\text{Closed}(\mathcal{R}, G) & = & \forall c \in \mathcal{R}.\ c.\text{form}\,G \\
-(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma' & = & \forall F : \text{DFam}.\ \text{Closed}(\mathcal{R}, F) \to F.\text{judge}\ \Gamma\,e\,\tau\,\Gamma'
+\text{Closed}(\mathcal{R}, G) & \triangleq & \forall c \in \mathcal{R}.\ c.\text{form}\,G \\
+(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma' & \triangleq & \forall F : \text{DFam}.\ \text{Closed}(\mathcal{R}, F) \Longrightarrow F.\text{judge}\ \Gamma\,e\,\tau\,\Gamma'
 \end{array}
 $$
 
 $$
-\text{StuckFree}(m,p) = \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ (\text{evalFrom}(m,p))) = \text{false}
+\text{StuckFree}(m,p) \triangleq \forall \mathit{fuel}.\ \text{typeStuck}(\text{run}\ \mathit{fuel}\ (\text{evalFrom}(m,p))) = \text{false}
 $$
 
 ### Soundness
@@ -1078,7 +1079,7 @@ $$
 **Theorem (Registry soundness, at every size).**
 
 $$
-(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma'\ \kappa\,I\,\kappa'\,I' \Rightarrow \text{SemSafeCtxA}\ \kappa\,\Gamma\,I\,e\,\tau\,\kappa'\,\Gamma'\,I'
+(\text{DJudgeC}\ \mathcal{R}).\text{judge}\ \Gamma\,e\,\tau\,\Gamma'\ \kappa\,I\,\kappa'\,I' \Longrightarrow \text{SemSafeCtxA}\ \kappa\,\Gamma\,I\,e\,\tau\,\kappa'\,\Gamma'\,I'
 $$
 
 *Proof sketch.* Instantiate $F := \text{dsemFam}$ and discharge $\text{Closed}$ from the clinks'
@@ -1088,7 +1089,7 @@ the registry had one rule in it and cannot stop holding as the registry grows.
 **Theorem (Every syntactic derivation is certified).**
 
 $$
-\text{DJudge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I' \Rightarrow (\text{DJudgeC}\ \text{dclinks}).\text{judge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I'
+\text{DJudge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I' \Longrightarrow (\text{DJudgeC}\ \text{dclinks}).\text{judge}\ \Gamma\ e\ \tau\ \Gamma'\ \kappa\ I\ \kappa'\ I'
 $$
 
 *Proof sketch.* Six-family mutual induction on the derivation, replacing each
@@ -1114,7 +1115,7 @@ completing the soundness proof.
 **Lemma (`denM_ext`).**
 
 $$
-\text{Ext}\ m\ m_2 \Rightarrow \text{denM}(\tau, m, v) \Rightarrow \text{denM}(\tau, m_2, v)
+\text{Ext}\ m\ m_2 \Longrightarrow \text{denM}(\tau, m, v) \Longrightarrow \text{denM}(\tau, m_2, v)
 $$
 
 for every $\tau$, simultaneously with the corresponding statement for
@@ -1124,18 +1125,18 @@ spines.
 string, array and hash payloads are well-formed and its prelude phase is
 unchanged, then $\text{StateOk}\ \kappa\ \Gamma\ I\ m_2$.
 
-**Lemma (`denM_heap_only`, `denM_ctl`).** For first-order $\tau$, $\text{denM}(\tau,m_1,v) \leftrightarrow \text{denM}(\tau,m_2,v)$
+**Lemma (`denM_heap_only`, `denM_ctl`).** For first-order $\tau$, $\text{denM}(\tau,m_1,v) \Longleftrightarrow \text{denM}(\tau,m_2,v)$
 whenever $m_1$ and $m_2$ have the same heap; and $\text{denM}$ is
 invariant under changing the control word and continuation stack.
 
-**Lemma (`denM_setLocal`).** If $\text{denM}(\tau', m, w)$ and $\text{capStale}(x,\tau',\tau) = \text{false}$, then $\text{denM}(\tau, m, v) \Rightarrow \text{denM}(\tau, m.\text{setLocal}(x,w), v)$.
+**Lemma (`denM_setLocal`).** If $\text{denM}(\tau', m, w)$ and $\text{capStale}(x,\tau',\tau) = \text{false}$, then $\text{denM}(\tau, m, v) \Longrightarrow \text{denM}(\tau, m.\text{setLocal}(x,w), v)$.
 
 **Lemma (`StateOk_setLocal`).** Given $\text{StateOk}\ \kappa\ \Gamma\ I\ m$, $\text{denM}(\tau,m,w)$, $\text{capStale}(x,\tau,\tau) = \text{false}$,
 $\text{capStaleCtx}(x,\tau,\kappa) = \text{false}$, $\text{stripAlias}(\rho) = \tau$, and an alias side condition, conformance holds at the
 environment
 
 $$
-\text{envAfter}(\Gamma,x,\tau) = \text{envSet}\bigl(\text{killClosOver}(\text{killAliasesTo}(\Gamma,x),x,\tau),\,x,\,\tau\bigr)
+\text{envAfter}(\Gamma,x,\tau) \triangleq \text{envSet}\bigl(\text{killClosOver}(\text{killAliasesTo}(\Gamma,x),x,\tau),\,x,\,\tau\bigr)
 $$
 
 and spine $\text{killClosOverSpine}(I,x,\tau)$.
