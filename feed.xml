@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Mon, 28 Sep 2026 13:07:04 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 14:08:48 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
@@ -220,7 +220,7 @@ note of it here.</p>
 <a href="https://www.lesswrong.com/posts/rhAPh3YzhPoBNpgHg/lies-damned-lies-and-proofs-formal-methods-are-not-slopless">proof-slop</a>
 by carefully auditing the end-to-end theorem statement. This theorem, given in
 the
-<a href="2026-09-26-ruby-lean-technical-appendix.html#the-soundness-theorem">Technical Appendix</a>,
+<a href="2026-09-26-ruby-lean-technical-appendix.html#end-to-end-soundness-theorem">Technical Appendix</a>,
 is an easy-to-interpret statement that directly relates the validator to the
 stuck-freedom property.</p>
 <p>The Lean kernel still has to be trusted, and soundness bugs in it have been
@@ -1051,8 +1051,8 @@ semantic judgment, by definition.</p>
 constructor with its registered rule.</p>
 <p>This is analogous to the "fundamental theorem of logical relations" in
 <a href="https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf">RustBelt</a>.</p>
-<p><strong>Theorem (End-to-End).</strong> For all programs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math> and certificates
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>,</p>
+<p><a id="end-to-end-soundness-theorem"></a><strong>Theorem (End-to-End).</strong> For all
+programs <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>p</mi></mrow></math> and certificates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>,</p>
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>validateD</mtext><mtext>&#x000A0;</mtext><mi>p</mi><mtext>&#x000A0;</mtext><mi>d</mi><mo>&#x0003D;</mo><mtext>true</mtext><mtext>&#x000A0;</mtext><mo>&#x02227;</mo><mtext>&#x000A0;</mtext><mtext>bootOkB</mtext><mo>&#x0003D;</mo><mtext>true</mtext><mtext>&#x000A0;</mtext><mo lspace="0.2778em" rspace="0.2778em">&#x027F9;</mo><mtext>&#x000A0;</mtext><mtext>StuckFree</mtext><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="italic">b</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">o</mi><mi mathvariant="italic">t</mi><mi mathvariant="italic">M</mi><mi mathvariant="italic">a</mi><mi mathvariant="italic">c</mi><mi mathvariant="italic">h</mi><mi mathvariant="italic">i</mi><mi mathvariant="italic">n</mi><mi mathvariant="italic">e</mi></mrow><mo>&#x0002C;</mo><mtext>&#x000A0;</mtext><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math>
 <p><em>Proof sketch.</em> <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mtext>validateD</mtext><mtext>&#x000A0;</mtext><mi>p</mi><mtext>&#x000A0;</mtext><mi>d</mi><mo>&#x0003D;</mo><mtext>true</mtext></mrow></math> yields a <code>DJudge</code> derivation by projection
 (<code>validateD_typed</code>); the previous theorem, <strong>Syntactic Judgments Certified</strong>,

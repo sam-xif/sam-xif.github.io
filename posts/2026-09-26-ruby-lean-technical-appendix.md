@@ -937,8 +937,8 @@ constructor with its registered rule.
 This is analogous to the "fundamental theorem of logical relations" in
 [RustBelt](https://plv.mpi-sws.org/rustbelt/popl18/paper.pdf).
 
-**Theorem (End-to-End).** For all programs $p$ and certificates
-$d$,
+<a id="end-to-end-soundness-theorem"></a>**Theorem (End-to-End).** For all
+programs $p$ and certificates $d$,
 
 $$
 \text{validateD}\ p\ d = \text{true} \ \wedge\ \text{bootOkB} = \text{true} \ \Longrightarrow\ \text{StuckFree}(\mathit{bootMachine},\ p)
