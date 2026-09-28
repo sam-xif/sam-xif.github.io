@@ -77,6 +77,16 @@ main {
     margin-right: 10px;
 }
 
+.site-nav {
+    margin-top: 6px;
+    font-size: 0.95em;
+}
+
+.site-nav-sep {
+    margin: 0 6px;
+    color: var(--text-muted);
+}
+
 #photo img {
     max-width: 150px;
     border-radius: 50%;
@@ -121,21 +131,12 @@ a:hover {
 }
 
 
-.blog-banner {
-    background-color: #d4edda;
-    color: #1a4a26;
-    border: 1px solid #a8d5b5;
-    border-radius: 4px;
-    padding: 10px 16px;
-    margin-bottom: 24px;
-    font-size: 0.95em;
-    text-align: center;
+#selected-links ul {
+    padding-left: 1.2em;
 }
 
-.blog-banner a {
-    color: #1a4a26;
-    font-weight: bold;
-    text-decoration: underline;
+#selected-links li {
+    margin-bottom: 8px;
 }
 
 #about {
@@ -144,7 +145,6 @@ a:hover {
 
 #about p {
     margin-bottom: 15px;
-    text-align: justify;
 }
 
 #about p:last-child {

@@ -392,27 +392,6 @@ a:visited {
     border-color: #d8d8d8;
 }
 
-/* Homepage "New:" banners (base colors in styles.css) */
-[data-theme="sepia"] .blog-banner {
-    background-color: #e6e2c3;
-    color: #4a4a1e;
-    border-color: #c9c29a;
-}
-
-[data-theme="sepia"] .blog-banner a {
-    color: #4a4a1e;
-}
-
-[data-theme="dark"] .blog-banner {
-    background-color: #1f2d22;
-    color: #a8d5b5;
-    border-color: #2f4a36;
-}
-
-[data-theme="dark"] .blog-banner a {
-    color: #a8d5b5;
-}
-
 /* Media queries for responsive design */
 @media screen and (max-width: 2000px) {
     .container {
