@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sam Xifaras</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="blog.css">
+    <script src="theme.js"></script>
     <script src="analytics.js"></script>
 </head>
 <body>
     <main>
-        <div class="container">
+        <div class="container home">
             <a href="feed.xml" class="rss-corner" title="RSS Feed" aria-label="RSS Feed"><img src="rssicon.svg" width="24" height="24" alt="RSS Feed"></a>
+            <div class="theme-switcher">
+                <button class="theme-btn" data-theme="normal">Normal</button>
+                <button class="theme-btn" data-theme="sepia">Sepia</button>
+                <button class="theme-btn" data-theme="dark">Dark</button>
+            </div>
             <section id="intro">
                 <div id="photo">
                     <img src="photo.png" alt="Your Photo">
