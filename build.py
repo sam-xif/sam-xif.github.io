@@ -9,6 +9,7 @@ import datetime
 from html import escape as escape_html
 import re
 import sys
+import zlib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -23,7 +24,7 @@ except ImportError:
 
 from tooltip import TooltipExtension, preserve_tooltips, restore_tooltips, add_tooltip_footnotes
 from accordion import AccordionExtension, preserve_accordions, restore_accordions
-from rss import build_feed
+from rss import BASE_URL, build_feed
 
 ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
@@ -38,6 +39,10 @@ HEADING_ANCHOR_CLASS = "heading-anchor"
 TOC_CLASS = "post-toc"
 # The toc extension emits the [TOC] as a <div>; it holds only a list, so the first </div> closes it.
 TOC_DIV_RE = re.compile(rf'<div class="{TOC_CLASS}">(.*?)</div>', re.DOTALL)
+# The first image in a post (markdown ![]() and raw <img> both end up as <img>) becomes its link preview.
+IMG_SRC_RE = re.compile(r'<img\b[^>]*?\bsrc="([^"]+)"')
+# "Read more" shows up to this many same-topic posts, plus one from another topic.
+READ_MORE_SAME_TOPIC = 3
 
 # Custom visualizations in widgets/, keyed by the fenced-block language that triggers them.
 WIDGETS = {
@@ -55,7 +60,7 @@ POST_TEMPLATE = """\
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{POST_TITLE}} - Sam Xifaras</title>
+    <title>{{POST_TITLE}} - Sam Xifaras</title>{{PREVIEW_META}}
     <link rel="stylesheet" href="../../../styles.css">
     <link rel="preload" href="../../../fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../../fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -91,7 +96,7 @@ POST_TEMPLATE = """\
                 <div class="post-body">
                     {{POST_BODY}}
                 </div>
-            </article>
+            </article>{{READ_MORE}}
         </div>
     </main>
     <footer>
@@ -264,6 +269,7 @@ class PostData:
     category: str = "blog"
     topic: str = DEFAULT_TOPIC
     audience: str = ""
+    image: str = ""
 
 
 def format_date(d: datetime.date) -> str:
@@ -354,6 +360,8 @@ def parse_post(path: Path) -> PostData:
         rf'<nav class="{TOC_CLASS}" aria-label="Table of contents">\1</nav>', html_body
     )
 
+    img_match = IMG_SRC_RE.search(html_body)
+
     return PostData(
         title=title,
         date=date,
@@ -363,6 +371,7 @@ def parse_post(path: Path) -> PostData:
         category=category,
         topic=topic,
         audience=audience,
+        image=img_match.group(1) if img_match else "",
     )
 
 
@@ -376,7 +385,77 @@ def render_audience_html(audience: str) -> str:
     )
 
 
-def render_post_html(post: PostData) -> str:
+def post_url(post: PostData) -> str:
+    return f"{BASE_URL}/blog/topics/{post.topic}/{post.slug}.html"
+
+
+def image_site_path(post: PostData) -> str:
+    """The post's preview image as a site-root path (or a full URL if it's external).
+
+    Posts reference images site-relative (/blog_assets/...) or relative to the post page;
+    normalizing lets pages at any depth (index, topic, post) and crawlers point at it.
+    """
+    image = post.image
+    if image and not image.startswith("/") and not re.match(r"[a-z]+:", image):
+        image = f"/blog/topics/{post.topic}/{image}"
+    return image
+
+
+def render_preview_meta(post: PostData) -> str:
+    """Open Graph / Twitter tags so shared links unfurl with a title, description, and image."""
+    tags = [
+        ("property", "og:type", "article"),
+        ("property", "og:title", post.title),
+        ("property", "og:url", post_url(post)),
+    ]
+    if post.description:
+        tags.append(("property", "og:description", post.description))
+    if post.image:
+        # Crawlers need an absolute URL.
+        image = image_site_path(post)
+        if image.startswith("/"):
+            image = BASE_URL + image
+        tags.append(("property", "og:image", image))
+        tags.append(("name", "twitter:card", "summary_large_image"))
+    return "".join(
+        f'\n    <meta {attr}="{key}" content="{escape_html(value)}">' for attr, key, value in tags
+    )
+
+
+def pick_read_more(post: PostData, published: list) -> list:
+    """Same-topic posts closest in date, plus one post from a different topic.
+
+    The cross-topic pick is seeded by the slug so rebuilds don't churn the generated HTML.
+    """
+    others = [p for p in published if p.slug != post.slug]
+    by_closeness = lambda p: (abs((p.date - post.date).days), p.slug)
+    same = sorted((p for p in others if p.topic == post.topic), key=by_closeness)[:READ_MORE_SAME_TOPIC]
+    different = sorted((p for p in others if p.topic != post.topic), key=lambda p: p.slug)
+    picks = same
+    if different:
+        picks = same + [different[zlib.crc32(post.slug.encode()) % len(different)]]
+    return sorted(picks, key=lambda p: p.date, reverse=True)
+
+
+def render_read_more_html(post: PostData, published: list) -> str:
+    picks = pick_read_more(post, published)
+    if not picks:
+        return ""
+    # Post pages live in blog/topics/<topic>/, alongside the topic index.
+    entries = render_post_listing_entries(
+        picks,
+        post_url_fn=lambda p: f"{p.slug}.html" if p.topic == post.topic else f"../{p.topic}/{p.slug}.html",
+        topic_url_fn=lambda t: "index.html" if t == post.topic else f"../{t}/index.html",
+    )
+    return (
+        '\n            <section class="read-more">'
+        '\n                <h2>Read more</h2>\n'
+        f'{entries}'
+        '\n            </section>'
+    )
+
+
+def render_post_html(post: PostData, published: list) -> str:
     # Only posts with a widget's fenced block (```mermaid, ```wavechart) pay for loading it.
     extra_scripts = "".join(
         tag
@@ -387,6 +466,8 @@ def render_post_html(post: PostData) -> str:
     return (
         POST_TEMPLATE
         .replace("{{EXTRA_SCRIPTS}}", extra_scripts)
+        .replace("{{PREVIEW_META}}", render_preview_meta(post))
+        .replace("{{READ_MORE}}", render_read_more_html(post, published))
         .replace("{{POST_TITLE}}", post.title)
         .replace("{{POST_DATE_ISO}}", post.date.isoformat())
         .replace("{{POST_DATE_DISPLAY}}", format_date(post.date))
@@ -407,8 +488,19 @@ def render_post_listing_entries(posts: list, post_url_fn, topic_url_fn) -> str:
             else ""
         )
         topic_label = TOPIC_LABELS.get(post.topic, post.topic)
+        # The post's preview image, as a thumbnail left of the title card. Decorative
+        # (alt="") and out of the tab order, since the title link goes to the same place.
+        thumb_html = (
+            f'    <a class="post-thumb" href="{post_url_fn(post)}" tabindex="-1" aria-hidden="true">'
+            f'<img src="{escape_html(image_site_path(post))}" alt="" loading="lazy"></a>\n'
+            if post.image
+            else ""
+        )
         entries.append(
-            f'<article class="post-listing" data-category="{post.category}" data-topic="{post.topic}">\n'
+            f'<article class="post-listing{" has-thumb" if post.image else ""}" '
+            f'data-category="{post.category}" data-topic="{post.topic}">\n'
+            f'{thumb_html}'
+            f'    <div class="post-card">\n'
             f'    <h3><a href="{post_url_fn(post)}">{post.title}</a></h3>\n'
             f'    <div class="post-meta">'
             f'<time class="post-date" datetime="{post.date.isoformat()}">'
@@ -417,6 +509,7 @@ def render_post_listing_entries(posts: list, post_url_fn, topic_url_fn) -> str:
             f'<a class="post-topic" href="{topic_url_fn(post.topic)}">{topic_label}</a>'
             f'</div>\n'
             f'    {description_html}\n'
+            f'    </div>\n'
             f'</article>'
         )
     return "\n".join(entries)
@@ -556,20 +649,17 @@ def main():
     if not all_md_files:
         print("No markdown files found in posts/")
 
-    all_posts = []
-    published_posts = []
-    for md_file in all_md_files:
-        post = parse_post(md_file)
-        all_posts.append(post)
+    all_posts = [parse_post(md_file) for md_file in all_md_files]
+    # "Read more" needs the full published list, so parse everything before rendering any post.
+    published_posts = [p for p in all_posts if p.slug in published_slugs]
+    published_posts.sort(key=lambda p: p.date, reverse=True)
+
+    for post in all_posts:
         topic_dir = TOPICS_DIR / post.topic
         topic_dir.mkdir(parents=True, exist_ok=True)
         out_path = topic_dir / f"{post.slug}.html"
-        out_path.write_text(render_post_html(post), encoding="utf-8")
+        out_path.write_text(render_post_html(post, published_posts), encoding="utf-8")
         print(f"  Built: {out_path.relative_to(ROOT)}")
-        if post.slug in published_slugs:
-            published_posts.append(post)
-
-    published_posts.sort(key=lambda p: p.date, reverse=True)
 
     index_path = BLOG_DIR / "index.html"
     index_path.write_text(render_index_html(published_posts), encoding="utf-8")

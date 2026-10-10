@@ -192,6 +192,40 @@ a:visited {
     font-size: 1.1em;
 }
 
+/* Preview-image thumbnail, left of the title card. */
+.post-listing.has-thumb {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.post-thumb {
+    flex: 0 0 auto;
+}
+
+.post-thumb img {
+    display: block;
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    /* Wide images keep their left edge; only the right side is cropped. */
+    object-position: left center;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    transition: border-color 0.3s ease;
+}
+
+.post-card {
+    min-width: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .post-thumb img {
+        width: 80px;
+        height: 60px;
+    }
+}
+
 .post, .blog-nav, .blog-index, .home {
     font-family: "Playfair", serif;
     font-optical-sizing: auto;
@@ -871,4 +905,20 @@ a.author-badge:hover {
 .post-body .post-toc a:hover {
     color: var(--link);
     text-decoration: underline;
+}
+
+/* "Read more" links to related posts, below a post's body. */
+.read-more {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    font-family: "Playfair", serif;
+    font-size: 13pt;
+    transition: border-color 0.3s ease;
+}
+
+.read-more h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 1.2em;
 }
