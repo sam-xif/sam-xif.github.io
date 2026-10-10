@@ -1,0 +1,136 @@
+/* Interactive wave chart (```wavechart blocks, rendered by wavechart.js and
+   loaded by build.py only on posts that use one).
+   Tier colors are categorical slots 1-4, validated for colorblind separation;
+   dark mode gets its own steps of the same hues. */
+.wavechart {
+    --wave-0: #2a78d6;
+    --wave-1: #eb6834;
+    --wave-2: #1baf7a;
+    --wave-3: #eda100;
+    margin: 1.8em 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+[data-theme="dark"] .wavechart {
+    --wave-0: #3987e5;
+    --wave-1: #d95926;
+    --wave-2: #199e70;
+    --wave-3: #c98500;
+}
+
+.wavechart .wc-tier-0 { --wave: var(--wave-0); }
+.wavechart .wc-tier-1 { --wave: var(--wave-1); }
+.wavechart .wc-tier-2 { --wave: var(--wave-2); }
+.wavechart .wc-tier-3 { --wave: var(--wave-3); }
+
+.wc-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    font-size: 0.85em;
+    color: var(--text-muted-2);
+    margin-bottom: 8px;
+}
+
+.wc-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wc-swatch {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--wave);
+}
+
+.wc-legend-value {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    min-width: 1.6em;
+}
+
+.wc-chart svg {
+    display: block;
+    overflow: visible;
+    touch-action: pan-y;
+    font-family: inherit;
+}
+
+.wc-chart svg:focus { outline: none; }
+.wc-chart svg:focus-visible { outline: 1px dotted var(--text-muted); outline-offset: 4px; }
+
+.wc-grid { stroke: var(--border); stroke-width: 1; }
+.wc-baseline { stroke: var(--border-strong); stroke-width: 1; }
+.wc-axis-label { fill: var(--text-muted); font-size: 11px; }
+
+.wc-future { fill: var(--code-bg); opacity: 0.6; }
+.wc-today { stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.wc-today-label { fill: var(--text-muted); font-size: 11px; font-style: italic; }
+.wavechart .wc-shared { --wave: var(--text-muted); }
+
+.wc-series { transition: opacity 0.25s ease; }
+.wc-series.wc-dim { opacity: 0.22; }
+.wc-line {
+    fill: none;
+    stroke: var(--wave);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+.wc-projected { stroke-dasharray: 5 4; }
+
+.wc-hit { fill: transparent; cursor: ew-resize; }
+.wc-cross { pointer-events: none; }
+.wc-hair { stroke: var(--text-muted); stroke-width: 1; }
+.wc-dot {
+    fill: var(--wave);
+    stroke: var(--bg);
+    stroke-width: 2;
+    transition: opacity 0.25s ease;
+}
+.wc-dot.wc-dim { opacity: 0.25; }
+
+.wc-marker {
+    fill: var(--bg);
+    stroke: var(--text-muted);
+    stroke-width: 1.5;
+    cursor: pointer;
+}
+.wc-marker:hover,
+.wc-marker.wc-active { fill: var(--text); stroke: var(--text); }
+
+.wc-note {
+    min-height: 8.5em;
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-left: 3px solid var(--blockquote-border);
+    transition: border-color 0.3s ease;
+}
+
+.wc-note-date {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.wc-note-title {
+    font-weight: bold;
+    margin: 2px 0 4px;
+}
+
+.wc-note-text {
+    margin: 0;
+    font-size: 0.95em;
+    line-height: 1.55;
+    color: var(--text-muted-2);
+}
+
+.wc-caption {
+    margin-top: 10px;
+    font-size: 0.8em;
+    font-style: italic;
+    color: var(--text-muted);
+}

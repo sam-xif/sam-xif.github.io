@@ -7,8 +7,205 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Mon, 28 Sep 2026 14:21:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 10 Oct 2026 19:45:32 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>What's happening to software engineers?</title>
+      <link>https://samx.io/blog/topics/tech/2026-10-10-sw-eng.html</link>
+      <guid isPermaLink="true">https://samx.io/blog/topics/tech/2026-10-10-sw-eng.html</guid>
+      <pubDate>Sat, 10 Oct 2026 00:00:00 +0000</pubDate>
+      <description><![CDATA[The timeline to automation]]></description>
+      <content:encoded><![CDATA[<p><em>I'm trying something new: posting looser, less edited streams of thought so I
+can get more posts out quicker. Feedback? Let me know at
+<a href="mailto:s.xifaras999@gmail.com">s.xifaras999@gmail.com</a></em>.</p>
+<hr />
+<p>Around 2022, ChatGPT was released, and this has since snowballed into the
+largest economic bet in the
+<a href="https://www.wsj.com/economy/the-ai-build-out-is-becoming-the-biggest-economic-bet-in-u-s-history-c60716dd?eafs_enabled=false">history of the United States</a>.
+If you had asked me then whether I thought software engineering might be
+automated, I might have said "probably, but not for a while, and not before many
+simpler white-collar tasks."</p>
+<p>Many of us probably thought similarly, but as it turns out, it might be the
+thing that AI <em>is best at.</em> And there are a few good reasons for it:</p>
+<ol>
+<li>There is a lot of training data</li>
+<li>The industry has generally converged on well-known and accepted patterns and
+   principles for system design</li>
+<li>Revelant annotations, comments, discussions and other metadata about software
+   are more likely to be on the internet and in a computable form than in other
+   industries</li>
+<li>There are very clean reward signals: the build fails, tests fail, an API call
+   is failing, etc.</li>
+</ol>
+<p>Today, the New York Times reported on the
+<a href="https://www.nytimes.com/2026/10/10/business/dealbook/ai-verification-tax-rework.html?eafs_enabled=false">"verification tax"</a>
+of AI-assisted work. I think this is an underappreciated limiting factor on how
+much more economic growth we can really squeeze out with AI; if we truly want to
+unlock extreme productivity gains, we need to be able to 1) actually have the AI
+doing just as good or better than humans, and 2) be able to trust the AI to do
+the job well in a variety of situations. Perhaps the case is different in
+industries across the economy, but in software, I have found that both of these
+criteria are satisfied, depending on the quality of the task definition.</p>
+<p>As I recently wrote about in my
+<a href="blog/topics/devlog/2026-09-26-ruby-lean.html">announcement of <code>ruby-lean</code></a>, I
+ended up having to scrap many thousands of tokens' worth of development work
+several times. However, I was able to get the agents to perform really well when
+I imposed a rigid structure of how trustworthy progress can be made. And
+throughout the entire project, agents have performed far better than me at
+writing Lean proofs that check and conform to the rules I impose.</p>
+<p>So, in pure software domains like
+<a href="https://github.com/sam-xif/ruby-lean"><code>ruby-lean</code></a>, at least, I have been able
+to unlock superhuman progress. This extends to my day job at Stripe as well.
+Stripe, along with every other large tech company, are implementing their own
+<a href="https://x.com/businessbarista/article/2061573150719021542">software factories</a>,
+where agents autonomously define implementation plans, write code, test it,
+review it, get it merged, and monitor it in production. Humans move a level up,
+setting the direction. Gergeley Orosz posted about
+<a href="https://newsletter.pragmaticengineer.com/p/openai-software-factory">OpenAI's</a>
+software factory. Different companies are at different levels on the scale of
+full factory production of software; it makes sense that the frontier labs like
+OpenAI and Anthropic would be at the forefront. Anthropic
+<a href="https://www.anthropic.com/institute/recursive-self-improvement">claims</a> that as
+of May 2026, 80% of code that gets merged into the codebase is authored by
+Claude.<a class="tooltip" data-tip="Anthropic also points out that 8x more lines of code per quarter are being shipped now compared to 2021-2025. I don&#x27;t really find this all that significant though because lines of code is not the best measurement of actual outcomes delivered." href="#tooltip-def-1" id="tooltip-ref-1"><sup>1</sup></a></p>
+<p>In other domains, similar gains can be made by implementing a scaffold of checks
+and balances that build robust monitoring frameworks and compounding trust as a
+result.</p>
+<p>All this is to say that productivity gains from AI are <em>real</em>, and improving,
+even if they have not diffused throughout the economy yet. Because the feedback
+loop of software engineering is so tight, and because new training data gets
+generated every day as coding agents are extensively used by software developers
+around the country and world, I expect the productivity gains will continue to
+increase.</p>
+<h2 id="what-does-this-mean-for-software-engineers">What does this mean for software engineers?</h2>
+<p>Software engineering is already in a precarious position.
+<a href="https://fred.stlouisfed.org/series/IHLIDXUSTPSOFTDEVE">Software engineering job postings on Indeed</a>
+in the US are up compared to last year around this time, but still down
+tremendously from the boom years around the pandemic. Furthermore, The Pragmatic
+Engineer
+<a href="https://newsletter.pragmaticengineer.com/p/the-job-market-in-2026-part-2">reports</a>
+that just 1 in 10 software engineering hires is a new graduate, down from 1 in 3
+in 2023. The number of computer science graduates also has
+<a href="https://www.reveliolabs.com/news/social/computer-science-has-hit-its-high-water-mark">peaked</a>
+this year, meaning that more new CS graduates than ever are entering a market
+that is getting automated away, with an eroding salary premium. The same linked
+article reports that enrollment in other STEM professions like engineering and
+finance are increasing now, with computer science likely to be on a steep
+downward trajectory as the salary premium erodes and agents get better at it.</p>
+<p>I think this is just the beginning. Entry level work will of course be the first
+to get automated, and it largely already is; I find myself being able to close
+out bug tickets within an hour or less by delegating an agent to it, whereas
+last year I might have assigned that ticket to a new hire as a task to help them
+get ramped up with the code. So not only are entry level roles harder to get
+hired for; once hired, there are fewer opportunities to develop skills that
+would get a junior engineer to the next level.</p>
+<p>As AI capabilities improve, I believe this will spread upwards towards the
+higher levels of the engineering career ladder. In the short term, there will be
+insane unmet demand for senior engineers who can steer the agents with a refined
+understanding of the code so that the system grows sustainably...until the
+agents develop that refined understanding.</p>
+<p>Here is how I picture it playing out: not one cliff, but a series of
+phase-delayed waves.</p>
+<pre><code class="language-wavechart">range: 2023-01 | 2030-07
+today: 2026-10
+spike: 2025-01 | 2026-04
+caption: An illustrative model, not data. Mouse over the chart to get a sense of how I'm thinking about this.
+tier: Entry level | 2026-12 | 8
+tier: Mid level | 2027-08 | 12
+tier: Senior | 2028-03 | 16
+tier: Staff | 2028-11 | 20
+note: 2023-01 | all | Before the spike | Each line is one level of the career ladder, indexed to its own peak (100). Early models assist engineers more than they replace any of them.
+note: 2025-01 | all | Unmet demand spikes | Agents make software dramatically cheaper to build, so companies want to build far more of it, and they need engineers at every level to steer the agents. This is the *insane unmet demand* of the short term.
+note: 2026-08 | 0 | Entry level falls first, and fastest | The work handed to new grads is precisely scoped and specified. AI is best at this kind of work. Entry-level demand drops off a cliff. The starter tickets that used to ramp new hires up go to agents in companies' software factories instead.
+note: 2026-10 | all | Where we are today | Everything to the right of this line is projection (dashed). Demand is still near its peak at most levels, but entry level has started to fall.
+note: 2027-02 | 1 | Mid level follows | About eight months behind, mid-level demand falls, a little less steeply. Coding agents reliably ship multi-file features, and fewer juniors are being promoted into this tier because it becomes progressively harder to keep up with agents that can do simple tasks better and faster.
+note: 2027-07 | 2 | Senior falls once agents can maintain and refactor | Senior engineers ship complex, impactful projects and deeply influence the code's design and evolution. As AI develops a similarly refined understanding, with scaffolding to provide agents inputs from GTM and observability systems to drive product engineering direction, senior demand falls too.
+note: 2027-12 | 3 | Staff holds out longest | Setting technical direction across many systems is the hardest thing to hand off, so staff demand falls last and slowest. But it still falls as agents earn trust.
+note: 2029-06 | all | Near zero by 2030 | By 2030, demand at every level is close to zero. What is left is a small group of people who set direction, define tasks precisely, and own the trust that lets everyone else rely on the agents' work.
+</code></pre>
+<p>A few things could invalidate this theory. First, AI capability improvement
+could plateau, though I find this unlikely. Second, harkening back to my
+<a href="2026-03-31-ai-stall.html">first blog post</a>, AI could get more expensive as
+capital infused into effective inference subsidies dries up, growth in AI output
+<em>quality</em> could also stall due to thinning R&amp;D budgets, or growth in inference
+speed/compute availability could stall. Finally, I think the most
+underappreciated risk is macro risk. COVID-19 demonstrated how quickly and
+easily our supply chain can be shocked. The Iran war continues to keep energy
+prices in flux. A larger-scale global conflict could put a pause on advanced AI
+development indefinitely.</p>
+<p>But at that point, we have way bigger things to worry about than the job market
+for software engineers...</p>
+<h2 id="what-does-this-mean-for-the-softwaresaas-economy">What does this mean for the software/SaaS economy?</h2>
+<p>The important quantity is</p>
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mfrac><mrow><mi>Q</mi></mrow><mrow><mi>C</mi><mo>&#x000B7;</mo><mi>T</mi></mrow></mfrac></mrow></math>
+<p>Read: the ratio between output <strong>Q</strong>uality and the product of <strong>C</strong>ost and
+<strong>T</strong>ime it takes to produce the amount of tokens required to achieve an average
+task. This is pretty hand-wavy and deserves a much more rigorous analysis, but
+as a simple starting point I think it suffices. I dub it the <b>"build
+payoff."</b><a class="tooltip" data-tip="I&#x27;m open to suggestions for a better name." href="#tooltip-def-2" id="tooltip-ref-2"><sup>2</sup></a></p>
+<p>Build payoff, as the name suggests, controls the "build-vs-buy" tradeoff. If
+cost of tokens and time to generate them asymptotically approaches zero, while
+quality holds steady or increases, even at current frontier capability levels,
+this dramatically shifts the calculus away from purchasing SaaS products that
+other companies are making, and towards building everything in-house. But this
+is an idealized scenario. In reality, the cost and time consumed by inference
+for tokens will remain elevated for some time, and this means that SaaS
+companies will continue to capture the value of the agentic software factory
+boom: agents and their "steerers" will decide that it is better to buy an
+observability platform (that other agents are building and maintaining, under
+the direction of the shareholders).</p>
+<p>You may wonder: how can build payoff be measured? Quality can be measured in a
+few ways. One that jumps to mind is METR's
+<a href="https://metr.org/time-horizons/">task horizon benchmark</a>, although the latest
+update to their webpage notes that measurements of task horizon length above 16
+hours are "unreliable" with their current set of benchmark tasks. Another way
+might be the number of "successful" agent rollouts, as measured by Anthropic in
+their
+<a href="https://www.anthropic.com/institute/recursive-self-improvement">recursive self-improvement post</a>.
+Cost and time are more straightforward. These are measured already on platforms
+like <a href="https://arena.ai/leaderboard">Arena</a> and
+<a href="https://openrouter.ai/rankings">OpenRouter</a>.</p>
+<p>The build payoff is still being held down mainly by cost. Heavy AI use can rack
+up bills upwards of several thousand dollars a month. Anthropic's models are
+notoriously expensive and slow as well, with OpenAI models currently favored for
+their lower cost and higher inference speed. The quality does continue to rise,
+however.</p>
+<p>I think it is pretty safe to conclude that cost won't come down soon too.
+Anthropic recently
+<a href="https://www.reddit.com/r/Anthropic/comments/1wvqd07/anthropics_figures_for_the_ipo/">filed for IPO</a>
+with financies that indicate a staggeringly high operating loss, almost twice
+its revenue.</p>
+<p><img src="/blog_assets/anthropic.webp" /></p>
+<p>Put another way, building software that meets a user need will still require
+risk, capital outlays, and a business model. I think this is why we are
+observing a
+<a href="https://www.stripeeconomics.com/p/the-saaspocalypse-was-more-like-a">RenaiSaaS</a>,
+contrary to investors' fears of a "SaaSpocalypse" at the beginning of this year.
+Don't get complacent though. As the build payoff increases, value will cease to
+be captured by SaaS companies, because it will become so much easier to build
+complex things quickly.</p>
+<h2 id="how-to-prepare">How to prepare</h2>
+<p>Honestly, I'm still trying to figure this one out. A part of me hopes what I'm
+anticipating here doesn't come to fruition, but I am not holding my breath. I
+feel that the writing is already on the wall.</p>
+<p>Here are a couple principles I'm trying to align around right now:</p>
+<ol>
+<li><strong>Do what you love.</strong> Easier said than done, given your financial standing,
+   but if you're able, find a way to work on something you're truly,
+   differentially passionate about. I'm hoping to take my career in this
+   direction soon.</li>
+<li><strong>Stay human.</strong> Build rich social networks, and maintain critical, nuanced,
+   thought in the face of an AI slop firehose.</li>
+</ol>
+<p>Thank you, dear reader, for getting this far. Stay well and safe!</p>
+<section class="tooltip-footnotes">
+    <hr class="tooltip-footnotes-rule">
+    <ol>
+        <li id="tooltip-def-1">Anthropic also points out that 8x more lines of code per quarter are being shipped now compared to 2021-2025. I don't really find this all that significant though because lines of code is not the best measurement of actual outcomes delivered. <a class="tooltip-back" href="#tooltip-ref-1">↩</a></li>
+        <li id="tooltip-def-2">I'm open to suggestions for a better name. <a class="tooltip-back" href="#tooltip-ref-2">↩</a></li>
+    </ol>
+</section>]]></content:encoded>
+    </item>
     <item>
       <title>ruby-lean: A Ruby semantics with a type soundness proof</title>
       <link>https://samx.io/blog/topics/devlog/2026-09-26-ruby-lean.html</link>

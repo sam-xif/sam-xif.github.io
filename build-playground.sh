@@ -19,7 +19,7 @@ cat > /tmp/homelink.css <<'CSS'
 CSS
 
 cat > /tmp/homelink.html <<'HTML'
-  <a class="homelink" href="https://samx.io/"><span class="arrow">&#8592;</span>samx.io</a>
+  <a class="homelink" href="/"><span class="arrow">&#8592;</span>samx.io</a>
 HTML
 
 awk '

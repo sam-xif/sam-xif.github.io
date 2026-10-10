@@ -11,3 +11,4 @@
 2026-06-13-ai-education.md
 2026-09-26-ruby-lean.md
 2026-09-26-ruby-lean-technical-appendix.md
+2026-10-10-sw-eng.md
