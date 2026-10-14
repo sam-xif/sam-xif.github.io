@@ -7,7 +7,7 @@
     <link>https://samx.io/blog/</link>
     <description>Blog by Sam Xifaras</description>
     <language>en</language>
-    <lastBuildDate>Sat, 10 Oct 2026 20:39:41 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 14 Oct 2026 23:53:57 +0000</lastBuildDate>
     <atom:link href="https://samx.io/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>What's happening to software engineers?</title>
@@ -60,7 +60,7 @@ Stripe, along with every other large tech company, are implementing their own
 <a href="https://x.com/businessbarista/article/2061573150719021542">software factories</a>,
 where agents autonomously define implementation plans, write code, test it,
 review it, get it merged, and monitor it in production. Humans move a level up,
-setting the direction. Gergeley Orosz posted about
+setting the direction. Gergely Orosz posted about
 <a href="https://newsletter.pragmaticengineer.com/p/openai-software-factory">OpenAI's</a>
 software factory. Different companies are at different levels on the scale of
 full factory production of software; it makes sense that the frontier labs like
